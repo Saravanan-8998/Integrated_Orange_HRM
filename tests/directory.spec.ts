@@ -1,8 +1,9 @@
 import { test, expect, Page } from '@playwright/test';
 import { Utils } from '../support/utils';
 import { TestData } from '../testData/testData';
+import Constants from '../support/constants.json';
 import { LoginPage, HomePage, DirectoryPage } from '../pageObjects';
-import ENV from '../support/env';
+import ENV from "../support/env";
 
 let loginPage: LoginPage, homePage: HomePage, directoryPage: DirectoryPage, testData: TestData, page: Page, utils: Utils;
 
@@ -19,10 +20,8 @@ test.beforeAll(async ({ browser }) => {
     let pass = await testData.encodeDecodePassword();
     await loginPage.fillUsrNameAndPwdAndLogin(ENV.USERNAME, pass);
     await utils.deleteUsers();
-    await utils.createUsers("Test", "User1", "testuser1");
-    await utils.updatingUserRole("testuser1", "Admin");
-    await utils.logout();
-    await loginPage.fillUsrNameAndPwdAndLogin("testuser1", "Testuser@12");
+    await utils.createUsers(Constants.Users.firstNameUser1, Constants.Users.lastNameUser1, Constants.Users.userNameUser1);
+    await utils.updatingUserRole(Constants.Users.userNameUser1, Constants.others.reportingMethodAdmin);
 });
 
 test.afterAll(async () => {
@@ -31,14 +30,16 @@ test.afterAll(async () => {
 
 test.describe('Directory', () => {
     test('Filling Directory details', async () => {
-        await utils.clickMenu("link", homePage.homePageElements.directory, "Directory");
-        await utils.fillTextBoxValues(directoryPage.directory.employeeName, "Test", true);
-        await utils.clickOption("option", "Test User1");
-        await utils.selecDropdownOption("option", directoryPage.directory.jobTitle, "Software Engineer");
-        await utils.selecDropdownOption("option", directoryPage.directory.location, "Texas R&D");
+        await utils.clickMenu(Constants.Roles.link, homePage.homePageElements.directory, Constants.Menu.directory);
+        await utils.fillTextBoxValues(directoryPage.directory.employeeName, Constants.Users.firstNameUser1, true);
+        await utils.clickOption(Constants.Roles.option, Constants.Users.employeeNameUser1);
+        await utils.selecDropdownOption(Constants.Roles.option, directoryPage.directory.jobTitle, Constants.others.jobTitleSE);
+        await utils.selecDropdownOption(Constants.Roles.option, directoryPage.directory.location, Constants.others.jobLocation);
         await utils.click(directoryPage.directory.search);
         await utils.waitForSpinnerToDisappear();
-        expect(await (await directoryPage.getRecordsCount()).trim()).toEqual('(1) Record Found');
-        expect(await (await directoryPage.getEmployeeName()).trim()).toEqual('Test  User1');
+        let recordCount = await directoryPage.getRecordsCount();
+        expect(recordCount?.trim()).toEqual(Constants.recordsCount);
+        let employeeName = await directoryPage.getEmployeeName();
+        expect(employeeName?.trim()).toEqual(Constants.Users.employeeNameUser1Space);
     });
 });

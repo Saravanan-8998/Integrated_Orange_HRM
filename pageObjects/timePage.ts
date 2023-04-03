@@ -112,6 +112,19 @@ export class TimePage {
         }
     }
 
+      // This function is used to get a "Specific Project Row cell values" by its Column Text
+      async getAProjectRowByColumnText(companyName: string) {
+        await this.page.waitForSelector(await this.cusomterRow(companyName));
+        let rowCells = this.page.locator(await this.customerRowCells(companyName));
+        let rowcellsText = await rowCells.allTextContents();
+        return {
+            checkbox: rowcellsText[0],
+            customerName: rowcellsText[1],
+            project: rowcellsText[2],
+            projectAdmins: rowcellsText[2],
+        }
+    }
+
     // This function is used to get a "Specific Row cell values" by its Column Text for Timesheet Action table
     async getTimesheetActionTable(user: string) {
         await this.page.waitForSelector(await this.cusomterRow(user));
@@ -142,25 +155,25 @@ export class TimePage {
 
     // This function is used to add a new Customer
     async addCustomer() {
-        let isCustomerPresent = await utils.isElementVisible(await this.cusomterRow("APlay Test Ltd"));
+        let isCustomerPresent = await utils.isElementVisible(await this.cusomterRow(Constants.customers.customerName));
         if (!isCustomerPresent) {
             await utils.click(this.add);
-            await utils.fillTextBoxValues(this.name, "APlay Test Ltd", true);
-            await utils.fillTextBoxValues(this.description, "An AI Company", true);
+            await utils.fillTextBoxValues(this.name, Constants.customers.customerName, true);
+            await utils.fillTextBoxValues(this.description, Constants.customers.customerDescription, true);
             await utils.clickSave(myInfoPage.save, 0);
-            let cellValues = await this.getARowByColumnText("APlay Test Ltd");
-            expect(cellValues.companyName).toEqual("APlay Test Ltd");
+            let cellValues = await this.getARowByColumnText(Constants.customers.customerName);
+            expect(cellValues.companyName).toEqual(Constants.customers.customerName);
         }
     }
 
     // This function is used to delete a existing Customers
     async deleteCustomers() {
-        let rowLength = await this.page.locator(this.cusomterRow('APlay Test Ltd')).count();
+        let rowLength = await this.page.locator(this.cusomterRow(Constants.customers.customerName)).count();
         for (let i = 0; i < rowLength; i++) {
-            let row = await this.cusomterRow('APlay Test Ltd');
+            let row = await this.cusomterRow(Constants.customers.customerName);
             let isCustomerAlreadyPresent = await this.page.locator(row).isVisible();
             if (isCustomerAlreadyPresent) {
-                let matchedRow = await this.cusomterRow('APlay Test Ltd');
+                let matchedRow = await this.cusomterRow(Constants.customers.customerName);
                 await this.page.locator(matchedRow).locator(this.trashPath).click({ force: true });
                 await myInfoPage.page.waitForSelector(myInfoPage.attachments.confirmationPopup);
                 await myInfoPage.page.locator(myInfoPage.attachments.popupDeleteButton).click();
@@ -171,24 +184,26 @@ export class TimePage {
 
     // This function is used to add a new Project
     async addProjects() {
-        let isProjectPresent = await utils.isElementVisible(await this.cusomterRow("Demo Play Project"));
+        let isProjectPresent = await utils.isElementVisible(await this.cusomterRow(Constants.projects.projectName));
         if (!isProjectPresent) {
             await utils.click(this.add);
-            await utils.fillTextBoxValues(this.name, "Demo Play Project", true);
-            await utils.fillTextBoxValues(this.projects.customerName, "APlay Test", true);
-            await utils.clickOption('option', "APlay Test Ltd");
-            await utils.fillTextBoxValues(this.description, "An AI Project", true);
+            await utils.fillTextBoxValues(this.name, Constants.projects.projectName, true);
+            await utils.fillTextBoxValues(this.projects.customerName, Constants.customers.customerNameForSearch, true);
+            await utils.clickOption(Constants.Roles.option, Constants.customers.customerName);
+            await utils.fillTextBoxValues(this.description, Constants.projects.projectDescription, true);
             await utils.clickSave(myInfoPage.save, 0);
             await utils.click(this.add);
             await utils.waitForElement(this.projects.addCustomerDialog);
-            await utils.fillTextBoxValues(this.projects.addCustomerDialogName, "Aplay", true);
+            await utils.fillTextBoxValues(this.projects.addCustomerDialogName, Constants.customers.customerDialogName, true);
             await utils.clickSave(myInfoPage.save, 1);
-            await utils.clickSave(myInfoPage.save, 0, Constants.sucessMsg.sucessfulSavedMsg);
+            await utils.clickSave(myInfoPage.save, 0);
+            await utils.clickCloseIcon();
+            await utils.waitForSpinnerToDisappear();
             await utils.waitForElement(this.projects.filterArea);
-            await utils.fillTextBoxValues(this.projects.customerName, "APlay Test Ltd", true);
-            await utils.clickOption('option', "APlay Test Ltd");
-            await utils.fillTextBoxValues(this.projects.project, "Demo Play Project", true);
-            await utils.clickOption('option', "Demo Play Project");
+            await utils.fillTextBoxValues(this.projects.customerName, Constants.customers.customerName, true);
+            await utils.clickOption(Constants.Roles.option, Constants.customers.customerName);
+            await utils.fillTextBoxValues(this.projects.project, Constants.projects.projectName, true);
+            await utils.clickOption(Constants.Roles.option, Constants.projects.projectName);
             await utils.click(this.projects.search);
         }
     }
@@ -196,45 +211,45 @@ export class TimePage {
     // This function is used to fill the Timesheet Hours
     async fillTimesheetHours() {
         for (let i = 0; i < 5; i++) {
-            await this.page.locator(this.timesheets.timeInputCell).nth(i).fill("09:00");
+            await this.page.locator(this.timesheets.timeInputCell).nth(i).fill(Constants.others.timesheetNineHrs);
         }
         await utils.clickSave(myInfoPage.save, 0);
         await this.page.waitForSelector(this.timesheets.totalhrs);
         let total = await utils.getText(this.timesheets.totalhrs);
-        expect(total).toEqual("45:00");
+        expect(total).toEqual(Constants.others.totalhrs);
         await utils.clickSave(myInfoPage.submit, 0);
     }
 
     // This function is used to fill the Punch In and Punch Out time
     async addPunchInPunchOut() {
-        await utils.fillDateValue(this.timeElements.date, "2023-03-28");
-        await utils.fillTextBoxValues(this.punchInOut.time, "10:00 AM", true);
+        await utils.fillDateValue(this.timeElements.date, Constants.Dates.punchInDate);
+        await utils.fillTextBoxValues(this.punchInOut.time, Constants.others.punchInTime, true);
         await utils.click(this.punchInOut.note);
-        await utils.fillTextBoxValues(this.punchInOut.note, "Logged in", true);
+        await utils.fillTextBoxValues(this.punchInOut.note, Constants.others.punchInComment, true);
         await utils.clickSave(this.punchInOut.in, 0);
         await utils.clickCloseIcon();
         await utils.waitForElement(this.punchInOut.punchOutContainer);
         await this.page.waitForTimeout(6000);
-        await utils.fillDateValue(this.timeElements.date, "2023-03-28");
-        await utils.fillTextBoxValues(this.punchInOut.time, "07:00 PM", true);
+        await utils.fillDateValue(this.timeElements.date, Constants.Dates.punchOutDate);
+        await utils.fillTextBoxValues(this.punchInOut.time, Constants.others.punchOutTime, true);
         await utils.click(this.punchInOut.note);
-        await utils.fillTextBoxValues(this.punchInOut.note, "Logged out", true);
+        await utils.fillTextBoxValues(this.punchInOut.note, Constants.others.loggedOut, true);
         await utils.clickSave(this.punchInOut.out, 0);
     }
 
     // This function is used to search and view the reports
     async searchAndViewReports(menuItemValue, locator, textboxValue, projectValue) {
         await utils.click(this.timeElements.reports);
-        await utils.clickByRole("menuitem", menuItemValue, true);
+        await utils.clickByRole(Constants.Roles.menuItem, menuItemValue, true);
         await utils.waitForElement(myInfoPage.backgroundContainer);
         await utils.fillTextBoxValues(locator, textboxValue, true);
-        await utils.clickOption('option', projectValue);
+        await utils.clickOption(Constants.Roles.option, projectValue);
         await utils.click(this.timeElements.view);
     }
 
     // This function is used to Maximize and Minimize Reports table
     async maximizeMinimizeReports(iconToClick, getAttributeFor) {
         await utils.click(iconToClick);
-        return await this.page.locator(getAttributeFor).getAttribute("class");
+        return await this.page.locator(getAttributeFor).getAttribute(Constants.attributeClass);
     }
 }

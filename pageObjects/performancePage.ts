@@ -67,7 +67,7 @@ export class PerformancePage {
             complete: '.orangehrm-performance-review-actions button',
             confirmationReviewPopup: '.oxd-dialog-sheet',
             popupButtons: '.oxd-dialog-sheet button',
-            dueDate: "//div[text()='2023-03-30']",
+            dueDate: "//div[text()='2023-04-05']",
             fileIcon: ".bi-file-text-fill",
             ratingField: ".orangehrm-evaluation-grid .oxd-input--active",
             commentsField: ".orangehrm-evaluation-grid .oxd-textarea--active",
@@ -148,9 +148,9 @@ export class PerformancePage {
     //This function is used to "Create Logs" in Employee Tracker page
     async createLogs() {
         await this.page.waitForSelector(this.keyPerformanceIndicators.logPopup);
-        await utils.fillTextBoxValues(this.logElements.log, "AB pw test", true);
+        await utils.fillTextBoxValues(this.logElements.log, Constants.others.logName, true);
         await utils.clickElementWithIndex(this.logElements.positive, 0);
-        await utils.fillTextBoxValues(this.keyPerformanceIndicators.comment, "Filled Logs", true);
+        await utils.fillTextBoxValues(this.keyPerformanceIndicators.comment, Constants.others.logComment, true);
         await utils.clickSave(this.save, 0, Constants.sucessMsg.sucessfulSavedMsg);
         await this.page.waitForSelector(this.logElements.employeeTrackerLogContainer);
     }
@@ -196,14 +196,15 @@ export class PerformancePage {
 
     //This function is used to get a fill the My Review Details
     async fillMyReviewDetails() {
+        await utils.waitForElement(this.attachments.attachemtRow);
         let dueDate = await utils.isElementVisible(this.myReview.dueDate);
         expect(dueDate).toBeTruthy();
         await utils.clickElementWithIndex(this.myReview.fileIcon, 0);
         for (let i = 0; i < 5; i++) {
-            await this.page.locator(this.myReview.ratingField).nth(i).fill('90');
-            await this.page.locator(this.myReview.commentsField).nth(i).fill('Good Performance');
+            await this.page.locator(this.myReview.ratingField).nth(i).fill(Constants.others.ratingValue);
+            await this.page.locator(this.myReview.commentsField).nth(i).fill(Constants.others.ratingComment);
         }
-        await this.page.locator(this.myReview.generalComments).type("Overall good");
+        await this.page.locator(this.myReview.generalComments).type(Constants.others.generalComment);
         await utils.clickElementWithIndex(this.myReview.complete, 2);
         await utils.clickElementWithIndex(this.myReview.popupButtons, 2);
         expect(await utils.getToastMessage()).toEqual(Constants.sucessMsg.sucessfulSavedMsg);

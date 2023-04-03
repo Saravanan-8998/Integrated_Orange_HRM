@@ -38,7 +38,6 @@ export class MyInfoPage {
         this.backgroundContainer = '.orangehrm-background-container';
         this.nameInputField = '//label[text()="Name"]/../..//div/input';
         this.reportTo = "//a[text()='Report-to']";
-
         this.myInfoPersonalDetails = {
             firstName: 'input.orangehrm-firstname',
             middleName: 'input.orangehrm-middlename',
@@ -235,6 +234,7 @@ export class MyInfoPage {
         }
     };
 
+    // This function is used to get the Arrays of Locators and its values
     async getLocators(locatorsSection: string) {
         let locators: string[] = [];
         let values: string[] = [];

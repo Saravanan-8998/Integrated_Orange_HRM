@@ -34,9 +34,9 @@ export class PIMPage {
 
     // This function is used to "Assign the Supervisor" for the Employee
     async assignSupervisor(employeeToSearch, supervisorEmployee) {
-        await utils.clickMenu("link", homePage.homePageElements.pim, "PIM");
+        await utils.clickMenu(Constants.Roles.link, homePage.homePageElements.pim, Constants.Menu.pim);
         await utils.fillTextBoxValues(this.employeeName, employeeToSearch, true);
-        await utils.clickOption('option', employeeToSearch);
+        await utils.clickOption(Constants.Roles.option, employeeToSearch);
         await utils.click(this.search);
         await utils.click(this.editIcon);
         await utils.waitForSpinnerToDisappear();
@@ -44,9 +44,9 @@ export class PIMPage {
         await utils.click(this.reportTo);
         await utils.clickElementWithIndex(this.add, 0);
         await utils.fillTextBoxValues(this.name, supervisorEmployee, true);
-        await utils.clickOption('option', supervisorEmployee);
+        await utils.clickOption(Constants.Roles.option, supervisorEmployee);
         await utils.click(this.reportingMethod);
-        await utils.clickOption('option', "Direct");
+        await utils.clickOption(Constants.Roles.option, Constants.others.reportingMethodDirect);
         await utils.clickSave(this.save, 0, Constants.sucessMsg.sucessfulSavedMsg);
     }
 }

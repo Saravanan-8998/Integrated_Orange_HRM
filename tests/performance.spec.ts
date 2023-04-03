@@ -23,14 +23,14 @@ test.beforeAll(async ({ browser }) => {
     let pass = await testData.encodeDecodePassword();
     await loginPage.fillUsrNameAndPwdAndLogin(ENV.USERNAME, pass);
     await utils.deleteUsers();
-    await utils.createUsers("Test", "User1", "testuser1");
-    await utils.updatingUserRole("testuser1", "Admin");
-    await utils.createUsers("Test", "User2", "testuser2");
-    await utils.updatingUserRole("testuser2", "Admin");
-    await utils.createUsers("Test", "User3", "testuser3");
-    await utils.updatingUserRole("testuser3", "Admin");
-    await pimPage.assignSupervisor("Test User1", "Test User2");
-    await pimPage.assignSupervisor("Test User2", "Test User3");
+    await utils.createUsers(Constants.Users.firstNameUser1, Constants.Users.lastNameUser1, Constants.Users.userNameUser1);
+    await utils.updatingUserRole(Constants.Users.userNameUser1, Constants.others.reportingMethodAdmin);
+    await utils.createUsers(Constants.Users.firstNameUser2, Constants.Users.lastNameUser2, Constants.Users.userNameUser2);
+    await utils.updatingUserRole(Constants.Users.userNameUser2, Constants.others.reportingMethodAdmin);
+    await utils.createUsers(Constants.Users.firstNameUser3, Constants.Users.lastNameUser3, Constants.Users.userNameUser3);
+    await utils.updatingUserRole(Constants.Users.userNameUser3, Constants.others.reportingMethodAdmin);
+    await pimPage.assignSupervisor(Constants.Users.employeeNameUser1, Constants.Users.employeeNameUser2);
+    await pimPage.assignSupervisor(Constants.Users.employeeNameUser2, Constants.Users.employeeNameUser3);
 });
 
 test.afterAll(async () => {
@@ -41,45 +41,45 @@ test.afterAll(async () => {
 test.describe('Performance Configure', () => {
     test('Filling KPIs details', async () => {
         await utils.logout();
-        await loginPage.fillUsrNameAndPwdAndLogin("testuser1", "Testuser@12");
-        await utils.clickMenu("link", homePage.homePageElements.performance, "Performance");
+        await loginPage.fillUsrNameAndPwdAndLogin(Constants.Users.userNameUser1, Constants.Users.password);
+        await utils.clickMenu(Constants.Roles.link, homePage.homePageElements.performance, Constants.Menu.performance);
         await utils.click(performancePage.keyPerformanceIndicators.configure);
-        await utils.clickByRole("menuitem", 'KPIs', true);
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.kpis, true);
         await utils.click(performancePage.add);
-        await utils.fillTextBoxValues(performancePage.keyPerformanceIndicators.keyPerformanceIndicator, "A Playwright Test", true);
-        await utils.selecDropdownOption("option", performancePage.keyPerformanceIndicators.jobTitle, "Software Engineer");
-        await utils.clickSave(myInfoPage.save,0);
+        await utils.fillTextBoxValues(performancePage.keyPerformanceIndicators.keyPerformanceIndicator, Constants.others.kpiName, true);
+        await utils.selecDropdownOption(Constants.Roles.option, performancePage.keyPerformanceIndicators.jobTitle, Constants.others.jobTitleSE);
+        await utils.clickSave(myInfoPage.save, 0);
         await page.waitForLoadState('networkidle');
         await page.waitForTimeout(4000);
-        await utils.selecDropdownOption("option", performancePage.keyPerformanceIndicators.jobTitle, "Software Engineer");
+        await utils.selecDropdownOption(Constants.Roles.option, performancePage.keyPerformanceIndicators.jobTitle, Constants.others.jobTitleSE);
         await utils.click(performancePage.keyPerformanceIndicators.search);
-        let row = await performancePage.getARowCheckbox('A Playwright Test');
+        let row = await performancePage.getARowCheckbox(Constants.others.kpiName);
         await expect(row.nth(0)).toBeVisible();
     });
 });
 
 test('Filling Trackers details', async () => {
     await utils.click(performancePage.keyPerformanceIndicators.configure);
-    await utils.clickByRole("menuitem", 'Trackers', true);
+    await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.trackers, true);
     await utils.click(performancePage.add);
-    await utils.fillTextBoxValues(performancePage.addPerformanceTracker.trackerName, "AB Playwright Test", true);
-    await utils.fillTextBoxValues(performancePage.addPerformanceTracker.employeeName, "Test U", true);
-    await utils.clickOption('option', "Test User1");
-    await utils.fillTextBoxValues(performancePage.addPerformanceTracker.reviewers, "Test U", true);
-    await utils.clickOption('option', "Test User2");
+    await utils.fillTextBoxValues(performancePage.addPerformanceTracker.trackerName, Constants.others.trackerName, true);
+    await utils.fillTextBoxValues(performancePage.addPerformanceTracker.employeeName, Constants.Users.employeeNameForSearch, true);
+    await utils.clickOption(Constants.Roles.option, Constants.Users.employeeNameUser1);
+    await utils.fillTextBoxValues(performancePage.addPerformanceTracker.reviewers, Constants.Users.employeeNameForSearch, true);
+    await utils.clickOption(Constants.Roles.option, Constants.Users.employeeNameUser2);
     await utils.clickSave(myInfoPage.save, 0);
-    await utils.fillTextBoxValues(performancePage.addPerformanceTracker.employeeName, "Test U", true);
-    await utils.clickOption('option', "Test User1");
+    await utils.fillTextBoxValues(performancePage.addPerformanceTracker.employeeName, Constants.Users.employeeNameForSearch, true);
+    await utils.clickOption(Constants.Roles.option, Constants.Users.employeeNameUser1);
     await utils.click(performancePage.keyPerformanceIndicators.search);
-    let perfTracker = await performancePage.getARow('AB Playwright Test');
+    let perfTracker = await performancePage.getARow(Constants.others.trackerName);
     let status = await perfTracker.first().isVisible();
     expect(status).toBeTruthy();
 });
 
 test.describe('Performance My tracker', () => {
     test('Viewing My Trackers details', async () => {
-        await utils.clickByRole(Constants.Roles.link, 'My Trackers', true);
-        let tracker = await performancePage.getARow('AB Playwright Test');
+        await utils.clickByRole(Constants.Roles.link, Constants.Menu.myTrackers, true);
+        let tracker = await performancePage.getARow(Constants.others.trackerName);
         expect(tracker).toBeVisible();
         let isMyTrackerOpened = await performancePage.clickViewAndVerify();
         expect(isMyTrackerOpened).toBeTruthy();
@@ -88,11 +88,11 @@ test.describe('Performance My tracker', () => {
 
 test.describe('Performance Employee Tracker', () => {
     test('Viewing Employee Trackers details', async () => {
-        await utils.clickByRole(Constants.Roles.link, 'Employee Trackers'), true;
-        await utils.fillTextBoxValues(performancePage.addPerformanceTracker.employeeName, "Test  U", true);
-        await utils.clickOption('option', "Test  User2");
-        await utils.selecDropdownOption("option", performancePage.employeeTrackers.include, "Current Employees Only");
-        await performancePage.getViewAndClick('AB Playwright Test', 0);
+        await utils.clickByRole(Constants.Roles.link, Constants.Menu.employeeTrackers), true;
+        await utils.fillTextBoxValues(performancePage.addPerformanceTracker.employeeName, Constants.Users.employeeNameForSearch, true);
+        await utils.clickOption(Constants.Roles.option, Constants.Users.employeeNameUser2);
+        await utils.selecDropdownOption(Constants.Roles.option, performancePage.employeeTrackers.include, Constants.includeEmployee);
+        await performancePage.getViewAndClick(Constants.others.trackerName, 0);
         let empPerfTrackerCharlie = await performancePage.isEmployeeTrackerViewVisible();
         expect(empPerfTrackerCharlie).toBeTruthy();
         await utils.click(performancePage.logElements.addLog);
@@ -106,23 +106,22 @@ test.describe('Performance Employee Tracker', () => {
 test.describe('Performance Manage Reviews', () => {
     test('Deleting the existing Performance Reviews records', async () => {
         await utils.click(performancePage.manageReviews.manageReviewsMenu);
-        await utils.clickByRole("menuitem", 'Manage Reviews', true);
-        // await performancePage.deleteRecords("2023");
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.manageReviews, true);
         expect(page.locator(performancePage.addReview.tableRow)).not.toBeVisible();
     });
 
     test('Adding the Manage Performance Review records', async () => {
         await utils.click(performancePage.add);
-        await utils.fillTextBoxValues(performancePage.addReview.employeeName, "Test U", true)
-        await utils.clickOption('option', "Test User1");
-        await utils.fillTextBoxValues(performancePage.addReview.supervisorReviewer, "Test", true)
-        await utils.clickOption('option', "Test User2");
-        await utils.fillDateValue(performancePage.addReview.reviewPeriodStartDate, "2023-03-15");
-        await utils.fillDateValue(performancePage.addReview.reviewPeriodEndDate, "2023-03-28");
-        await utils.fillDateValue(performancePage.addReview.reviewDueDate, "2023-03-30");
+        await utils.fillTextBoxValues(performancePage.addReview.employeeName, Constants.Users.employeeNameForSearch, true)
+        await utils.clickOption(Constants.Roles.option, Constants.Users.employeeNameUser1);
+        await utils.fillTextBoxValues(performancePage.addReview.supervisorReviewer, Constants.Users.firstNameUser2, true)
+        await utils.clickOption(Constants.Roles.option, Constants.Users.employeeNameUser2);
+        await utils.fillDateValue(performancePage.addReview.reviewPeriodStartDate, Constants.Dates.reviewPeriodStartDate);
+        await utils.fillDateValue(performancePage.addReview.reviewPeriodEndDate, Constants.Dates.reviewPeriodEndDate);
+        await utils.fillDateValue(performancePage.addReview.reviewDueDate, Constants.Dates.reviewDueDate);
         await utils.clickSave(myInfoPage.save, 0);
         let rowCells = await performancePage.getRowDetails();
-        expect(rowCells.reviewStatus).toEqual("Inactive");
+        expect(rowCells.reviewStatus).toEqual(Constants.status.inactive);
     });
 
     test('Activating the Manage Performance Review record', async () => {
@@ -135,31 +134,32 @@ test.describe('Performance Manage Reviews', () => {
         await utils.click(myInfoPage.toastElements.closeIcon);
         await utils.waitForSpinnerToDisappear();
         let rowCells = await performancePage.getRowDetails();
-        expect(rowCells.reviewStatus).toEqual("Activated");
+        expect(rowCells.reviewStatus).toEqual(Constants.status.activated);
     });
 });
 
 test.describe('Performance My Reviews', () => {
     test('Viewing the My Reviews performance', async () => {
         await utils.click(performancePage.manageReviews.manageReviewsMenu);
-        await utils.clickByRole("menuitem", 'My Reviews', true);
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.myReviews, true);
         await performancePage.fillMyReviewDetails();
-        await utils.clickByRole("menuitem", 'My Reviews', true);
-        let rowCells = await performancePage.getMyReviewDetails('2023-03-30');
-        expect(rowCells.selfEvaluationStatus).toEqual('Completed');
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.myReviews, true);
+        let rowCells = await performancePage.getMyReviewDetails(Constants.Dates.reviewDueDate);
+        expect(rowCells.selfEvaluationStatus).toEqual(Constants.status.completed);
     });
 });
 
 test.describe('Performance Employee Reviews', () => {
     test('Viewing the Employee Reviews performance', async () => {
         await utils.logout();
-        await loginPage.fillUsrNameAndPwdAndLogin("testuser2", "Testuser@12");
-        await utils.clickMenu("link", homePage.homePageElements.performance, "Performance");
+        await loginPage.fillUsrNameAndPwdAndLogin(Constants.Users.userNameUser2, Constants.Users.password);
+        await utils.clickMenu(Constants.Roles.link, homePage.homePageElements.performance, Constants.Menu.performance);
         await utils.click(performancePage.manageReviews.manageReviewsMenu);
-        await utils.clickByRole("menuitem", 'Employee Reviews', true);
-        await utils.fillTextBoxValues(performancePage.addReview.employeeName, "Test U", true)
-        await utils.clickOption('option', "Test User1");
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.employeeReviews, true);
+        await utils.fillTextBoxValues(performancePage.addReview.employeeName, Constants.Users.employeeNameForSearch, true)
+        await utils.clickOption(Constants.Roles.option, Constants.Users.employeeNameUser1);
         await utils.click(directoryPage.directory.search);
-        let rowCells = await performancePage.getMyReviewDetails('2023-03-30');
+        let rowCells = await performancePage.getMyReviewDetails(Constants.Dates.reviewDueDate);
+        expect(rowCells.selfEvaluationStatus).toEqual(Constants.status.inProgress);
     });
 });
