@@ -151,5 +151,56 @@
         "pastEmployee": "Paul Collings",
         "vacancy": "Sales Representative",
         "employeeName": "Dominic  Chase"
+    },
+    "pimModule": {
+        "licenseExpiryDate": "2030-11-25",
+        "nationality": "Indian",
+        "maritalStatus": "Single",
+        "dateOfBirth": "2000-12-12",
+        "bloodType": "A+",
+        "country": "India",
+        "name": "Gob",
+        "relationship": "Child",
+        "depDateofBirth": "2000-12-26",
+        "jobTitle": "QA Engineer",
+        "subUnit": "Quality Assurance",
+        "employeeStatus": "Full-Time Permanent",
+        "nameTitle": "Paul  Collings",
+        "reportingMethod": "reportingMethod",
+        "employeeName": "Aldrin F Kardoze",
+        "employeeId": "999",
+        "reportNameSearch": "PIM Sample Report Automation",
+        "displayFieldGroup": "Personal",
+        "displayField": "Employee Last Name",
+        "reportNameSearch1": "All Employee Sub Unit Hierarchy Report",
+        "reportNameSearchEdit": "All Employee Sub Unit Hierarchy Report Edited",
+        "criteria": "Employee Name",
+        "employeeName1": "Cecil Bonaparte"
+    },
+    "adminModule": {
+        "userName": "Admin",
+        "userRole": "Admin",
+        "employeeName": "Paul Colling",
+        "status": "Enabled",
+        "userManagement": {
+            "userName": "AdminTesting",
+            "employeeName": "Paul Collings"
+        },
+        "job": {
+            "jobTitle": "Automation Engineer",
+            "jobDescription": "Testing 123 Sample",
+            "note": "Automation Engineer Note Added",
+            "jobTitleEdited": " Edited",
+            "jobDescriptionEdited": "Testing 123 Sample Edited",
+            "noteEdited": "Automation Engineer Note Added and Edited",
+            "deleteEditedRecord": "Automation Engineer Edited"
+        },
+        "payGradeName": "Grade 0",
+        "payGradeNameEdited": " Edited",
+        "currency": "INR - Indian Rupee",
+        "minSalary": "20000",
+        "maxSalary": "25000",
+        "deletePayGradeRecord": "Grade 0 Edited",
+        "employeeStatusName": "Full-Time Automation"
     }
 }

@@ -1,20 +1,14 @@
 import { test, expect, Page } from '@playwright/test';
 import Constants from '../support/constants.json';
 import { TestData } from '../testData/testData';
-import { LoginPage, HomePage, AdminPage } from '../pageObjects';
+import { LoginPage, HomePage, AdminPage } from '../page_objects';
 import ENV from '../support/env';
+import { Utils } from '../support/utils';
 
-let loginPage: LoginPage, homePage: HomePage, adminPage: AdminPage, testData: TestData, page: Page;
-
-enum values1 {
-    userName = "Admin",
-    userRole = "Admin",
-    employeeName = "Paul Colling",
-    status = "Enabled",
-}
+let loginPage: LoginPage, homePage: HomePage, adminPage: AdminPage, testData: TestData, page: Page, utils: Utils;;
 
 let systemUsersLocators = [];
-let systemUsersLocatorsValues = [values1.userName, values1.employeeName];
+let systemUsersLocatorsValues = [Constants.adminModule.userName, Constants.adminModule.employeeName];
 
 test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -27,9 +21,7 @@ test.beforeAll(async ({ browser }) => {
     await expect(page).toHaveURL(/.*login/);
     let pass = await testData.encodeDecodePassword();
     await loginPage.fillUsrNameAndPwdAndLogin(ENV.USERNAME, pass);
-    await expect(page).toHaveURL(/.*dashboard/);
-    await page.waitForSelector(homePage.dashboardGrid);
-    await homePage.clickAdminMenu();
+    await utils.clickMenu("link", homePage.homePageElements.admin, "Admin");
 });
 
 test.afterAll(async () => {
@@ -41,9 +33,9 @@ test.describe('Filling Admin Information and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.userManagementMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.userDropDownMenu, 0);
         await adminPage.fillFieldValues(systemUsersLocators, systemUsersLocatorsValues);
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.employeeName, 'Paul Collings');
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.userRole, values1.userRole);
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.status, values1.status);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.employeeName, Constants.adminModule.employeeName);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.userRole, Constants.adminModule.userRole);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.status, Constants.adminModule.status);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 1);
         let table = await page.locator(adminPage.tableRow).textContent();
         console.log(table);
@@ -58,11 +50,11 @@ test.describe('Filling Admin Information and editing the information', () => {
         await page.waitForTimeout(2000);
         await adminPage.clearTextBoxValues(adminPage.userManagementLocators.userName);
         await adminPage.clearTextBoxValues(adminPage.userManagementLocators.employeeName);
-        await adminPage.fillTextBoxValues(adminPage.userManagementLocators.userName, 'AdminTesting');
-        await adminPage.fillTextBoxValues(adminPage.userManagementLocators.employeeName, 'Paul Colling');
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.employeeName, 'Paul Collings');
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.userRole, values1.userRole);
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.status, values1.status);
+        await adminPage.fillTextBoxValues(adminPage.userManagementLocators.userName, Constants.adminModule.userManagement.userName);
+        await adminPage.fillTextBoxValues(adminPage.userManagementLocators.employeeName, Constants.adminModule.userManagement.employeeName);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.employeeName, Constants.adminModule.userManagement.employeeName);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.userRole, Constants.adminModule.userRole);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.status, Constants.adminModule.status);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 1);
     });
 });
@@ -73,9 +65,9 @@ test.describe('Filling Job Information and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.jobTitlesDropDownMenu, 0);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobTitle, 'Automation Engineer');
-        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobDescription, 'Testing 123 Sample');
-        await adminPage.fillTextBoxValues(adminPage.note, 'Automation Engineer Note Added');
+        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobTitle, Constants.adminModule.job.jobTitle);
+        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobDescription, Constants.adminModule.job.jobDescription);
+        await adminPage.fillTextBoxValues(adminPage.note, Constants.adminModule.job.note);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -84,13 +76,13 @@ test.describe('Filling Job Information and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.jobTitlesDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.editRow('Automation Engineer');
+        await adminPage.editRow(Constants.adminModule.job.jobTitle);
         await adminPage.clearTextBoxValues(adminPage.jobLocators.jobTitle);
-        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobTitle, ' Edited');
+        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobTitle, Constants.adminModule.job.jobTitleEdited);
         await adminPage.clearTextBoxValues(adminPage.jobLocators.jobDescription);
-        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobDescription, 'Testing 123 Sample Edited');
+        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobDescription, Constants.adminModule.job.jobDescriptionEdited);
         await adminPage.clearTextBoxValues(adminPage.note);
-        await adminPage.fillTextBoxValues(adminPage.note, 'Automation Engineer Note Added and Edited');
+        await adminPage.fillTextBoxValues(adminPage.note, Constants.adminModule.job.noteEdited);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -99,7 +91,7 @@ test.describe('Filling Job Information and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.jobTitlesDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'Automation Engineer Edited');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.job.deleteEditedRecord);
     });
 });
 
@@ -109,7 +101,7 @@ test.describe('Filling Pay Grades and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.payGradesDropDownMenu, 0);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.payGradeName, 'Grade 0');
+        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.payGradeName, Constants.adminModule.payGradeName);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 1);
     });
 
@@ -120,15 +112,15 @@ test.describe('Filling Pay Grades and editing the information', () => {
         await page.waitForTimeout(2000);
         await adminPage.editRow('Grade 0');
         await adminPage.clearTextBoxValues(adminPage.payGradeLocators.payGradeName);
-        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.payGradeName, ' Edited');
+        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.payGradeName, Constants.adminModule.payGradeNameEdited);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 1);
         await page.waitForTimeout(3000);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 2);
         await page.waitForTimeout(3000);
-        await adminPage.selecDropdownOption(adminPage.payGradeLocators.currency, 'INR - Indian Rupee');
+        await adminPage.selecDropdownOption(adminPage.payGradeLocators.currency, Constants.adminModule.currency);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.minSalary, '20000');
-        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.maxSalary, '25000');
+        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.minSalary, Constants.adminModule.minSalary);
+        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.maxSalary, Constants.adminModule.maxSalary);
         await adminPage.clickSave(adminPage.actionButton, 3, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -137,7 +129,7 @@ test.describe('Filling Pay Grades and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.payGradesDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'Grade 0 Edited');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.deletePayGradeRecord);
     });
 });
 
@@ -376,7 +368,7 @@ test.describe('Filling Organization Structure Information and editing the inform
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.structureDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.click(adminPage.organizationLocators.editSwitch);
-await adminPage.deleteFileStructure('structure','Quality Engineering Edited');
+        await adminPage.deleteFileStructure('structure', 'Quality Engineering Edited');
     });
 });
 
