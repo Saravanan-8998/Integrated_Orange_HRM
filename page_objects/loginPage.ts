@@ -11,9 +11,18 @@ export class LoginPage {
         this.page = page;
         homePage = new HomePage(page);
         this.loginElements = {
-            userName: '[name="username"]',
-            password: '[name="password"]',
-            loginButton: "//button[normalize-space()='Login']"
+            // userName: '[name="username"]',
+            // password: '[name="password"]',
+            loginButton: "//button[normalize-space()='Login']",
+            logoImg : `img[alt='company-branding']`,
+            userName : `//p[text()='Username : Admin']`,
+            password : `//p[text()='Password : admin123']`,
+            inputUserName : `input[name='username']`,
+            inputPassword : `input[name='password']`,
+            loginBtn : `button[type='submit']`,
+            inValidMsg : `//p[text()='Invalid credentials']`,
+            alertDiv : `//div[@role='alert']//div[1]`,
+            requiredMsg : `(//span[contains(@class,'oxd-text oxd-text--span')])`
         }
     }
 
@@ -49,4 +58,28 @@ export class LoginPage {
         await (await this.page.waitForSelector(this.loginElements.loginButton)).waitForElementState("stable");
         await this.page.locator(this.loginElements.loginButton).click();
     };
+
+    async componentsVisibility() {
+        await (await this.page.waitForSelector(this.loginElements.logoImg)).isVisible();
+        await (await this.page.waitForSelector(this.loginElements.userName)).isVisible();
+        await (await this.page.waitForSelector(this.loginElements.password)).isVisible();
+        await (await this.page.waitForSelector(this.loginElements.inputUserName)).isVisible();
+        await (await this.page.waitForSelector(this.loginElements.inputPassword)).isVisible();
+        await (await this.page.waitForSelector(this.loginElements.loginBtn)).isVisible();
+    }
+
+    async enterCredentials(username: any, password: any) {
+        await this.page.locator(this.loginElements.inputUserName).fill(username);
+        await this.page.locator(this.loginElements.inputPassword).fill(password);
+        await this.page.locator(this.loginElements.loginBtn).click();
+    }
+
+    async invalid() {
+        await this.page.waitForTimeout(5000);
+        return await this.page.locator(this.loginElements.inValidMsg).textContent();
+    }
+
+    async required() {
+        return await this.page.locator(this.loginElements.requiredMsg).textContent();
+    }
 }

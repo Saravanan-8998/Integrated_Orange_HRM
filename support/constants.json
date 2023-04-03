@@ -130,5 +130,26 @@
         "text": "The selected record will be permanently deleted. Are you sure you want to continue?",
         "purge": "You are about to purge selected candidates permanently. Are you sure you want to continue? This operation cannot be undone",
         "item": "The selected item will be permanently deleted. Are you sure you want to continue?"
+    },
+    "buzzModule": {
+        "postInput": "Hey Everyone, What's up?",
+        "postInput2": "Hey Everyone, What's up?, Check Out this Remix!",
+        "upload50px": "50px X 50px.png",
+        "upload182px": "182px X 50px.jpg",
+        "videoURL": "https://www.youtube.com/watch?v=kvV_9-H6Ab0",
+        "commentInput": "Look I have commented for this Post",
+        "commmentInputEdit": "Look I have commented for this Post Edited"
+    },
+    "buzzAssertions": {
+        "feedText": "Hey Everyone, What's up?, Check Out this Remix!",
+        "feedText1": "Happy Birthday to my darling little son!!! Thanks guys for your presence at the party. ",
+        "feedText2": "Happy Birthday to my darling little son!!! Thanks guys for your presence at the party. ",
+        "like": "1 Like",
+        "comment": "Look I have commented for this Post Edited"
+    },
+    "maintenanceModule": {
+        "pastEmployee": "Paul Collings",
+        "vacancy": "Sales Representative",
+        "employeeName": "Dominic  Chase"
     }
 }
