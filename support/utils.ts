@@ -1,0 +1,359 @@
+import { chromium, firefox, webkit, Page, expect } from '@playwright/test';
+import { HomePage } from '../page_objects';
+import { DirectoryPage } from "../page_objects/directoryPage";
+import Constants from "./constants.json";
+
+let directoryPage: DirectoryPage;
+let homePage: HomePage;
+
+export class Utils {
+
+  readonly page: Page;
+  readonly backgroundContainer: string;
+  readonly toastElements: any;
+  readonly save: string;
+  readonly tableRow: string;
+  readonly attachments: any;
+  readonly editIcon: string;
+  readonly spinner: string;
+  readonly userDropdown: string;
+  readonly tableContainer: string;
+  readonly employeeListMenu: string;
+  readonly trashPath: string;
+  readonly addEmployee: string;
+  readonly row: (value: any) => string;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly switch: string;
+  readonly userName: string;
+  readonly password: string;
+  readonly confirmPassword: string;
+  readonly job: string;
+  readonly joinedDate: string;
+  readonly jobTitle: string;
+  readonly location: string;
+  readonly search: string;
+  readonly userRole: string;
+
+  constructor(page: Page) {
+    this.page = page;
+    homePage = new HomePage(page);
+    directoryPage = new DirectoryPage(page);
+    this.backgroundContainer = '.orangehrm-background-container';
+    this.save = "//button[normalize-space()='Save']";
+    this.search = "//button[normalize-space()='Search']";
+    this.toastElements = {
+      toastMessage: 'p.oxd-text--toast-message',
+      closeIcon: '.oxd-toast-close-container'
+    }
+    this.attachments = {
+      deleteSelectedButton: 'button.orangehrm-horizontal-margin',
+      deleteIcon: 'i.oxd-icon.bi-trash',
+      confirmationPopup: 'div.orangehrm-dialog-popup',
+      popupDeleteButton: '(//div[@class="orangehrm-modal-footer"]//button)[2]'
+    }
+    this.tableRow = "//div[@class='oxd-table-card']/div[@role='row']";
+    this.editIcon = ".oxd-icon.bi-pencil-fill";
+    this.spinner = ".oxd-loading-spinner";
+    this.userDropdown = ".oxd-userdropdown-tab";
+    this.tableContainer = ".orangehrm-paper-container";
+    this.employeeListMenu = "//a[text()='Employee List']";
+    this.trashPath = "../..//i[@class='oxd-icon bi-trash']";
+    this.addEmployee = "//a[text()='Add Employee']";
+    this.firstName = "[name='firstName']";
+    this.lastName = "[name='lastName']";
+    this.switch = ".oxd-switch-wrapper input";
+    this.userName = "//label[text()='Username']/../..//input";
+    this.password = "//label[text()='Password']/../..//input";
+    this.confirmPassword = "//label[text()='Confirm Password']/../..//input";
+    this.job = "//a[text()='Job']";
+    this.joinedDate = "//label[text()='Joined Date']/../..//input";
+    this.jobTitle = "//label[text()='Job Title']/../..//div[contains(@class,'text-input')]";
+    this.location = "//label[text()='Location']/../..//div[contains(@class,'text-input')]";
+    this.userRole = "//label[text()='User Role']/../..//div[contains(@class,'text-input')]";
+    this.row = (value) => {
+      return `//div[@class='oxd-table-card']//div[@role='cell']/div[contains(text(),'${value}')]`;
+    }
+  }
+
+  async launchBrowsers() {
+    const browsers = await Promise.all([
+      chromium.launch(),
+      firefox.launch(),
+      webkit.launch(),
+    ]);
+  }
+
+  // This function is used to wait for the spinner to appear and disappear
+  async waitForSpinnerToDisappear() {
+    const spinner = await this.page.waitForSelector(this.spinner);
+    await spinner.waitForElementState("hidden", { timeout: 6000 });
+  }
+
+  // This function is used to wait for the logout
+  async logout() {
+    await this.click(this.userDropdown);
+    await this.page.getByRole("menuitem", { name: "Logout", exact: true }).click();
+  }
+
+  // This function is used to get the element
+  async getElement(locator) {
+    return this.page.locator(locator);
+  }
+
+  // This function is used to "clear" the "textbox" values
+  async clearTextBoxValues(locatorValue: any) {
+    await (await this.page.waitForSelector(locatorValue)).waitForElementState('editable');
+    await this.page.locator(locatorValue).clear();
+  };
+
+
+  // This function is used to fill the "textbox" values
+  async fillTextBoxValues(locatorValue: any, fillValue: any, clearTextbox?: boolean) {
+    await (await this.page.waitForSelector(locatorValue)).waitForElementState("editable");
+    if (clearTextbox) {
+      await this.clearTextBoxValues(locatorValue);
+    }
+    await this.page.locator(locatorValue).type(fillValue);
+  };
+
+  // This function is used to fill the "Date" textbox values
+  async fillDateValue(locatorValue: any, fillValue: any) {
+    await this.page.locator(locatorValue).fill(fillValue);
+  };
+
+  // This function is used to click the dropdown and "select the passed value"
+  async selecDropdownOption(role: any, locator: any, optionValue: any) {
+    await this.click(locator);
+    await this.page.getByRole(role, { name: optionValue }).getByText(optionValue, { exact: true }).click();
+  };
+
+  // This function is used to click on the "Save" button
+  async clickSave(locatorValue: string, index: number, messageToVerify?: string) {
+    await this.page.locator(locatorValue).nth(index).click({ delay: 2000 });
+    if (messageToVerify) {
+      let toastMsg = await this.getToastMessage();
+      expect(toastMsg).toEqual(messageToVerify);
+      await this.clickCloseIcon();
+      let spinner = await this.page.locator(this.spinner).isVisible();
+      if (spinner) {
+        await this.waitForSpinnerToDisappear();
+      }
+    }
+  }
+
+  // This function is used to "click on the element"
+  async click(locator: any) {
+    await (await this.page.waitForSelector(locator)).waitForElementState("stable");
+    await this.page.locator(locator).click({ force: true });
+  }
+
+  // This function is used to "click on the element with index"
+  async clickElementWithIndex(locatorValue, index) {
+    await this.page.locator(locatorValue).nth(index).click();
+  }
+
+  // This function is used to filling the multiple textbox values using "for of" loop
+  async fillFieldValues(locators: any, values: any) {
+    for (const locator of locators) {
+      const index = locators.indexOf(locator);
+      await this.fillTextBoxValues(locator, values[index], true);
+      await this.page.waitForTimeout(1000);
+    };
+  }
+
+  // This function is used to click on the "Close" Icon of the toast message
+  async clickCloseIcon() {
+    await (await this.page.waitForSelector(this.toastElements.closeIcon)).waitForElementState("stable");
+    await this.page.locator(this.toastElements.closeIcon).click();
+  }
+
+  // This function returns the "toast message text"
+  async getToastMessage() {
+    return await this.page.locator(this.toastElements.toastMessage).textContent();
+  }
+
+  // This function is used to "copy and paste" the values from the any textbox elements
+  async copyPaste(sourceLocator, destinationLocator) {
+    await this.page.locator(sourceLocator).dblclick();
+    await this.page.locator(sourceLocator).press('Control+C');
+    await this.page.locator(destinationLocator).press('Control+V');
+  }
+
+  // This function is used to "get the text" of any elements
+  async getText(locator) {
+    return await this.page.locator(locator).textContent();
+  }
+
+  //This function is used to check the element is visible or not
+  async isElementVisible(locator: string) {
+    return await this.page.locator(locator).isVisible();
+  }
+
+  // This function is used to "click the element/link"
+  async clickByRole(role, value, shouldWaitForContainer?: boolean) {
+    await this.page.getByRole(role, { name: value, exact: true }).click();
+    if (shouldWaitForContainer) {
+      await this.page.waitForSelector(this.backgroundContainer);
+    }
+    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+  }
+
+  // This function is used to "select the option" from "Auto suggestion"
+  async clickOption(role, value) {
+    await this.page.getByRole(role, { name: value }).getByText(value, { exact: true }).click();
+  }
+
+  // This function is used to "click on the My info sub menus"
+  async clickMenu(role, locator, menuLinkText) {
+    await this.page.waitForSelector(locator);
+    await this.page.getByRole(role, { name: menuLinkText }).click();
+    await (await this.page.waitForSelector(this.backgroundContainer)).waitForElementState("stable");
+    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+  }
+
+  async waitForElement(locator) {
+    await (await this.page.waitForSelector(locator)).waitForElementState("stable");
+  }
+
+  async deleteUsers() {
+    await this.clickMenu("link", homePage.homePageElements.pim, "PIM");
+    await this.click(this.employeeListMenu);
+    await this.fillTextBoxValues(directoryPage.directory.employeeName, "Test User", true);
+    await this.page.locator(directoryPage.directory.search).click();
+    await this.waitForElement(this.tableContainer);
+    await this.page.waitForTimeout(5000);
+    let tableRow = await (this.page.locator(this.row('Test'))).first().isVisible();
+    if (tableRow) {
+      await this.deleteRecords("Test");
+    }
+  }
+
+  async deleteRecords(value) {
+    let rowVisibility = await this.page.locator(this.tableRow).first().isVisible();
+    if (rowVisibility) {
+      let rows = await this.getARow('Test');
+      let rowsCount = await rows.count();
+      for (let i = 0; i < rowsCount; i++) {
+        let get = await this.getARow(value);
+        await get.locator(this.trashPath).first().click();
+        await this.waitForElement(this.attachments.confirmationPopup);
+        await this.click(this.attachments.popupDeleteButton);
+        let toastMsg = await this.getToastMessage();
+        expect(toastMsg).toEqual(Constants.sucessMsg.successfulDeletedMsg);
+        await this.clickCloseIcon();
+        await this.waitForSpinnerToDisappear();
+      }
+    }
+  }
+
+  // This function is used to get the "specific row"
+  async getARow(value) {
+    await this.page.waitForSelector(this.row(value));
+    return this.page.locator(this.row(value));
+  }
+
+  async createUsers(firstName, lastName, userName) {
+    await this.clickMenu("link", homePage.homePageElements.pim, "PIM");
+    await this.click(this.addEmployee);
+    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+    await this.page.waitForTimeout(2000);
+    await this.fillTextBoxValues(this.firstName, firstName, true);
+    await this.fillTextBoxValues(this.lastName, lastName, true);
+    await this.click(this.switch);
+    await this.fillTextBoxValues(this.userName, userName, true);
+    await this.fillTextBoxValues(this.password, "Testuser@12", true);
+    await this.fillTextBoxValues(this.confirmPassword, "Testuser@12", true);
+    await this.clickSave(this.save, 0);
+    await this.clickCloseIcon();
+    await this.waitForElement(this.backgroundContainer);
+    await this.click(this.job);
+    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+    await this.fillDateValue(this.joinedDate, "2023-03-10");
+    await this.selecDropdownOption("option", this.jobTitle, "Software Engineer");
+    await this.selecDropdownOption("option", this.location, "Texas R&D");
+    await this.clickSave(this.save, 0);
+  }
+
+  async updatingUserRole(userName, userRole) {
+    await this.clickMenu("link", homePage.homePageElements.admin, userRole);
+    await this.fillTextBoxValues(this.userName, userName, true);
+    await this.click(this.search);
+    await this.waitForElement(this.row(userName));
+    await this.click(this.editIcon);
+    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+    await this.waitForElement(this.backgroundContainer);
+    await this.selecDropdownOption("option", this.userRole, "Admin");
+    await this.clickSave(this.save, 0);
+    await this.clickCloseIcon();
+  }
+
+  async deleteUsersDuplicate() {
+    await this.clickMenu("link", homePage.homePageElements.pim, "PIM");
+    await this.click(this.employeeListMenu);
+    await this.fillTextBoxValues(directoryPage.directory.employeeName, "Test User", true);
+    await this.click(directoryPage.directory.search);
+    await this.waitForElement(this.tableContainer);
+    await this.page.waitForTimeout(5000);
+    let tableRow = await (await this.getARow('Test')).first().isVisible();
+    console.log("tableRow", tableRow);
+    if (tableRow) {
+      await this.deleteRecords("User1");
+    }
+  }
+
+  async deleteRecordsDuplicate(value) {
+    // await (await this.page.waitForSelector(this.addReview.tableRow)).waitForElementState("stable");
+    let rowVisibility = await this.page.locator(this.tableRow).first().isVisible();
+    console.log("rowVisibility", rowVisibility);
+    if (rowVisibility) {
+      let rows = await this.getARow('User1');
+      console.log("rows", await rows.count());
+      let rowsCount = await rows.count();
+      for (let i = 0; i < rowsCount; i++) {
+        let get = await this.getARow(value);
+        await get.locator(this.trashPath).first().click();
+        await this.waitForElement(this.attachments.confirmationPopup);
+        await this.click(this.attachments.popupDeleteButton);
+        let toastMsg = await this.getToastMessage();
+        expect(toastMsg).toEqual(Constants.sucessMsg.successfulDeletedMsg);
+        await this.clickCloseIcon();
+        await this.waitForSpinnerToDisappear();
+      }
+    }
+  }
+
+  async createUsersDuplicate(firstName, lastName, userName) {
+    await this.clickMenu("link", homePage.homePageElements.pim, "PIM");
+    await this.click(this.addEmployee);
+    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+    // await this.page.waitForTimeout(4000);
+    await this.fillTextBoxValues(this.firstName, firstName, true);
+    await this.fillTextBoxValues(this.lastName, lastName, true);
+    await this.click(this.switch);
+    await this.fillTextBoxValues(this.userName, userName, true);
+    await this.fillTextBoxValues(this.password, "Testuser@12", true);
+    await this.fillTextBoxValues(this.confirmPassword, "Testuser@12", true);
+    // await myInfoPage.click("[type='submit]");
+    await this.clickSave(this.save, 0, Constants.sucessMsg.sucessfulSavedMsg);
+    await this.click(this.job);
+    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+    // await this.page.waitForTimeout(4000);
+    await this.fillDateValue(this.joinedDate, "2023-03-10");
+    await this.selecDropdownOption("option", this.jobTitle, "Software Engineer");
+    await this.selecDropdownOption("option", this.location, "Texas R&D");
+    await this.clickSave(this.save, 0);
+  }
+
+  async updatingUserRoleDuplicate(userName, userRole) {
+    await this.clickMenu("link", homePage.homePageElements.admin, userRole);
+    await this.fillTextBoxValues(this.userName, userName, true);
+    await this.click(this.search);
+    await this.page.waitForTimeout(2000);
+    await this.click(this.editIcon);
+    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+    await this.waitForElement(this.backgroundContainer);
+    await this.selecDropdownOption("option", this.userRole, "Admin");
+    await this.clickSave(this.save, 0, Constants.sucessMsg.successfulUpdatedMsg);
+  }
+}

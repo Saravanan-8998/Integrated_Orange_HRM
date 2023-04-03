@@ -1,0 +1,30 @@
+{
+    "candidate": {
+        "firstName": "Test",
+        "middleName": "User",
+        "lastName": "candidate",
+        "vacancieName": "Test Vaccancy 2",
+        "email": "saravanan@gmail.com",
+        "number": "9999832378",
+        "keywords": "Fast Join",
+        "notes": "Need a good candidate",
+        "filter1Option": "Test Vaccancy 2",
+        "filter2Option": "Application Initiated",
+        "shortListMsg": "User is shortlisted",
+        "scheduleForInterview": "User is scheduled for Interview",
+        "markInterview": "User is scheduled for markInterview",
+        "offerJob": "User is offered Job",
+        "hire": "User is hired"
+    },
+    "vacancy":{
+        "vacancieName": "Test Vaccancy 2",
+        "vacancieRole": "QA Engineer",
+        "vacancieDescription": "This is a sample Vacancie which is developed for testing purposes",
+        "recruiterFirstName": "Ravi kant badola",
+        "recruiterFullName": "Ravi kant badola",
+        "openPosition": "1"
+    },
+    "myLeave": {
+        "leaveType" : "US - FMLA"
+    }
+}

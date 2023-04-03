@@ -1,0 +1,134 @@
+{
+    "Credentials": {
+        "stdUser": "Admin",
+        "password": "admin123"
+    },
+    "Urls": {
+        "login": "/.*login/",
+        "dashboard": "/.*dashboard/"
+    },
+    "TitleVerification": {
+        "loginPageTitle": "OrangeHRM"
+    },
+    "Roles": {
+        "link": "link",
+        "menuItem": "menuitem",
+        "option": "option",
+        "dropdown": "dropdown"
+    },
+    "EmployeeName": {
+        "firstName": "Pon",
+        "middleName": "L",
+        "lastName": "Balan",
+        "nickName": "Agilesh"
+    },
+    "EmployeeIDs": {
+        "employeeId": "10",
+        "otherId": "11",
+        "driverLicenseNumber": "123",
+        "ssnNumber": "110",
+        "sinNumber": "111",
+        "licenseExpiryDate": "2024-01-10"
+    },
+    "EmployeeContactDetails": {
+        "street1": "KLS",
+        "street2": "Mak",
+        "city": "Pol",
+        "state": "TN",
+        "zip": "600097",
+        "home": "7777777771",
+        "mobile": "777777772",
+        "work": "7777777773",
+        "workEmail": "pon@hrm.com",
+        "otherEmail": "ba@hrm.com"
+    },
+    "EmergencyContacts": {
+        "name": "Lin",
+        "relationship": "Father",
+        "homeTelephone": "7246363727",
+        "mobile": "777777777",
+        "workTelephone": "77777776"
+    },
+    "ImmigrationDetails": {
+        "issuedDate": "2023-03-10",
+        "expiryDate": "2023-03-28",
+        "eligibleStatus": "Active",
+        "eligibleReviewDate": "2023-03-28",
+        "comments": "Immigration details has been filled",
+        "number": "1234567"
+    },
+    "WorkExperience": {
+        "company": "AM",
+        "jobTitle": "Software Engineer",
+        "fromDate": "2019-02-23",
+        "toDate": "2025-02-23",
+        "comment": "Filled Work Experience fields"
+    },
+    "Education": {
+        "institute": "STC",
+        "majorOrSpecialization": "BSC",
+        "year": "2015",
+        "gpaScore": "7.2",
+        "startDate": "2012-04-15",
+        "endDate": "2015-04-15"
+    },
+    "Skills": {
+        "yearsOfExperience": "4",
+        "comment": "Filled Skills fields"
+    },
+    "License": {
+        "licenseNumber": "123456",
+        "issuedDate": "2015-04-15",
+        "expiryDate": "2015-05-15"
+    },
+    "AssignedMemberships": {
+        "subscriptionAmount": "42000",
+        "subscriptionCommenceDate": "2023-03-21",
+        "subscriptionRenewalDate": "2023-03-23"
+    },
+    "sucessMsg": {
+        "successfulUpdatedMsg": "Successfully Updated",
+        "successfulDeletedMsg": "Successfully Deleted",
+        "sucessfulSavedMsg": "Successfully Saved",
+        "sucessfulActivatedMsg": "Successfully Activated",
+        "sucessfulSubmittedMsg": "Timesheet Submitted",
+        "germansuccessfulUpdatedMsg": "Aktualisiert"
+    },
+    "others": {
+        "minimizeIconClass": "bi-fullscreen-exit",
+        "maximizeIconClass": "bi-arrows-fullscreen"
+    },
+    "fillText": {
+        "comment": "Text file has been uploaded"
+    },
+    "noRecordsText": "No Records Found",
+    "assertion": {
+        "invalidCredentials": "Invalid credentials",
+        "requiredCredentials": "Required",
+        "success": "Successfully Saved",
+        "totalRecords": "(1) Record Found",
+        "status1": "Status: Shortlisted",
+        "status2": "Status: Rejected",
+        "scheduled": "Status: Interview Scheduled",
+        "markInterview": "Status: Interview Passed",
+        "offerJob": "Status: Job Offered",
+        "hired": "Status: Hired"
+    },
+    "employeeDetails": {
+        "firstName": "Aldrin",
+        "middleName": "F",
+        "lastName": "Kardoze",
+        "employeeId": "999"
+    },
+    "employeeIDs": {
+        "otherId": "666",
+        "driverLicenseNumber": "123",
+        "ssnNumber": "110",
+        "sinNumber": "111"
+    },
+    "popupText": {
+        "text": "The selected record will be permanently deleted. Are you sure you want to continue?",
+        "purge": "You are about to purge selected candidates permanently. Are you sure you want to continue? This operation cannot be undone",
+        "item": "The selected item will be permanently deleted. Are you sure you want to continue?"
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "login" : "/web/index.php/auth/login",
+    "dashboard" : "web/index.php/dashboard/index",
+    "punchIn" : "web/index.php/attendance/punch",
+    "viewCandidates" : "web/index.php/recruitment/viewCandidates",
+    "viewJobVacancy" : "web/index.php/recruitment/viewJobVacancy",
+    "filePath" : "C:/Users/saravanan.s/Documents/OrangeHRM/OranageHRM/sampleUpload/upload.txt",
+    "leave" : "/web/index.php/leave/viewMyLeaveList",
+    "pim" : "/web/index.php/pim/viewEmployeeList",
+    "admin" : "/web/index.php/admin/viewSystemUsers"
+}

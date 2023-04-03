@@ -1,0 +1,19 @@
+{
+  "name": "integrated_orange_hrm",
+  "version": "1.0.0",
+  "description": "It is the complete automated application flow of Trail website Orange HRM",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.32.1"
+  },
+  "dependencies": {
+    "@reportportal/agent-js-playwright": "^5.0.9",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "terminal-image": "^2.0.0"
+  }
+}
