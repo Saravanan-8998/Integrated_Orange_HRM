@@ -2,26 +2,7 @@ import { Page, expect } from "@playwright/test";
 import constants from "../support/constants.json";
 
 export class PIMPage {
-    readonly page: Page;
-    readonly firstName: string;
-    readonly middleName: string;
-    readonly lastName: string;
-    readonly nickName: string;
-    readonly employeeId: string;
-    readonly toastMessage: string;
-    readonly addEmployee: string;
-    readonly closeIcon: string;
-    readonly save: string;
-    readonly addAdmin: any;
-    readonly empName: any;
-    readonly userRole: any;
-    readonly userStatus: any;
-    readonly userName: any;
-    readonly password: any;
-    readonly confirmPassword: any;
-    readonly saveAdmin: any;
-    readonly pageLoc: any;
-    readonly itManagerLoc: any;
+    readonly page: Page; firstName: string; middleName: string; lastName: string; nickName: string; employeeId: string; toastMessage: string; addEmployee: string; closeIcon: string; save: string; addAdmin: any; empName: any; userRole: any; userStatus: any; userName: any; password: any; confirmPassword: any; saveAdmin: any; pageLoc: any; itManagerLoc: any;
 
     constructor(page: Page) {
         this.page = page;

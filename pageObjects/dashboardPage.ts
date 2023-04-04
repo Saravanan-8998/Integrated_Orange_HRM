@@ -1,14 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 export class Dashboard {
-    readonly page: Page;
-    readonly timeAtWorkLoc: any;
-    readonly myActions: any;
-    readonly quickLaunches: any;
-    readonly buzzLatestPosts: any;
-    readonly employeeDistributionBySubUnit: any;
-    readonly employeeDistributionByLocation: any;
-    readonly employeeOnLeaveToday: any;
+    readonly page: Page; timeAtWorkLoc: any; myActions: any; quickLaunches: any; buzzLatestPosts: any; employeeDistributionBySubUnit: any; employeeDistributionByLocation: any; employeeOnLeaveToday: any;
 
     constructor(page: Page) {
         this.page = page;

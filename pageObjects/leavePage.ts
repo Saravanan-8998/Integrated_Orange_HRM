@@ -4,13 +4,7 @@ import constants from "../support/constants.json";
 import { LoginPage } from "./login_Page";
 
 export class Leave {
-
-    readonly page: Page;
-    readonly apply: any;
-    readonly myLeave: any;
-    readonly entitlement: any;
-    readonly leaveList: any;
-    readonly assignLeave: any;
+    readonly page: Page; apply: any; myLeave: any; entitlement: any; leaveList: any; assignLeave: any;
 
     constructor(page: Page) {
         this.page = page;
