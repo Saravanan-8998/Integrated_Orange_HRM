@@ -1,4 +1,5 @@
 import { Page, expect } from "@playwright/test";
+import constants from "../support/constants.json";
 
 export class PIMPage {
     readonly page: Page;
@@ -11,7 +12,6 @@ export class PIMPage {
     readonly addEmployee: string;
     readonly closeIcon: string;
     readonly save: string;
-
     readonly addAdmin: any;
     readonly empName: any;
     readonly userRole: any;
@@ -20,6 +20,8 @@ export class PIMPage {
     readonly password: any;
     readonly confirmPassword: any;
     readonly saveAdmin: any;
+    readonly pageLoc: any;
+    readonly itManagerLoc: any;
 
     constructor(page: Page) {
         this.page = page;
@@ -40,52 +42,67 @@ export class PIMPage {
         this.password = `(//input[@type='password'])[1]`;
         this.confirmPassword = `(//input[@type='password'])[2]`;
         this.saveAdmin = `//button[@type='submit']`;
+        this.pageLoc = {
+            addEmp: `(//input[@placeholder='Type for hints...'])[1]`,
+            searchBtn: `//button[text()=' Search ']`,
+            recordList: `(//span[@class='oxd-text oxd-text--span'])[1]`,
+        }
+        this.itManagerLoc = {
+            pencilFill: `//i[@class='oxd-icon bi-pencil-fill']`,
+            jobSearch: `//a[contains(text(),'Job')]`,
+            input1: `(//div[@class='oxd-select-text-input'])[1]`,
+            input2: `(//div[@class='oxd-select-text-input'])[2]`,
+            input3: `(//div[@class='oxd-select-text-input'])[3]`,
+            submit: `//button[@type='submit']`,
+            clickAdd : `.orangehrm-background-container`,
+            logoutLoc : `oxd-userdropdown-name`
+        }
     }
 
-    async addEmpToAdmin(fullName : any) {
+    async addEmpToAdmin(fullName: any) {
         await this.page.locator(this.addAdmin).click();
         await this.page.locator(this.userRole).click();
-        await this.page.getByRole('option', { name: 'Admin' }).getByText('Admin', { exact: true }).click();
+        await this.page.getByRole('option', { name: constants.mainPO.Admin }).getByText(constants.mainPO.Admin, { exact: true }).click();
         await this.page.locator(this.empName).fill(fullName);
         await this.page.getByRole('option', { name: fullName }).getByText(fullName, { exact: true }).click();
         await this.page.locator(this.userStatus).click();
-        await this.page.getByRole('option', { name: 'Enabled' }).getByText('Enabled', { exact: true }).click();
+        await this.page.getByRole('option', { name: constants.mainPO.Enabled }).getByText(constants.mainPO.Enabled, { exact: true }).click();
         await this.page.locator(this.userName).clear();
         await this.page.locator(this.userName).fill(fullName);
-        await this.page.locator(this.password).fill('Admin@123');
-        await this.page.locator(this.confirmPassword).fill('Admin@123');
+        await this.page.locator(this.password).fill(constants.Credentials.newUser);
+        await this.page.locator(this.confirmPassword).fill(constants.Credentials.newUser);
         await this.page.waitForTimeout(5000);
         await this.page.locator(this.saveAdmin).click();
         await this.page.waitForTimeout(5000);
     }
 
-    async addEmpToITManager(username : any){
-        await this.page.locator(`(//input[@placeholder='Type for hints...'])[1]`).fill(username)
+    async addEmpToITManager(username: any) {
+        await this.page.locator(this.pageLoc.addEmp).fill(username)
         await this.page.getByRole('option', { name: username }).getByText(username, { exact: true }).click();
-        await this.page.locator(`//button[text()=' Search ']`).click();
-        let records = await this.page.locator(`(//span[@class='oxd-text oxd-text--span'])[1]`).textContent();
+        await this.page.locator(this.pageLoc.searchBtn).click();
+        let records = await this.page.locator(this.pageLoc.recordList).textContent();
         await this.page.waitForTimeout(3000);
-        if(records == '(1) Record Found'){
+        if (records == constants.leaveModule.verifyMyTitleEntitlement) {
             await this.itManager();
         }
     }
 
-    async itManager(){
-        await this.page.locator(`//i[@class='oxd-icon bi-pencil-fill']`).click();
-        await this.page.locator(`//a[contains(text(),'Job')]`).click();
-        await this.page.locator(`(//div[@class='oxd-select-text-input'])[1]`).click();
-        await this.page.getByRole('option', { name: 'IT Manager' }).getByText('IT Manager', { exact: true }).click();
-        await this.page.locator(`(//div[@class='oxd-select-text-input'])[2]`).click();
-        await this.page.getByRole('option', { name: 'Officials and Managers' }).getByText('Officials and Managers', { exact: true }).click();
-        await this.page.locator(`(//div[@class='oxd-select-text-input'])[3]`).click();
-        await this.page.getByRole('option', { name: 'Development' }).getByText('Development', { exact: true }).click();
-        await this.page.locator(`//button[@type='submit']`).click();
+    async itManager() {
+        await this.page.locator(this.itManagerLoc.pencilFill).click();
+        await this.page.locator(this.itManagerLoc.jobSearch).click();
+        await this.page.locator(this.itManagerLoc.input1).click();
+        await this.page.getByRole('option', { name: constants.mainPO.ITManager }).getByText(constants.mainPO.ITManager, { exact: true }).click();
+        await this.page.locator(this.itManagerLoc.input2).click();
+        await this.page.getByRole('option', { name: constants.mainPO.OfficialsAndManagers }).getByText(constants.mainPO.OfficialsAndManagers, { exact: true }).click();
+        await this.page.locator(this.itManagerLoc.input3).click();
+        await this.page.getByRole('option', { name: constants.mainPO.Development }).getByText(constants.mainPO.Development, { exact: true }).click();
+        await this.page.locator(this.itManagerLoc.submit).click();
         await this.page.waitForTimeout(3000);
     }
 
-    async logout(){
-        await this.page.locator(`oxd-userdropdown-name`).click();
-        await this.page.getByRole('option', { name: 'Logout' }).getByText('Logout', { exact: true }).click();
+    async logout() {
+        await this.page.locator(this.itManagerLoc.logoutLoc).click();
+        await this.page.getByRole('option', { name: constants.mainPO.Logout }).getByText(constants.mainPO.Logout, { exact: true }).click();
         await this.page.waitForTimeout(5000);
     }
 
@@ -115,8 +132,8 @@ export class PIMPage {
 
     async clickAddEmployeeMenu() {
         await this.page.waitForSelector(this.addEmployee);
-        await this.page.getByRole('link', { name: 'Add Employee' }).click();
-        await this.page.waitForSelector(`.orangehrm-background-container`);
+        await this.page.getByRole('link', { name: constants.mainPO.AddEmployee }).click();
+        await this.page.waitForSelector(this.itManagerLoc.clickAdd);
         await this.page.waitForTimeout(5000);
     };
 
@@ -127,14 +144,5 @@ export class PIMPage {
             await this.fillTextBoxValues(locator, values[index]);
             await this.page.waitForTimeout(3000);
         };
-    }
-
-    async delete(){
-        await this.page.locator(`(//i[contains(@class,'oxd-icon bi-check')])[1]`).click();
-        await this.page.waitForTimeout(2000);
-        await this.page.locator(`//button[text()=' Delete Selected ']`).click();
-        await this.page.waitForTimeout(2000);
-        await this.page.locator(`//button[text()=' Yes, Delete ']`).click();
-        await this.page.waitForTimeout(3000);
     }
 }

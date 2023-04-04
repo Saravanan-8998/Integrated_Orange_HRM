@@ -1,10 +1,9 @@
 import { expect, Locator, Page } from "@playwright/test";
 import subURL from "../support/subURL.json";
-import testData from "../support/testDate.json";
 import constants from "../support/constants.json";
 
 export class Recruitment {
-    readonly page: Page; candidates: any; vacancies: any; toastMessage: any; submit: any; shortlistLocators: any; rejectLocators: any; recruitmentNavigation: any;
+    readonly page: Page; candidates: any; vacancies: any; toastMessage: any; submit: any; shortlistLocators: any; rejectLocators: any; recruitmentNavigation: any; otherLoc: any;
     vacancyName: any = '';
     middleName: any = '';
 
@@ -54,15 +53,26 @@ export class Recruitment {
             textArea: `//textarea[@placeholder='Type here']`,
             status: `.orangehrm-recruitment-status`,
         }
+        this.otherLoc = {
+            scheduleInterview: `//button[text()=' Schedule Interview ']`,
+            interviewTitle: `(//label[text()='Interview Title']/following::input)[1]`,
+            inputUser: `//input[@placeholder='Type for hints...']`,
+            dateFill: `(//label[text()='Date']/following::input)[1]`,
+            timeFill: `//label[text()='Time']/following::input`,
+            marketInterview: `//button[text()=' Mark Interview Passed ']`,
+            offerJobLoc: `//button[text()=' Offer Job ']`,
+            hireLoc: `//button[text()=' Hire ']`
+        }
         this.recruitmentNavigation = `//span[text()='Recruitment']`;
         this.toastMessage = 'p.oxd-text--toast-message';
         this.submit = `//button[@type='submit']`;
+
     }
 
     async vacancyNameAutoGenerate() {
         if (this.vacancyName === '') {
             let num = Math.floor(Math.random() * 3 + 919);
-            this.vacancyName = 'Test Vacancy ' + num.toString();
+            this.vacancyName = constants.recruitmentPO.vacancyName + num.toString();
             return this.vacancyName;
         } else {
             return this.vacancyName;
@@ -72,7 +82,7 @@ export class Recruitment {
     async autoGenerateFName() {
         if (this.middleName === '') {
             let num = Math.floor(Math.random() * 3 + 255);
-            this.middleName = 'Test' + num.toString();
+            this.middleName = constants.recruitmentPO.Test + num.toString();
             return this.middleName;
         } else {
             return this.middleName;
@@ -92,7 +102,7 @@ export class Recruitment {
     async autoGenerateLName() {
         if (this.middleName === '') {
             let num = Math.floor(Math.random() * 3 + 559);
-            this.middleName = 'Last' + num.toString();
+            this.middleName = constants.recruitmentPO.Last + num.toString();
             return this.middleName;
         } else {
             return this.middleName;
@@ -133,11 +143,11 @@ export class Recruitment {
         await this.page.locator(this.vacancies.addANewVacancie).click();
         await this.page.locator(this.vacancies.vacancieName).fill(await this.vacancyNameAutoGenerate());
         await this.page.locator(this.vacancies.vacancieRole).click();
-        await this.page.getByRole('option', { name: testData.vacancy.vacancieRole }).getByText(testData.vacancy.vacancieRole, { exact: true }).click();
-        await this.page.locator(this.vacancies.vacancieDescription).type(testData.vacancy.vacancieDescription);
+        await this.page.getByRole('option', { name: constants.vacancy.vacancieRole }).getByText(constants.vacancy.vacancieRole, { exact: true }).click();
+        await this.page.locator(this.vacancies.vacancieDescription).type(constants.vacancy.vacancieDescription);
         await this.page.locator(this.vacancies.recruiter).fill(username);
         await this.page.getByRole('option', { name: username }).getByText(username, { exact: true }).click();
-        await this.page.locator(this.vacancies.totalOpenings).fill('10');
+        await this.page.locator(this.vacancies.totalOpenings).fill(constants.recruitmentPO.addVacancy);
         await this.page.locator(this.submit).click();
     }
 
@@ -159,7 +169,7 @@ export class Recruitment {
     async editAVacancy() {
         await this.searchVacancie();
         await this.page.locator(this.vacancies.editIcon).click();
-        await this.page.locator(this.vacancies.editOpenings).fill('5');
+        await this.page.locator(this.vacancies.editOpenings).fill(constants.recruitmentPO.changeVacancy);
         await this.page.locator(this.submit).click();
     }
 
@@ -177,11 +187,11 @@ export class Recruitment {
         await this.page.locator(this.candidates.lastName).fill(await this.autoGenerateLName());
         await this.page.locator(this.candidates.vaccancy).click();
         await this.page.getByRole('option', { name: await this.vacancyNameAutoGenerate() }).getByText(await this.vacancyNameAutoGenerate(), { exact: true }).click();
-        await this.page.locator(this.candidates.email).fill(testData.candidate.email);
-        await this.page.locator(this.candidates.contactNumber).fill(testData.candidate.number);
+        await this.page.locator(this.candidates.email).fill(constants.candidate.email);
+        await this.page.locator(this.candidates.contactNumber).fill(constants.candidate.number);
         await this.uploadFile();
-        await this.page.locator(this.candidates.keywords).fill(testData.candidate.keywords);
-        await this.page.locator(this.candidates.notes).fill(testData.candidate.notes);
+        await this.page.locator(this.candidates.keywords).fill(constants.candidate.keywords);
+        await this.page.locator(this.candidates.notes).fill(constants.candidate.notes);
     }
 
     async searchCandidate() {
@@ -200,7 +210,7 @@ export class Recruitment {
     async shortlist() {
         await this.page.locator(this.shortlistLocators.viewCandidate).click();
         await this.page.locator(this.shortlistLocators.shortListACandidate).click();
-        await this.page.locator(this.shortlistLocators.textArea).type(testData.candidate.shortListMsg);
+        await this.page.locator(this.shortlistLocators.textArea).type(constants.candidate.shortListMsg);
         await this.page.locator(this.submit).click();
         await this.page.waitForTimeout(3000);
         let status = await this.page.locator(this.shortlistLocators.status).textContent();
@@ -209,21 +219,21 @@ export class Recruitment {
 
     async autoGenerateTitle() {
         let num = Math.floor(Math.random() * 2 + 9);
-        let interviewTitle = 'Autogenerate Title ' + num.toString();
+        let interviewTitle = constants.recruitmentPO.autogenerateTitle + num.toString();
         return interviewTitle;
     }
 
-    async interviewSchedule(username: any){
+    async interviewSchedule(username: any) {
         await this.page.locator(this.shortlistLocators.viewCandidate).click();
-        await this.page.locator(`//button[text()=' Schedule Interview ']`).click();
-        await this.page.locator(`(//label[text()='Interview Title']/following::input)[1]`).fill(await this.autoGenerateTitle());
-        await this.page.locator(`//input[@placeholder='Type for hints...']`).fill(username);
+        await this.page.locator(this.otherLoc.scheduleInterview).click();
+        await this.page.locator(this.otherLoc.interviewTitle).fill(await this.autoGenerateTitle());
+        await this.page.locator(this.otherLoc.inputUser).fill(username);
         await this.page.getByRole('option', { name: username }).getByText(username, { exact: true }).click();
-        await this.page.locator(`(//label[text()='Date']/following::input)[1]`).clear();
-        await this.page.locator(`(//label[text()='Date']/following::input)[1]`).type('2023-08-12');
-        await this.page.locator(`//label[text()='Time']/following::input`).clear()
-        await this.page.locator(`//label[text()='Time']/following::input`).type('09:00 AM')
-        await this.page.locator(this.shortlistLocators.textArea).type(testData.candidate.scheduleForInterview);
+        await this.page.locator(this.otherLoc.dateFill).clear();
+        await this.page.locator(this.otherLoc.dateFill).type(constants.recruitmentPO.date);
+        await this.page.locator(this.otherLoc.timeFill).clear()
+        await this.page.locator(this.otherLoc.timeFill).type(constants.recruitmentPO.time)
+        await this.page.locator(this.shortlistLocators.textArea).type(constants.candidate.scheduleForInterview);
         await this.page.locator(this.submit).click();
         await this.page.waitForTimeout(3000);
     }
@@ -231,7 +241,7 @@ export class Recruitment {
     async scheduleForInterview(username: any) {
         await this.searchCandidate();
         let totalRecords = await this.page.locator(this.candidates.totalRecordsList).textContent();
-        if (totalRecords == '(1) Record Found') {
+        if (totalRecords == constants.recruitmentPO.totalRecords) {
             await this.interviewSchedule(username);
         }
     }
@@ -239,10 +249,10 @@ export class Recruitment {
     async markInterview() {
         await this.searchCandidate();
         let totalRecords = await this.page.locator(this.candidates.totalRecordsList).textContent();
-        if (totalRecords == '(1) Record Found') {
+        if (totalRecords == constants.recruitmentPO.totalRecords) {
             await this.page.locator(this.shortlistLocators.viewCandidate).click();
-            await this.page.locator(`//button[text()=' Mark Interview Passed ']`).click();
-            await this.page.locator(this.shortlistLocators.textArea).type(testData.candidate.markInterview);
+            await this.page.locator(this.otherLoc.marketInterview).click();
+            await this.page.locator(this.shortlistLocators.textArea).type(constants.candidate.markInterview);
             await this.page.locator(this.submit).click();
             await this.page.waitForTimeout(3000);
         }
@@ -251,10 +261,10 @@ export class Recruitment {
     async offerJob() {
         await this.searchCandidate();
         let totalRecords = await this.page.locator(this.candidates.totalRecordsList).textContent();
-        if (totalRecords == '(1) Record Found') {
+        if (totalRecords == constants.recruitmentPO.totalRecords) {
             await this.page.locator(this.shortlistLocators.viewCandidate).click();
-            await this.page.locator(`//button[text()=' Offer Job ']`).click();
-            await this.page.locator(this.shortlistLocators.textArea).type(testData.candidate.offerJob);
+            await this.page.locator(this.otherLoc.offerJobLoc).click();
+            await this.page.locator(this.shortlistLocators.textArea).type(constants.candidate.offerJob);
             await this.page.locator(this.submit).click();
             await this.page.waitForTimeout(3000);
         }
@@ -263,10 +273,10 @@ export class Recruitment {
     async hire() {
         await this.searchCandidate();
         let totalRecords = await this.page.locator(this.candidates.totalRecordsList).textContent();
-        if (totalRecords == '(1) Record Found') {
+        if (totalRecords == constants.recruitmentPO.totalRecords) {
             await this.page.locator(this.shortlistLocators.viewCandidate).click();
-            await this.page.locator(`//button[text()=' Hire ']`).click();
-            await this.page.locator(this.shortlistLocators.textArea).type(testData.candidate.hire);
+            await this.page.locator(this.otherLoc.hireLoc).click();
+            await this.page.locator(this.shortlistLocators.textArea).type(constants.candidate.hire);
             await this.page.locator(this.submit).click();
             await this.page.waitForTimeout(3000);
         }

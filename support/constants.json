@@ -305,5 +305,60 @@
             "germanlanguage": "English (United States)",
             "germandateFormat": ""
         }
+    },
+    "leaveModule": {
+        "addEntitlement": "10",
+        "verifyMyTitleEntitlement": "(1) Record Found",
+        "applyLeaveDate": "2023-04-12",
+        "comments": "Testing leave apply module",
+        "addLeaveComments": "Testing for leave list"
+    },
+    "mainPO": {
+        "Admin": "Admin",
+        "Enabled": "Enabled",
+        "ITManager": "IT Manager",
+        "OfficialsAndManagers": "Officials and Managers",
+        "Development": "Development",
+        "Logout": "Logout",
+        "AddEmployee": "Add Employee"
+    },
+    "recruitmentPO": {
+        "addVacancy": "10",
+        "changeVacancy": "5",
+        "date": "2023-08-12",
+        "time": "09:00 AM",
+        "totalRecords": "(1) Record Found",
+        "autogenerateTitle": "Autogenerate Title ",
+        "vacancyName": "Test Vacancy ",
+        "Test": "Test",
+        "Last": "Last"
+    },
+    "candidate": {
+        "firstName": "Test",
+        "middleName": "User",
+        "lastName": "candidate",
+        "vacancieName": "Test Vaccancy 2",
+        "email": "saravanan@gmail.com",
+        "number": "9999832378",
+        "keywords": "Fast Join",
+        "notes": "Need a good candidate",
+        "filter1Option": "Test Vaccancy 2",
+        "filter2Option": "Application Initiated",
+        "shortListMsg": "User is shortlisted",
+        "scheduleForInterview": "User is scheduled for Interview",
+        "markInterview": "User is scheduled for markInterview",
+        "offerJob": "User is offered Job",
+        "hire": "User is hired"
+    },
+    "vacancy": {
+        "vacancieName": "Test Vaccancy 2",
+        "vacancieRole": "QA Engineer",
+        "vacancieDescription": "This is a sample Vacancie which is developed for testing purposes",
+        "recruiterFirstName": "Ravi kant badola",
+        "recruiterFullName": "Ravi kant badola",
+        "openPosition": "1"
+    },
+    "myLeave": {
+        "leaveType": "US - FMLA"
     }
 }
