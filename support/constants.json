@@ -54,6 +54,12 @@
         "lastName": "Balan",
         "nickName": "Agilesh"
     },
+    "employeeDetails": {
+        "firstName": "Aldrin",
+        "middleName": "F",
+        "lastName": "Kardoze",
+        "employeeId": "999"
+    },
     "EmployeeIDs": {
         "employeeId": "10",
         "otherId": "11",
