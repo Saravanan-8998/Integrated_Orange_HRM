@@ -40,6 +40,7 @@ export class PIMPage {
         }
     }
 
+    // A function used to add Employee to admin
     async addEmpToAdmin(fullName: any) {
         await this.page.locator(this.addAdmin).click();
         await this.page.locator(this.userRole).click();
@@ -57,6 +58,7 @@ export class PIMPage {
         await this.page.waitForTimeout(5000);
     }
 
+    // A function used to add employee to IT manager
     async addEmpToITManager(username: any) {
         await this.page.locator(this.pageLoc.addEmp).fill(username)
         await this.page.getByRole('option', { name: username }).getByText(username, { exact: true }).click();
@@ -68,6 +70,7 @@ export class PIMPage {
         }
     }
 
+    // A function used to convert into IT Manager
     async itManager() {
         await this.page.locator(this.itManagerLoc.pencilFill).click();
         await this.page.locator(this.itManagerLoc.jobSearch).click();
@@ -81,36 +84,43 @@ export class PIMPage {
         await this.page.waitForTimeout(3000);
     }
 
+    // A function used to logout from home page
     async logout() {
         await this.page.locator(this.itManagerLoc.logoutLoc).click();
         await this.page.getByRole('option', { name: constants.mainPO.Logout }).getByText(constants.mainPO.Logout, { exact: true }).click();
         await this.page.waitForTimeout(5000);
     }
 
+    // A function used to clear all the text box values
     async clearTextBoxValues(locatorValue: any) {
         await this.page.locator(locatorValue).fill('');
         await this.page.waitForTimeout(1000);
     };
 
+    // A function used to fill the text box values
     async fillTextBoxValues(locatorValue: any, fillValue: any) {
         await (await this.page.waitForSelector(locatorValue)).waitForElementState("stable");
         await this.page.locator(locatorValue).type(fillValue);
     };
 
+    // A function used to click save
     async clickSave(locatorValue: string, index: number, messageToVerify?: string) {
         await this.page.locator(locatorValue).nth(index).click();
         expect(await this.getToastMessage()).toEqual(messageToVerify);
         await this.clickCloseIcon();
     }
 
+    // A function used to get the toast message
     async getToastMessage() {
         return await this.page.locator(this.toastMessage).textContent();
     }
 
+    // A function used to click close icon
     async clickCloseIcon() {
         await this.page.locator(this.closeIcon).click();
     }
 
+    // A function used to click add employee menu
     async clickAddEmployeeMenu() {
         await this.page.waitForSelector(this.addEmployee);
         await this.page.getByRole('link', { name: constants.mainPO.AddEmployee }).click();
@@ -118,6 +128,7 @@ export class PIMPage {
         await this.page.waitForTimeout(5000);
     };
 
+    // A function used to fill fields values
     async fillFieldValues(namesLocators: any, values: any) {
         for (const locator of namesLocators) {
             await this.clearTextBoxValues(locator);

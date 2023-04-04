@@ -59,12 +59,14 @@ export class Dashboard {
         }
     }
 
+    // A function used to verify all the components in employee leave today
     async verifyEmployeeLeaveTodayComponents() {
         await (await this.page.waitForSelector(this.employeeOnLeaveToday.employeeOnLeaveTodayTitle)).isVisible();
         await (await this.page.waitForSelector(this.employeeOnLeaveToday.settingIcon)).isVisible();
         await (await this.page.waitForSelector(this.employeeOnLeaveToday.noLeaveMsg)).isVisible();
     }
 
+    // A function used to verify all the components in the leave today settings
     async verifyEmployeeLeaveTodaySettingsComponents() {
         await this.leaveSettings();
         await (await this.page.waitForSelector(this.employeeOnLeaveToday.popupBody)).isVisible();
@@ -76,31 +78,37 @@ export class Dashboard {
         await (await this.page.waitForSelector(this.employeeOnLeaveToday.closeBtn)).isVisible();
     }
 
+    // A function used to add a leave settings
     async leaveSettings() {
         await this.page.reload();
         await (await this.page.waitForSelector(this.employeeOnLeaveToday.settingIcon)).click();
     }
 
+    // A function used to toggle
     async toggle() {
         await this.leaveSettings();
         await this.page.locator(this.employeeOnLeaveToday.toggleBtn).click();
     }
 
+    // A function used to cancel
     async cancel() {
         await this.leaveSettings();
         await this.page.locator(this.employeeOnLeaveToday.cancelBtn).click();
     }
 
+    // A function used to save
     async save() {
         await this.leaveSettings();
         await this.page.locator(this.employeeOnLeaveToday.saveBtn).click();
     }
 
+    // A function used to close
     async close() {
         await this.leaveSettings();
         await this.page.locator(this.employeeOnLeaveToday.closeBtn).click();
     }
 
+    // A function used to verify the components in verify time at work components
     async verifyTimeAtWorkComponents() {
         await (await this.page.waitForSelector(this.timeAtWorkLoc.timeAtWorkTitle)).isVisible();
         await (await this.page.waitForSelector(this.timeAtWorkLoc.timeFormat)).isVisible();
@@ -110,31 +118,37 @@ export class Dashboard {
         await (await this.page.waitForSelector(this.timeAtWorkLoc.empTimeChart)).isVisible();
     }
 
+    // A function used to timer click
     async timerClick() {
         await this.page.locator(this.timeAtWorkLoc.timeBtn).click();
     }
 
+    // A function used to verify the my actions components
     async verifyMyActionsComponents() {
         await (await this.page.waitForSelector(this.myActions.myActionsTitle)).isVisible();
         await (await this.page.waitForSelector(this.myActions.leaveRequest)).isVisible();
         await (await this.page.waitForSelector(this.myActions.timeSheet)).isVisible();
     }
 
+    // A function used to leave a request
     async leaveRequestClick() {
         await this.page.locator(this.myActions.leaveRequest).click();
         await this.page.waitForTimeout(5000);
     }
 
+    // A function used to click a time sheet
     async timeSheetClick() {
         await this.page.waitForTimeout(4000);
         await this.page.locator(this.myActions.timeSheet).click();
     }
 
+    // A function used to click a interview
     async interviewClick() {
         await this.page.waitForTimeout(4000);
         await this.page.locator(this.myActions.interview).click();
     }
 
+    // A function used to verify components in the quick launches
     async verifyQuickLaunchesComponents() {
         await (await this.page.waitForSelector(this.quickLaunches.quickLaunchesTitle)).isVisible();
         await (await this.page.waitForSelector(this.quickLaunches.assignLeave)).isVisible();
@@ -145,47 +159,58 @@ export class Dashboard {
         await (await this.page.waitForSelector(this.quickLaunches.myTimesheet)).isVisible();
     }
 
+    // A function used to click assign leave
     async assignLeaveClick() {
         await this.page.locator(this.quickLaunches.assignLeave).click();
     }
 
+    // A function used to click list
     async leaveListClick() {
         await this.page.locator(this.quickLaunches.leaveList).click();
     }
 
+    // A function used to click timesheet
     async timesheetClick() {
         await this.page.locator(this.quickLaunches.timesheet).click();
     }
 
+    // A function used to click apply leave
     async applyLeaveClick() {
         await this.page.locator(this.quickLaunches.applyLeave).click();
     }
 
+    // A function used to click my leave
     async myLeaveClick() {
         await this.page.locator(this.quickLaunches.myLeave).click();
     }
 
+    // A function used to click my timesheet
     async myTimesheetClick() {
         await this.page.locator(this.quickLaunches.myTimesheet).click();
     }
 
+    // A function used to verify buzz latest post components
     async verifyBuzzLatestPostsComponents() {
         await (await this.page.waitForSelector(this.buzzLatestPosts.buzzLatestPostsTitle)).isVisible();
         await (await this.page.waitForSelector(this.buzzLatestPosts.mainDiv)).isVisible();
     }
 
+    // A function used to click check sub div
     async checkSubDiv() {
         await this.page.locator(this.buzzLatestPosts.subDiv).count();
     }
 
+    // A function used to verify verify components employee distribution by location
     async verifyEmployeeDistributionByLocationComponents() {
         await (await this.page.waitForSelector(this.employeeDistributionByLocation.employeeDistributionByLocationTitle)).isVisible();
     }
 
+    // A function used to verify components employee distribution by sub unit
     async verifyEmployeeDistributionBySubUnitComponents() {
         await (await this.page.waitForSelector(this.employeeDistributionBySubUnit.employeeDistributionBySubUnitTitle)).isVisible();
     }
 
+    // A function used to count the total list
     async totolList() {
         await this.page.locator(this.employeeDistributionByLocation.allList).count();
     }

@@ -58,16 +58,19 @@ export class Leave {
         }
     }
 
+    // A function used to navigate to leave module
     async navigate() {
         await this.page.locator(this.apply.mainLeave).click();
     }
 
+    // A function used to goto entitlement
     async gotoEntitlement(username: any) {
         await this.page.locator(this.entitlement.entitlement).click();
         await this.page.locator(this.entitlement.addEntitlement).click();
         await this.page.locator(this.entitlement.empName).fill(username);
     }
 
+    // A function used to add a entitlement data
     async addEntitlementData(username: any) {
         await this.page.getByRole('option', { name: username }).getByText(username, { exact: true }).click();
         await this.page.locator(this.entitlement.leaveType).click();
@@ -75,6 +78,7 @@ export class Leave {
         await this.page.locator(this.entitlement.leaveEntitlement).fill(constants.leaveModule.addEntitlement);
     }
 
+    // A function used to save a entitlement
     async saveEntitlement() {
         await this.page.locator(this.entitlement.submit).click();
         await this.page.waitForTimeout(6000);
@@ -82,40 +86,47 @@ export class Leave {
         await this.page.locator(this.entitlement.confirmEntitlement).click();
     }
 
+    // A function used to goto my leave entitlement
     async gotoMyLeaveEntitlement() {
         await this.page.locator(this.entitlement.entitlement).click();
         await this.page.locator(this.entitlement.myEntitlement).click();
         await this.page.locator(this.entitlement.leaveType).click();
     }
 
+    // A function used to verify my leave entitlement
     async verifyMyLeaveEntitlement() {
         await this.page.getByRole('option', { name: constants.myLeave.leaveType }).getByText(constants.myLeave.leaveType, { exact: true }).click();
         await this.page.locator(this.entitlement.search).click();
         await this.verifymyLeaveEntitlement();
     }
 
+    // A function used to goto my leave entitlement page
     async gotoMyLeaveEntitlementPage(username: any) {
         await this.page.locator(this.entitlement.entitlement).click();
         await this.page.locator(this.entitlement.myLeaveEntitlement).click();
         await this.page.locator(this.entitlement.empName).fill(username);
     }
 
+    // A function used to verify my leave entitlement page
     async verifyMyLeaveEntitlementPage(username: any) {
         await this.page.getByRole('option', { name: username }).getByText(username, { exact: true }).click();
         await this.page.locator(this.entitlement.search).click();
         await this.verifymyLeaveEntitlement();
     }
 
+    // A function used to verify my leave entitlement
     async verifymyLeaveEntitlement() {
         let records = await this.page.locator(this.entitlement.totolRecords).textContent();
         expect(records).toBe(constants.leaveModule.verifyMyTitleEntitlement);
     }
 
+    // A function used to goto apply leave module
     async gotoApplyLeave() {
         await this.page.locator(this.apply.apply).click();
         await this.page.locator(this.apply.leaveType).click();
     }
 
+    // A function used to fill apply leave data
     async fillApplyLeaveData() {
         await this.page.getByRole('option', { name: constants.myLeave.leaveType }).getByText(constants.myLeave.leaveType, { exact: true }).click();
         await this.page.locator(this.apply.fromDate).clear();
@@ -125,11 +136,13 @@ export class Leave {
         await this.page.locator(this.apply.comments).fill(constants.leaveModule.comments);
     }
 
+    // A function used to save applied leave data
     async saveAppliedLeaveData() {
         await this.page.locator(this.apply.submit).click();
         await this.page.waitForTimeout(7000);
     }
 
+    // A function used to goto my leave list
     async gotoMyLeaveList() {
         await this.navigate();
         await this.page.locator(this.myLeave.myLeave).click();
@@ -137,6 +150,7 @@ export class Leave {
         await this.page.getByRole('option', { name: constants.myLeave.leaveType }).getByText(constants.myLeave.leaveType, { exact: true }).click();
     }
 
+    // A function used to verify my leave list
     async verifyMyleaveList() {
         await this.page.locator(this.myLeave.submit).click();
         await this.page.waitForTimeout(4000);
@@ -144,6 +158,7 @@ export class Leave {
         expect(records).toBe(constants.leaveModule.verifyMyTitleEntitlement);
     }
 
+    // A function used to goto search leave list page
     async gotoSearchLeaveList() {
         let loginPage: LoginPage;
         loginPage = new LoginPage(this.page);
@@ -153,6 +168,7 @@ export class Leave {
         await this.navigate();
     }
 
+    // A function used to submit assignment
     async submitAssignLeave(username: any) {
         await this.page.locator(this.leaveList.leaveList).click();
         await this.page.waitForTimeout(3000);
@@ -162,6 +178,7 @@ export class Leave {
         await this.page.waitForTimeout(4000);
     }
 
+    // A function used to approve a leave
     async approveLeave() {
         let records = await this.page.locator(this.leaveList.leaveListTotalRecords).textContent();
         expect(records).toBe(constants.leaveModule.verifyMyTitleEntitlement);
@@ -170,6 +187,7 @@ export class Leave {
         await this.page.locator(this.assignLeave.approveLeave).click();
     }
 
+    // A function used to add a leave comments
     async addLeaveComments() {
         await this.page.locator(this.leaveList.threeDots).click();
         await this.page.locator(this.leaveList.viewLeaveDetails).click();

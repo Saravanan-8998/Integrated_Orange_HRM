@@ -69,6 +69,7 @@ export class Recruitment {
 
     }
 
+    // A function used to generate auto generate vacancy name
     async vacancyNameAutoGenerate() {
         if (this.vacancyName === '') {
             let num = Math.floor(Math.random() * 3 + 919);
@@ -79,6 +80,7 @@ export class Recruitment {
         }
     }
 
+    // A function used to generate auto generate first name
     async autoGenerateFName() {
         if (this.middleName === '') {
             let num = Math.floor(Math.random() * 3 + 255);
@@ -89,6 +91,7 @@ export class Recruitment {
         }
     }
 
+    // A function used to generate auto generate Middle name
     async autoGenerateMName() {
         if (this.middleName === '') {
             let num = Math.floor(Math.random() * 3 + 435);
@@ -99,6 +102,7 @@ export class Recruitment {
         }
     }
 
+    // A function used to generate auto generate last name
     async autoGenerateLName() {
         if (this.middleName === '') {
             let num = Math.floor(Math.random() * 3 + 559);
@@ -109,24 +113,29 @@ export class Recruitment {
         }
     }
 
+    // A function used to navigate to recruitment page
     async navigate() {
         await this.page.locator(this.recruitmentNavigation).click();
     }
 
+    // A function used to click candidates
     async clickCandidates() {
         await this.page.locator(this.candidates.candidatesTab).click();
     }
 
+    // A function used to click vacancies
     async clickVacancies() {
         await this.page.locator(this.candidates.vacanciesTab).click();
     }
 
+    // A function used to upload a file
     async uploadFile() {
         const fileInput: any = await this.page.$(this.candidates.resume);
         const filePath = subURL.filePath;
         await fileInput.setInputFiles(filePath);
     }
 
+    // A function used to save the records
     async clickSave(messageToVerify?: string) {
         await this.page.locator(this.submit).click({ force: true });
         if (messageToVerify) {
@@ -134,10 +143,12 @@ export class Recruitment {
         }
     }
 
+    // A function used to get the toast message
     async getToastMessage() {
         return await this.page.locator(this.toastMessage).textContent();
     }
 
+    // A function used to add a new vacancy
     async addNewVacancie(username: any) {
         await this.page.locator(this.vacancies.vacanciesTab).click();
         await this.page.locator(this.vacancies.addANewVacancie).click();
@@ -151,6 +162,7 @@ export class Recruitment {
         await this.page.locator(this.submit).click();
     }
 
+    // A function used to search a vacancy
     async searchVacancie() {
         await this.navigate();
         await this.page.goto(subURL.viewJobVacancy);
@@ -161,11 +173,13 @@ export class Recruitment {
         await this.page.waitForTimeout(3000);
     }
 
+    // A function used to verify search vacancy
     async verifyVacancieSearch() {
         let totalRecords = await this.page.locator(this.candidates.totalRecordsList).textContent();
         expect(totalRecords).toContain(constants.assertion.totalRecords);
     }
 
+    // A function used to edit a vacancy
     async editAVacancy() {
         await this.searchVacancie();
         await this.page.locator(this.vacancies.editIcon).click();
@@ -173,12 +187,14 @@ export class Recruitment {
         await this.page.locator(this.submit).click();
     }
 
+    // A function used to delete a vacancy
     async deleteAVacancy() {
         await this.searchVacancie();
         await this.page.locator(this.vacancies.deleteIcon).click();
         await this.page.locator(this.vacancies.confirmDelete).click();
     }
 
+    // A function used to add a new candidate
     async addNewCandidate() {
         await this.navigate();
         await this.page.locator(this.candidates.addACandidate).click();
@@ -194,6 +210,7 @@ export class Recruitment {
         await this.page.locator(this.candidates.notes).fill(constants.candidate.notes);
     }
 
+    // A function used to search a candidate
     async searchCandidate() {
         await this.page.goto(subURL.viewCandidates);
         await this.page.locator(this.candidates.filter1).click();
@@ -202,11 +219,13 @@ export class Recruitment {
         await this.page.waitForTimeout(3000);
     }
 
+    // A function used to verify a candidate search
     async verifyCandidateSearch() {
         let totalRecords = await this.page.locator(this.candidates.totalRecordsList).textContent();
         expect(totalRecords).toContain(constants.assertion.totalRecords);
     }
 
+    // A function used to shortlist a candidate
     async shortlist() {
         await this.page.locator(this.shortlistLocators.viewCandidate).click();
         await this.page.locator(this.shortlistLocators.shortListACandidate).click();
@@ -217,12 +236,14 @@ export class Recruitment {
         expect(status).toContain(constants.assertion.status1);
     }
 
+    // A function used to autogenerate a title
     async autoGenerateTitle() {
         let num = Math.floor(Math.random() * 2 + 9);
         let interviewTitle = constants.recruitmentPO.autogenerateTitle + num.toString();
         return interviewTitle;
     }
 
+    // A function used to schedule a interview
     async interviewSchedule(username: any) {
         await this.page.locator(this.shortlistLocators.viewCandidate).click();
         await this.page.locator(this.otherLoc.scheduleInterview).click();
@@ -238,6 +259,7 @@ export class Recruitment {
         await this.page.waitForTimeout(3000);
     }
 
+    // A function used to schedule for a interview
     async scheduleForInterview(username: any) {
         await this.searchCandidate();
         let totalRecords = await this.page.locator(this.candidates.totalRecordsList).textContent();
@@ -246,6 +268,7 @@ export class Recruitment {
         }
     }
 
+    // A function used to mark a interview
     async markInterview() {
         await this.searchCandidate();
         let totalRecords = await this.page.locator(this.candidates.totalRecordsList).textContent();
@@ -258,6 +281,7 @@ export class Recruitment {
         }
     }
 
+    // A function used to offer a job
     async offerJob() {
         await this.searchCandidate();
         let totalRecords = await this.page.locator(this.candidates.totalRecordsList).textContent();
@@ -270,6 +294,7 @@ export class Recruitment {
         }
     }
 
+    // A function used to hire
     async hire() {
         await this.searchCandidate();
         let totalRecords = await this.page.locator(this.candidates.totalRecordsList).textContent();
@@ -282,6 +307,7 @@ export class Recruitment {
         }
     }
 
+    // A function used to verify whether the user id hired
     async verifyUserIsHired() {
         await this.navigate();
         await this.searchCandidate();
