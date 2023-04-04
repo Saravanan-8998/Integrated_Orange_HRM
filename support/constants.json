@@ -15,7 +15,38 @@
         "link": "link",
         "menuItem": "menuitem",
         "option": "option",
-        "dropdown": "dropdown"
+        "dropdown": "dropdown",
+        "button": "button"
+    },
+    "Menu": {
+        "directory": "Directory",
+        "pim": "PIM",
+        "myInfo": "My Info",
+        "contactDetails": "Contact Details",
+        "emergencyContacts": "Emergency Contacts",
+        "immigration": "Immigration",
+        "qualifications": "Qualifications",
+        "memberships": "Memberships",
+        "time": "Time",
+        "customers": "Customers",
+        "projects": "Projects",
+        "myTimesheets": "My Timesheets",
+        "employeeTimesheets": "Employee Timesheets",
+        "punchInOut": "Punch In/Out",
+        "myRecords": "My Records",
+        "employeeRecords": "Employee Records",
+        "configuration": "Configuration",
+        "projectReports": "Project Reports",
+        "employeeReports": "Employee Reports",
+        "attendanceSummary": "Attendance Summary",
+        "performance": "Performance",
+        "kpis": "KPIs",
+        "trackers": "Trackers",
+        "myTrackers": "My Trackers",
+        "employeeTrackers": "Employee Trackers",
+        "manageReviews": "Manage Reviews",
+        "myReviews": "My Reviews",
+        "employeeReviews": "Employee Reviews"
     },
     "EmployeeName": {
         "firstName": "Pon",
@@ -30,6 +61,39 @@
         "ssnNumber": "110",
         "sinNumber": "111",
         "licenseExpiryDate": "2024-01-10"
+    },
+    "PersonalDetails": {
+        "nationality": "Indian",
+        "maritalStatus": "Single",
+        "dob": "2000-12-26",
+        "militaryService": "No",
+        "bloodType": "A+"
+    },
+    "contactDetails": {
+        "country": "India"
+    },
+    "depedendant": {
+        "dependents": "Dependents",
+        "assignedDependents": "Assigned Dependents",
+        "name": "Gob",
+        "relationship": "Child",
+        "dob": "2000-12-26"
+    },
+    "immigration": {
+        "assignedImmigrationRecords": "Assigned Immigration Records",
+        "issuedBy": "Albania"
+    },
+    "language": {
+        "languageEnglish": "English",
+        "fluencyWriting": "Writing",
+        "competencyGood": "Good",
+        "comment": "Filled Languages fields"
+    },
+    "assignedMemberships": {
+        "assignedMemberships": "Assigned Memberships",
+        "membership": "ACCA",
+        "subscriptionPaidBy": "Company",
+        "indianRupee": "Indian Rupee"
     },
     "EmployeeContactDetails": {
         "street1": "KLS",
@@ -97,12 +161,73 @@
     },
     "others": {
         "minimizeIconClass": "bi-fullscreen-exit",
-        "maximizeIconClass": "bi-arrows-fullscreen"
+        "maximizeIconClass": "bi-arrows-fullscreen",
+        "reportingMethodAdmin": "Admin",
+        "reportingMethodDirect": "Direct",
+        "jobTitleSE": "Software Engineer",
+        "jobLocation": "Texas R&D",
+        "save": "save",
+        "cancel": "cancel",
+        "nineHrs": "9.00",
+        "timesheetNineHrs": "09.00",
+        "totalhrs": "45:00",
+        "punchInComment": "Logged in",
+        "punchInTime": "10:00 AM",
+        "punchOutTime": "07:00 PM",
+        "loggedOut": "Logged out",
+        "kpiName": "A Playwright Test",
+        "state": "networkidle",
+        "trackerName": "AB Playwright Test",
+        "logName": "AB pw test",
+        "logComment": "Filled Logs",
+        "ratingValue": "90",
+        "ratingComment": "Good Performance",
+        "generalComment": "Overall good"
+    },
+    "projects": {
+        "projectName": "Demo Play Project",
+        "projectShortName": "APlay",
+        "projectDescription": "An AI Project",
+        "projectCustomerName": "APlay Test Ltd - Demo Play Project"
+    },
+    "customers": {
+        "customerName": "APlay Test Ltd",
+        "customerNameForSearch": "APlay Test",
+        "customerDescription": "An AI Company",
+        "customerDialogName": "APlay"
+    },
+    "Dates": {
+        "attendanceDate": "2023-04-02",
+        "reviewPeriodStartDate": "2023-04-01",
+        "reviewPeriodEndDate": "2023-04-03",
+        "reviewDueDate": "2023-04-05",
+        "punchInDate": "2023-04-02",
+        "punchOutDate": "2023-04-02",
+        "joinedDate": "2023-04-01"
+    },
+    "status": {
+        "submitted": "Submitted",
+        "inactive": "Inactive",
+        "inProgress": "In Progress",
+        "activated": "Activated",
+        "completed": "Completed"
+    },
+    "section": {
+        "names": "names",
+        "id": "names",
+        "attachments": "Attachments",
+        "contactDetails": "contactDetails",
+        "emergencyContact": "emergencyContact",
+        "immigration": "immigration",
+        "workExperience": "workExperience",
+        "education": "education",
+        "skills": "skills",
+        "licenseDetails": "licenseDetails",
+        "assignedMemberships": "AssignedMemberships"
     },
     "fillText": {
         "comment": "Text file has been uploaded"
     },
-    "noRecordsText": "No Records Found",
     "assertion": {
         "invalidCredentials": "Invalid credentials",
         "requiredCredentials": "Required",
@@ -115,12 +240,42 @@
         "offerJob": "Status: Job Offered",
         "hired": "Status: Hired"
     },
-    "employeeDetails": {
-        "firstName": "Aldrin",
-        "middleName": "F",
-        "lastName": "Kardoze",
-        "employeeId": "999"
+    "Users": {
+        "firstNameUser1": "Test",
+        "lastNameUser1": "User1",
+        "firstNameUser2": "Test",
+        "lastNameUser2": "User2",
+        "firstNameUser3": "Test",
+        "lastNameUser3": "User3",
+        "userNameUser1": "testuser1",
+        "userNameUser2": "testuser2",
+        "userNameUser3": "testuser3",
+        "password": "Testuser@12",
+        "employeeNameUser1": "Test User1",
+        "employeeNameUser1Space": "Test  User1",
+        "employeeNameUser2": "Test User2",
+        "employeeNameUser3": "Test User3",
+        "employeeNameForSearch": "Test U",
+        "employeeToSearch": "Test User"
     },
+    "noRecordsText": "No Records Found",
+    "recordsCount": "(1) Record Found",
+    "assignedEmergencyContacts": "Assigned Emergency Contacts",
+    "education": "Education",
+    "workExperience": "Work Experience",
+    "skills": "Skills",
+    "languages": "Languages",
+    "license": "License",
+    "level": "Bachelor's Degree",
+    "skillsPython": "Python",
+    "licenseType": "Cisco Certified Network Associate (CCNA)",
+    "fileName": "uploadTextFile.txt",
+    "includeEmployee": "Current Employees Only",
+    "attributeClass": "class",
+    "elementStateStable": "stable",
+    "elementStateEditable": "editable",
+    "ctrlC": "Control+C",
+    "ctrlV": "Control+V",
     "employeeIDs": {
         "otherId": "666",
         "driverLicenseNumber": "123",

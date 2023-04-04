@@ -176,8 +176,8 @@ export class Utils {
   // This function is used to "copy and paste" the values from the any textbox elements
   async copyPaste(sourceLocator: string, destinationLocator: string) {
     await this.page.locator(sourceLocator).dblclick();
-    await this.page.locator(sourceLocator).press('Control+C');
-    await this.page.locator(destinationLocator).press('Control+V');
+    await this.page.locator(sourceLocator).press(Constants.ctrlC);
+    await this.page.locator(destinationLocator).press(Constants.ctrlV);
   }
 
   // This function is used to "get the text" of any elements
@@ -196,7 +196,7 @@ export class Utils {
     if (shouldWaitForContainer) {
       await this.page.waitForSelector(this.backgroundContainer);
     }
-    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+    await this.page.waitForLoadState("networkidle", { timeout: 15000 });
   }
 
   // This function is used to "select the option" from "Auto suggestion"
@@ -217,22 +217,22 @@ export class Utils {
   }
 
   async deleteUsers() {
-    await this.clickMenu("link", homePage.homePageElements.pim, "PIM");
+    await this.clickMenu(Constants.Roles.link, homePage.homePageElements.pim, Constants.Menu.pim);
     await this.click(this.employeeListMenu);
-    await this.fillTextBoxValues(directoryPage.directory.employeeName, "Test User", true);
+    await this.fillTextBoxValues(directoryPage.directory.employeeName, Constants.Users.employeeToSearch, true);
     await this.page.locator(directoryPage.directory.search).click();
     await this.waitForElement(this.tableContainer);
     await this.page.waitForTimeout(5000);
-    let tableRow = await (this.page.locator(this.row('Test'))).first().isVisible();
+    let tableRow = await (this.page.locator(this.row(Constants.Users.firstNameUser1))).first().isVisible();
     if (tableRow) {
-      await this.deleteRecords("Test");
+      await this.deleteRecords(Constants.Users.firstNameUser1);
     }
   }
 
   async deleteRecords(value: string) {
     let rowVisibility = await this.page.locator(this.tableRow).first().isVisible();
     if (rowVisibility) {
-      let rows = await this.getARow('Test');
+      let rows = await this.getARow(Constants.Users.firstNameUser1);
       let rowsCount = await rows.count();
       for (let i = 0; i < rowsCount; i++) {
         let get = await this.getARow(value);
@@ -253,37 +253,50 @@ export class Utils {
     return this.page.locator(this.row(value));
   }
 
+<<<<<<< HEAD
+    // This function is used for Create user
+  async createUsers(firstName, lastName, userName) {
+    await this.clickMenu(Constants.Roles.link, homePage.homePageElements.pim, Constants.Menu.pim);
+=======
   async createUsers(firstName: any, lastName: any, userName: any) {
     await this.clickMenu("link", homePage.homePageElements.pim, "PIM");
+>>>>>>> 3a8081816ea0c0dfd9ba05225daed39ded831d48
     await this.click(this.addEmployee);
-    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+    await this.page.waitForLoadState("networkidle", { timeout: 15000 });
     await this.page.waitForTimeout(2000);
     await this.fillTextBoxValues(this.firstName, firstName, true);
     await this.fillTextBoxValues(this.lastName, lastName, true);
     await this.click(this.switch);
     await this.fillTextBoxValues(this.userName, userName, true);
-    await this.fillTextBoxValues(this.password, "Testuser@12", true);
-    await this.fillTextBoxValues(this.confirmPassword, "Testuser@12", true);
+    await this.fillTextBoxValues(this.password, Constants.Users.password, true);
+    await this.fillTextBoxValues(this.confirmPassword, Constants.Users.password, true);
     await this.clickSave(this.save, 0);
     await this.clickCloseIcon();
     await this.waitForElement(this.backgroundContainer);
+    await this.page.waitForLoadState("networkidle", { timeout: 15000 });
     await this.click(this.job);
-    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
-    await this.fillDateValue(this.joinedDate, "2023-03-10");
-    await this.selecDropdownOption("option", this.jobTitle, "Software Engineer");
-    await this.selecDropdownOption("option", this.location, "Texas R&D");
+    await this.page.waitForLoadState("networkidle", { timeout: 15000 });
+    await this.fillDateValue(this.joinedDate, Constants.Dates.joinedDate);
+    await this.selecDropdownOption(Constants.Roles.option, this.jobTitle, Constants.others.jobTitleSE);
+    await this.selecDropdownOption(Constants.Roles.option, this.location, Constants.others.jobLocation);
     await this.clickSave(this.save, 0);
   }
 
+<<<<<<< HEAD
+   // This function is used for updating the role
+  async updatingUserRole(userName, userRole) {
+    await this.clickMenu(Constants.Roles.link, homePage.homePageElements.admin, userRole);
+=======
   async updatingUserRole(userName: any, userRole: any) {
     await this.clickMenu("link", homePage.homePageElements.admin, userRole);
+>>>>>>> 3a8081816ea0c0dfd9ba05225daed39ded831d48
     await this.fillTextBoxValues(this.userName, userName, true);
     await this.click(this.search);
     await this.waitForElement(this.row(userName));
     await this.click(this.editIcon);
     await this.page.waitForLoadState("networkidle", { timeout: 10000 });
     await this.waitForElement(this.backgroundContainer);
-    await this.selecDropdownOption("option", this.userRole, "Admin");
+    await this.selecDropdownOption(Constants.Roles.option, this.userRole, Constants.others.reportingMethodAdmin);
     await this.clickSave(this.save, 0);
     await this.clickCloseIcon();
   }

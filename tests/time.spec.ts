@@ -21,11 +21,11 @@ test.beforeAll(async ({ browser }) => {
     let pass = await testData.encodeDecodePassword();
     await loginPage.fillUsrNameAndPwdAndLogin(ENV.USERNAME, pass);
     await utils.deleteUsers();
-    await utils.createUsers("Test", "User1", "testuser1");
-    await utils.updatingUserRole("testuser1", "Admin");
+    await utils.createUsers(Constants.Users.firstNameUser1, Constants.Users.lastNameUser1, Constants.Users.userNameUser1);
+    await utils.updatingUserRole(Constants.Users.userNameUser1, Constants.others.reportingMethodAdmin);
     await utils.logout();
-    await loginPage.fillUsrNameAndPwdAndLogin("testuser1", "Testuser@12");
-    await utils.clickMenu("link", homePage.homePageElements.time, "Time");
+    await loginPage.fillUsrNameAndPwdAndLogin(Constants.Users.userNameUser1, Constants.Users.password, false);
+    await utils.clickMenu(Constants.Roles.link, homePage.homePageElements.time, Constants.Menu.time);
 });
 
 test.afterAll(async () => {
@@ -35,80 +35,81 @@ test.afterAll(async () => {
 test.describe('Time Project Info', () => {
     test('Add Customer details', async () => {
         await utils.click(timePage.timeElements.projectInfo);
-        await utils.clickByRole("menuitem", 'Customers', true);
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.customers, true);
         await timePage.addCustomer();
     });
 
     test('Add Project details', async () => {
         await utils.click(timePage.timeElements.projectInfo);
-        await utils.clickByRole("menuitem", 'Projects', true);
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.projects, true);
         await timePage.addProjects();
-        let cellValues = await timePage.getARowByColumnText('APlay Test Ltd');
-        expect(cellValues.companyName).toEqual('APlay Test Ltd');
+        let cellValues = await timePage.getAProjectRowByColumnText(Constants.projects.projectName);
+        expect(cellValues.project).toEqual(Constants.projects.projectName);
     });
 });
 
 test.describe('Time Timesheets', () => {
     test('Add My Timesheets details', async () => {
         await utils.click(timePage.timeElements.timesheets);
-        await utils.clickByRole("menuitem", 'My Timesheets', true);
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.myTimesheets, true);
         await utils.click(timePage.timesheets.editButton);
-        await utils.fillTextBoxValues(timePage.timesheets.project, "APlay", true);
-        await utils.clickOption('option', "APlay Test Ltd - Demo Play Project");
-        await utils.selecDropdownOption("option", timePage.timesheets.activity, "Aplay");
+        await utils.fillTextBoxValues(timePage.timesheets.project, Constants.projects.projectShortName, true);
+        await utils.clickOption(Constants.Roles.option, Constants.projects.projectCustomerName);
+        await utils.selecDropdownOption(Constants.Roles.option, timePage.timesheets.activity, Constants.projects.projectShortName);
         await timePage.fillTimesheetHours();
-        let actionsTableCells = await timePage.getTimesheetActionTable("Test User1");
-        expect(await actionsTableCells.actions).toEqual("Submitted");
+        let actionsTableCells = await timePage.getTimesheetActionTable(Constants.Users.employeeNameUser1);
+        expect(await actionsTableCells.actions).toEqual(Constants.status.submitted);
     });
 
     test('Retrieve Employee Timesheets', async () => {
         await utils.click(timePage.timeElements.timesheets);
-        await utils.clickByRole("menuitem", 'Employee Timesheets', true);
-        await utils.fillTextBoxValues(timePage.timeElements.employeeName, "Test", true);
-        await utils.clickOption('option', "Test User1");
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.employeeTimesheets, true);
+        await utils.fillTextBoxValues(timePage.timeElements.employeeName, Constants.Users.firstNameUser1, true);
+        await utils.clickOption(Constants.Roles.option, Constants.Users.employeeNameUser1);
         await utils.click(timePage.timeElements.view);
         await utils.waitForElement(timePage.timeElements.tableContainer);
-        let actionsTableCells = await timePage.getTimesheetActionTable("Test User1");
-        expect(await actionsTableCells.actions).toEqual("Submitted");
+        let actionsTableCells = await timePage.getTimesheetActionTable(Constants.Users.employeeNameUser1);
+        expect(await actionsTableCells.actions).toEqual(Constants.status.submitted);
     });
 });
 
 test.describe('Time Attendance', () => {
     test('Add Punch In/Out details', async () => {
         await utils.click(timePage.timeElements.attendance);
-        await utils.clickByRole("menuitem", 'Punch In/Out', true);
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.punchInOut, true);
         await timePage.addPunchInPunchOut();
     });
 
     test('View My Records', async () => {
         await utils.click(timePage.timeElements.attendance);
-        await utils.clickByRole("menuitem", 'My Records', false);
-        await utils.fillDateValue(timePage.timeElements.date, "2023-03-28");
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.myRecords, false);
+        await utils.waitForElement(timePage.timeElements.tableContainer);
+        await utils.fillDateValue(timePage.timeElements.date, Constants.Dates.attendanceDate);
         await utils.click(timePage.timeElements.view);
         await utils.waitForElement(timePage.timeElements.tableContainer);
-        let tableCells = await timePage.getAttendanceRowCells("Logged out");
-        expect(tableCells.duration).toEqual("9.00");
+        let tableCells = await timePage.getAttendanceRowCells(Constants.others.loggedOut);
+        expect(tableCells.duration).toEqual(Constants.others.nineHrs);
     });
 
     test('View Employee Records', async () => {
         await utils.click(timePage.timeElements.attendance);
-        await utils.clickByRole("menuitem", 'Employee Records', false);
-        await utils.fillDateValue(timePage.timeElements.employeeName, "Test");
-        await utils.clickOption('option', "Test User1");
-        await utils.fillDateValue(timePage.timeElements.date, "2023-03-28");
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.employeeRecords, false);
+        await utils.fillDateValue(timePage.timeElements.employeeName, Constants.Users.firstNameUser1);
+        await utils.clickOption(Constants.Roles.option, Constants.Users.employeeNameUser1);
+        await utils.fillDateValue(timePage.timeElements.date, Constants.Dates.attendanceDate);
         await utils.click(timePage.timeElements.view);
         await utils.waitForElement(timePage.reports.reportsTableContainer);
-        let tableCells = await timePage.getAttendanceRowCells("Logged out");
-        expect(tableCells.duration).toEqual("9.00");
+        let tableCells = await timePage.getAttendanceRowCells(Constants.others.loggedOut);
+        expect(tableCells.duration).toEqual(Constants.others.nineHrs);
     });
 
     test('Enable/Disable access from Configuration sub menu', async () => {
         await utils.click(timePage.timeElements.attendance);
-        await utils.clickByRole("menuitem", 'Configuration', true);
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.configuration, true);
         await utils.clickElementWithIndex(timePage.attendance.switch, 1);
         await utils.clickSave(myInfoPage.save, 0, Constants.sucessMsg.sucessfulSavedMsg);
         await utils.click(timePage.timeElements.attendance);
-        await utils.clickByRole("menuitem", 'My Records', false);
+        await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.myRecords, false);
         let tableRow = await utils.isElementVisible(timePage.attendance.deleteIcon);
         expect(tableRow).toBeFalsy();
     });
@@ -116,27 +117,27 @@ test.describe('Time Attendance', () => {
 
 test.describe('Time Reports', () => {
     test('Search and View project Reports', async () => {
-        await timePage.searchAndViewReports("Project Reports", timePage.reports.project, "APlay", "APlay Test Ltd - Demo Play Project");
+        await timePage.searchAndViewReports(Constants.Menu.projectReports, timePage.reports.project, Constants.projects.projectShortName, Constants.projects.projectCustomerName);
         await utils.waitForElement(timePage.reports.reportsTableContainer);
-        expect(await utils.getText(timePage.reports.activityName)).toEqual("Aplay");
+        expect(await utils.getText(timePage.reports.activityName)).toEqual(Constants.projects.projectShortName);
     });
 
     test('Search and View Employee Reports', async () => {
-        await timePage.searchAndViewReports("Employee Reports", timePage.timeElements.employeeName, "Test", "Test User1");
+        await timePage.searchAndViewReports(Constants.Menu.employeeReports, timePage.timeElements.employeeName, Constants.Users.firstNameUser1, Constants.Users.employeeNameUser1);
         await utils.waitForElement(timePage.reports.reportsTableContainer);
         await utils.isElementVisible(timePage.reports.employeeReportsTable);
-        let minimizeIcon = await timePage.maximizeMinimizeReports(timePage.reports.maximize, timePage.reports.minimize);
+        let minimizeIcon:any = await timePage.maximizeMinimizeReports(timePage.reports.maximize, timePage.reports.minimize);
         expect(minimizeIcon.includes(Constants.others.minimizeIconClass)).toBeTruthy();
-        let maximizeIcon = await timePage.maximizeMinimizeReports(timePage.reports.minimize, timePage.reports.maximize);
+        let maximizeIcon:any = await timePage.maximizeMinimizeReports(timePage.reports.minimize, timePage.reports.maximize);
         expect(maximizeIcon.includes(Constants.others.maximizeIconClass)).toBeTruthy();
     });
 
     test('Search and View Employee Attendance Summary', async () => {
-        await timePage.searchAndViewReports("Attendance Summary", timePage.timeElements.employeeName, "Test", "Test User1");
+        await timePage.searchAndViewReports(Constants.Menu.attendanceSummary, timePage.timeElements.employeeName, Constants.Users.firstNameUser1, Constants.Users.employeeNameUser1);
         await utils.waitForElement(timePage.reports.reportsTableContainer);
         let employeeReportTable = await utils.isElementVisible(timePage.reports.employeeReportsTable);
         expect(employeeReportTable).toBeTruthy();
         let hours = await utils.getText(timePage.reports.totalDurationHours);
-        expect(hours).toEqual("9.00");
+        expect(hours).toEqual(Constants.others.nineHrs);
     });
 });

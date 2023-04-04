@@ -44,12 +44,14 @@ export class LoginPage {
     };
 
     // This function is used to login into application
-    async fillUsrNameAndPwdAndLogin(userName: string, password: string) {
+    async fillUsrNameAndPwdAndLogin(userName: any, password: string, ishomePageDasbboard?:boolean) {
         let getUserNameElem = await this.getUserNameElement();
         await this.page.locator(getUserNameElem).fill(userName);
         await this.page.locator(await this.getPasswordElement()).fill(password);
         await this.clickLogin();
+        if(ishomePageDasbboard){
         await expect(this.page).toHaveURL(/.*dashboard/);
+        }
         await this.page.waitForSelector(homePage.homePageElements.dashboardGrid);
     }
 

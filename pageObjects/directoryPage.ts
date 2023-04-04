@@ -20,12 +20,12 @@ export class DirectoryPage {
     // This function is used to retrieve the "Records Count"
     async getRecordsCount() {
         await (await this.page.waitForSelector(this.directory.recordsCount)).waitForElementState("stable");
-        return await this.page.locator(this.directory.recordsCount).textContent();
+        return await this.page.locator(this.directory.recordsCount)?.textContent();
     }
 
     // This function is used to retrieve the "Employee Name"
     async getEmployeeName() {
         await (await this.page.waitForSelector(this.directory.employeeCardHeader)).waitForElementState("stable");
-        return await this.page.locator(this.directory.employeeCardHeader).textContent();
+        return await this.page.locator(this.directory.employeeCardHeader)?.textContent();
     }
 }
