@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import Constants from '../support/constants.json';
 import { Utils } from '../support/utils';
 import { TestData } from '../testData/testData';
-import { LoginPage, HomePage, PIMPage } from '../pageObjects';
+import { LoginPage, HomePage, PIMPage } from '../page_objects';
 import ENV from '../support/env';
 
 let loginPage: LoginPage, homePage: HomePage, pimPage: PIMPage, testData: TestData, page: Page, utils: Utils;;
@@ -31,9 +31,7 @@ test.beforeAll(async ({ browser }) => {
     await expect(page).toHaveURL(/.*login/);
     let pass = await testData.encodeDecodePassword();
     await loginPage.fillUsrNameAndPwdAndLogin(ENV.USERNAME, pass);
-    await expect(page).toHaveURL(/.*dashboard/);
-    await page.waitForSelector(homePage.dashboardGrid);
-    await homePage.clickPIMMenu();
+    await utils.clickMenu("link", homePage.homePageElements.pim, "PIM");
 });
 
 test.afterAll(async () => {
@@ -51,16 +49,16 @@ test.describe('Personal Informations', () => {
 
     test.skip('Filling the Id section', async () => {
         await pimPage.fillFieldValues(idLocators, idValues);
-        await pimPage.fillDateValue(pimPage.licenseExpiryDate, '2030-11-25');
+        await pimPage.fillDateValue(pimPage.licenseExpiryDate, Constants.pimModule.licenseExpiryDate);
     });
 
     test('Filling the Personal Informations section', async () => {
-        await pimPage.selecDropdownOption(pimPage.nationality, 'Indian');
-        await pimPage.selecDropdownOption(pimPage.maritalStatus, 'Single');
-        await pimPage.fillDateValue(pimPage.dateofBirth, '2000-12-12');
+        await pimPage.selecDropdownOption(pimPage.nationality, Constants.pimModule.nationality);
+        await pimPage.selecDropdownOption(pimPage.maritalStatus, Constants.pimModule.maritalStatus);
+        await pimPage.fillDateValue(pimPage.dateofBirth, Constants.pimModule.dateOfBirth);
         await pimPage.click(pimPage.gender);
         await pimPage.clickSave(pimPage.save, 0, Constants.sucessMsg.successfulUpdatedMsg);
-        await pimPage.selecDropdownOption(pimPage.bloodType, 'A+');
+        await pimPage.selecDropdownOption(pimPage.bloodType, Constants.pimModule.bloodType);
         await pimPage.clickSave(pimPage.save, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -91,7 +89,7 @@ test.describe('Filling Contact Informations', () => {
     test('Filling the Address section fields', async () => {
         await pimPage.clickMenu(pimPage.contactDetails, 'Contact Details');
         await pimPage.fillFieldValues(contactDetailsLocators, contactDetailValues);
-        await pimPage.selecDropdownOption(pimPage.contactDetailsLocators.country, 'India');
+        await pimPage.selecDropdownOption(pimPage.contactDetailsLocators.country, Constants.pimModule.country);
         await pimPage.clickSave(pimPage.save, 0, Constants.sucessMsg.successfulUpdatedMsg);
     });
 });
@@ -113,9 +111,9 @@ test.describe('Filling Dependents informations', () => {
         await pimPage.clickMenu(pimPage.dependentsDetails.dependentsMenuLink, 'Dependents');
         await pimPage.clickElementWithIndex(pimPage.addButton, 0);
         await pimPage.clearTextBoxValues(pimPage.nameInputField);
-        await pimPage.fillTextBoxValues(pimPage.nameInputField, 'Gob');
-        await pimPage.selecDropdownOption(pimPage.dependentsDetails.relationship, 'Child');
-        await pimPage.fillDateValue(pimPage.dateofBirth, '2000-12-26');
+        await pimPage.fillTextBoxValues(pimPage.nameInputField, Constants.pimModule.name);
+        await pimPage.selecDropdownOption(pimPage.dependentsDetails.relationship, Constants.pimModule.relationship);
+        await pimPage.fillDateValue(pimPage.dateofBirth, Constants.pimModule.depDateofBirth);
         await pimPage.clickSave(pimPage.save, 1, Constants.sucessMsg.sucessfulSavedMsg);
         await pimPage.clickElementWithIndex(pimPage.addButton, 1);
         await pimPage.uploadFile('uploadTextFile.txt', true);
@@ -125,9 +123,9 @@ test.describe('Filling Dependents informations', () => {
 test.describe('Filling Job informations', () => {
     test('Filling Job informations', async () => {
         await pimPage.clickMenu(pimPage.jobDetails.jobMenuLink, 'Job');
-        await pimPage.selecDropdownOption(pimPage.jobDetails.jobTitle, 'QA Engineer');
-        await pimPage.selecDropdownOption(pimPage.jobDetails.subUnit, 'Quality Assurance');
-        await pimPage.selecDropdownOption(pimPage.jobDetails.employeeStatus, 'Full-Time Permanent');
+        await pimPage.selecDropdownOption(pimPage.jobDetails.jobTitle, Constants.pimModule.jobTitle);
+        await pimPage.selecDropdownOption(pimPage.jobDetails.subUnit, Constants.pimModule.subUnit);
+        await pimPage.selecDropdownOption(pimPage.jobDetails.employeeStatus, Constants.pimModule.employeeStatus);
         await pimPage.clickSave(pimPage.save, 0, Constants.sucessMsg.successfulUpdatedMsg);
     });
 });
@@ -136,9 +134,9 @@ test.describe('Filling Report-To informations', () => {
     test('Filling Report-To informations', async () => {
         await pimPage.clickMenu(pimPage.reportToDetails.reportToMenuLink, 'Report-to');
         await pimPage.clickElementWithIndex(pimPage.addButton, 0);
-        await pimPage.fillTextBoxValues(pimPage.reportToDetails.nameTitle, 'Paul  Colling');
-        await pimPage.selecDropdownOption(pimPage.reportToDetails.nameTitle, 'Paul  Collings');
-        await pimPage.selecDropdownOption(pimPage.reportToDetails.reportingMethod, 'Direct');
+        await pimPage.fillTextBoxValues(pimPage.reportToDetails.nameTitle, Constants.pimModule.nameTitle);
+        await pimPage.selecDropdownOption(pimPage.reportToDetails.nameTitle, Constants.pimModule.nameTitle);
+        await pimPage.selecDropdownOption(pimPage.reportToDetails.reportingMethod, Constants.pimModule.reportingMethod);
         await pimPage.clickSave(pimPage.save, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 });
@@ -146,14 +144,14 @@ test.describe('Filling Report-To informations', () => {
 test.describe('Search Employee List informations', () => {
     test('Filling Employee informations and searching for the existing Employee', async () => {
         await pimPage.clickEmployeeListMenu();
-        await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.employeeName, 'Aldrin');
-        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.employeeName, 'Aldrin F Kardoze');
-        await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.employeeId, '999');
-        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.employmentStatus, 'Full-Time Permanent');
-        await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.supervisorName, 'Paul  Colling');
-        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.supervisorName, 'Paul  Collings');
-        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.jobTitle, 'QA Engineer');
-        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.subUnit, 'Quality Assurance');
+        await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.employeeName, Constants.pimModule.employeeName);
+        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.employeeName, Constants.pimModule.employeeName);
+        await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.employeeId, Constants.pimModule.employeeId);
+        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.employmentStatus, Constants.pimModule.employeeStatus);
+        await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.supervisorName, Constants.pimModule.nameTitle);
+        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.supervisorName, Constants.pimModule.nameTitle);
+        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.jobTitle, Constants.pimModule.jobTitle);
+        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.subUnit, Constants.pimModule.subUnit);
         await pimPage.clickElementWithIndex(pimPage.save, 1);
     });
 
@@ -166,13 +164,13 @@ test.describe('Search Employee List informations', () => {
 test.describe('Search Employee Reports informations', () => {
     test('Filling Employee Reports and searching for the existing Employee Reports', async () => {
         await pimPage.clickReportsMenu();
-        // await pimPage.clickElementWithIndex(pimPage.save, 2);
-        // await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, 'PIM Sample Report');
-        // await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayFieldGroup, 'Personal');
-        // await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayField, 'Employee Last Name');
-        // await pimPage.clickElementWithIndex(pimPage.save, 1);
-        await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, 'PIM Sample Report');
-        await pimPage.selecDropdownOption(pimPage.searchEmployeeReports.reportNameSearch, 'PIM Sample Report');
+        await pimPage.clickElementWithIndex(pimPage.save, 2);
+        await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch);
+        await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayFieldGroup, Constants.pimModule.displayFieldGroup);
+        await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayField, Constants.pimModule.displayField);
+        await pimPage.clickElementWithIndex(pimPage.save, 1);
+        await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch);
+        await pimPage.selecDropdownOption(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch);
         await pimPage.clickElementWithIndex(pimPage.save, 1);
     });
 
@@ -184,8 +182,8 @@ test.describe('Search Employee Reports informations', () => {
 
     test('Searching for the existing Employee Reports and editing Report', async () => {
         await pimPage.clearTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch);
-        await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, 'All Employee Sub Unit Hierarchy');
-        await pimPage.selecDropdownOption(pimPage.searchEmployeeReports.reportNameSearch, 'All Employee Sub Unit Hierarchy Report');
+        await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch1);
+        await pimPage.selecDropdownOption(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch1);
         await pimPage.clickElementWithIndex(pimPage.save, 1);
         await pimPage.click(pimPage.attachmentCheckBox);
         await pimPage.click(pimPage.edit);
@@ -193,15 +191,15 @@ test.describe('Search Employee Reports informations', () => {
 
     test('Editing the existing Report and Adding an Employee Name and verify the employee is added', async () => {
         await pimPage.clearTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch);
-        await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, 'All Employee Sub Unit Hierarchy Report Edited');
-        await pimPage.selecDropdownOption(pimPage.editEmployeeReports.criteria, 'Employee Name');
+        await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearchEdit);
+        await pimPage.selecDropdownOption(pimPage.editEmployeeReports.criteria, Constants.pimModule.criteria);
         await pimPage.clickElementWithIndex(pimPage.editEmployeeReports.addreport, 0);
-        await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.employeeName, 'Cecil');
-        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.employeeName, 'Cecil Bonaparte');
-        await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayFieldGroup, 'Personal');
+        await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.employeeName, Constants.pimModule.employeeName1);
+        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.employeeName, Constants.pimModule.employeeName1);
+        await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayFieldGroup, Constants.pimModule.displayFieldGroup);
         await pimPage.click(pimPage.editEmployeeReports.editFields);
-        await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayField, 'Employee Last Name');
+        await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayField, Constants.pimModule.displayField);
         await pimPage.clickElementWithIndex(pimPage.editEmployeeReports.addreport, 1);
         await pimPage.clickElementWithIndex(pimPage.save, 1);
-    });
+    })
 });

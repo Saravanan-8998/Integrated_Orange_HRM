@@ -1,20 +1,20 @@
 import { test, expect, Page } from '@playwright/test';
 import Constants from '../support/constants.json';
 import { TestData } from '../testData/testData';
-import { LoginPage, HomePage, AdminPage } from '../pageObjects';
+import { LoginPage, HomePage, AdminPage } from '../page_objects';
 import ENV from '../support/env';
+import { Utils } from '../support/utils';
+import date, { addDays } from 'date-and-time';
 
-let loginPage: LoginPage, homePage: HomePage, adminPage: AdminPage, testData: TestData, page: Page;
+let loginPage: LoginPage, homePage: HomePage, adminPage: AdminPage, testData: TestData, page: Page, utils: Utils;;
 
-enum values1 {
-    userName = "Admin",
-    userRole = "Admin",
-    employeeName = "Paul Colling",
-    status = "Enabled",
-}
+const now = new Date();
+// const AddDays = date.addDays(now, 1);
+const germanDate = date.format(now, 'YYYY-MM-DD');
+const usDate = date.format(now, 'DD-MM-YYYY');
 
 let systemUsersLocators = [];
-let systemUsersLocatorsValues = [values1.userName, values1.employeeName];
+let systemUsersLocatorsValues = [Constants.adminModule.userName, Constants.adminModule.employeeName];
 
 test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -27,9 +27,7 @@ test.beforeAll(async ({ browser }) => {
     await expect(page).toHaveURL(/.*login/);
     let pass = await testData.encodeDecodePassword();
     await loginPage.fillUsrNameAndPwdAndLogin(ENV.USERNAME, pass);
-    await expect(page).toHaveURL(/.*dashboard/);
-    await page.waitForSelector(homePage.dashboardGrid);
-    await homePage.clickAdminMenu();
+    await utils.clickMenu("link", homePage.homePageElements.admin, "Admin");
 });
 
 test.afterAll(async () => {
@@ -41,9 +39,9 @@ test.describe('Filling Admin Information and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.userManagementMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.userDropDownMenu, 0);
         await adminPage.fillFieldValues(systemUsersLocators, systemUsersLocatorsValues);
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.employeeName, 'Paul Collings');
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.userRole, values1.userRole);
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.status, values1.status);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.employeeName, Constants.adminModule.employeeName);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.userRole, Constants.adminModule.userRole);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.status, Constants.adminModule.status);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 1);
         let table = await page.locator(adminPage.tableRow).textContent();
         console.log(table);
@@ -58,11 +56,11 @@ test.describe('Filling Admin Information and editing the information', () => {
         await page.waitForTimeout(2000);
         await adminPage.clearTextBoxValues(adminPage.userManagementLocators.userName);
         await adminPage.clearTextBoxValues(adminPage.userManagementLocators.employeeName);
-        await adminPage.fillTextBoxValues(adminPage.userManagementLocators.userName, 'AdminTesting');
-        await adminPage.fillTextBoxValues(adminPage.userManagementLocators.employeeName, 'Paul Colling');
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.employeeName, 'Paul Collings');
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.userRole, values1.userRole);
-        await adminPage.selecDropdownOption(adminPage.userManagementLocators.status, values1.status);
+        await adminPage.fillTextBoxValues(adminPage.userManagementLocators.userName, Constants.adminModule.userManagement.userName);
+        await adminPage.fillTextBoxValues(adminPage.userManagementLocators.employeeName, Constants.adminModule.userManagement.employeeName);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.employeeName, Constants.adminModule.userManagement.employeeName);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.userRole, Constants.adminModule.userRole);
+        await adminPage.selecDropdownOption(adminPage.userManagementLocators.status, Constants.adminModule.status);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 1);
     });
 });
@@ -73,9 +71,9 @@ test.describe('Filling Job Information and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.jobTitlesDropDownMenu, 0);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobTitle, 'Automation Engineer');
-        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobDescription, 'Testing 123 Sample');
-        await adminPage.fillTextBoxValues(adminPage.note, 'Automation Engineer Note Added');
+        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobTitle, Constants.adminModule.job.jobTitle);
+        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobDescription, Constants.adminModule.job.jobDescription);
+        await adminPage.fillTextBoxValues(adminPage.note, Constants.adminModule.job.note);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -84,13 +82,13 @@ test.describe('Filling Job Information and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.jobTitlesDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.editRow('Automation Engineer');
+        await adminPage.editRow(Constants.adminModule.job.jobTitle);
         await adminPage.clearTextBoxValues(adminPage.jobLocators.jobTitle);
-        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobTitle, ' Edited');
+        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobTitle, Constants.adminModule.edit);
         await adminPage.clearTextBoxValues(adminPage.jobLocators.jobDescription);
-        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobDescription, 'Testing 123 Sample Edited');
+        await adminPage.fillTextBoxValues(adminPage.jobLocators.jobDescription, Constants.adminModule.job.jobDescriptionEdited);
         await adminPage.clearTextBoxValues(adminPage.note);
-        await adminPage.fillTextBoxValues(adminPage.note, 'Automation Engineer Note Added and Edited');
+        await adminPage.fillTextBoxValues(adminPage.note, Constants.adminModule.job.noteEdited);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -99,7 +97,7 @@ test.describe('Filling Job Information and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.jobTitlesDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'Automation Engineer Edited');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.job.deleteEditedRecord);
     });
 });
 
@@ -109,7 +107,7 @@ test.describe('Filling Pay Grades and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.payGradesDropDownMenu, 0);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.payGradeName, 'Grade 0');
+        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.payGradeName, Constants.adminModule.payGradeName);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 1);
     });
 
@@ -120,15 +118,15 @@ test.describe('Filling Pay Grades and editing the information', () => {
         await page.waitForTimeout(2000);
         await adminPage.editRow('Grade 0');
         await adminPage.clearTextBoxValues(adminPage.payGradeLocators.payGradeName);
-        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.payGradeName, ' Edited');
+        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.payGradeName, Constants.adminModule.edit);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 1);
         await page.waitForTimeout(3000);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 2);
         await page.waitForTimeout(3000);
-        await adminPage.selecDropdownOption(adminPage.payGradeLocators.currency, 'INR - Indian Rupee');
+        await adminPage.selecDropdownOption(adminPage.payGradeLocators.currency, Constants.adminModule.currency);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.minSalary, '20000');
-        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.maxSalary, '25000');
+        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.minSalary, Constants.adminModule.minSalary);
+        await adminPage.fillTextBoxValues(adminPage.payGradeLocators.maxSalary, Constants.adminModule.maxSalary);
         await adminPage.clickSave(adminPage.actionButton, 3, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -137,7 +135,7 @@ test.describe('Filling Pay Grades and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.payGradesDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'Grade 0 Edited');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.deletePayGradeRecord);
     });
 });
 
@@ -148,7 +146,7 @@ test.describe('Filling Employment Status and editing the information', () => {
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.employeeStatusDropDownMenu, 0);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
         await page.waitForTimeout(5000);
-        await adminPage.fillTextBoxValues(adminPage.empStatusLocators.empStatusName, 'Full-Time Automation');
+        await adminPage.fillTextBoxValues(adminPage.empStatusLocators.empStatusName, Constants.adminModule.employeeStatusName);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -157,9 +155,9 @@ test.describe('Filling Employment Status and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.employeeStatusDropDownMenu, 0);
         await page.waitForTimeout(2000);
-        await adminPage.editRow('Full-Time Automation');
+        await adminPage.editRow(Constants.adminModule.employeeStatusName);
         await adminPage.clearTextBoxValues(adminPage.empStatusLocators.empStatusName);
-        await adminPage.fillTextBoxValues(adminPage.empStatusLocators.empStatusName, ' Edited');
+        await adminPage.fillTextBoxValues(adminPage.empStatusLocators.empStatusName, Constants.adminModule.edit);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -168,7 +166,7 @@ test.describe('Filling Employment Status and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.employeeStatusDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'Full-Time Automation Edited');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.deleteemployeeStatusEditedRecord);
     });
 });
 
@@ -179,7 +177,7 @@ test.describe('Filling Job Categories and editing the information', () => {
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.jobCategoriesDropDownMenu, 0);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
         await page.waitForTimeout(5000);
-        await adminPage.fillTextBoxValues(adminPage.jobCatLocators.jobCatName, 'On Bench');
+        await adminPage.fillTextBoxValues(adminPage.jobCatLocators.jobCatName, Constants.adminModule.jobCategory);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -190,7 +188,7 @@ test.describe('Filling Job Categories and editing the information', () => {
         await page.waitForTimeout(2000);
         await adminPage.editRow('On Bench');
         await adminPage.clearTextBoxValues(adminPage.jobCatLocators.jobCatName);
-        await adminPage.fillTextBoxValues(adminPage.jobCatLocators.jobCatName, ' Edited');
+        await adminPage.fillTextBoxValues(adminPage.jobCatLocators.jobCatName, Constants.adminModule.edit);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -199,7 +197,7 @@ test.describe('Filling Job Categories and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.jobCategoriesDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'On Bench Edited');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.deletejobCategory);
     });
 });
 
@@ -210,11 +208,11 @@ test.describe('Filling Work Shifts and editing the information', () => {
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.workShiftsDropDownMenu, 0);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
         await page.waitForTimeout(5000);
-        await adminPage.fillTextBoxValues(adminPage.workShiftsLocators.shiftName, 'Lunch Time');
-        await adminPage.fillDateValue(adminPage.workShiftsLocators.fromTime, '01:00 PM');
-        await adminPage.fillDateValue(adminPage.workShiftsLocators.toTime, '02:00 PM');
-        await adminPage.fillTextBoxValues(adminPage.workShiftsLocators.assignedEmployees, 'Cecil');
-        await adminPage.selecDropdownOption(adminPage.workShiftsLocators.assignedEmployees, 'Cecil  Bonaparte');
+        await adminPage.fillTextBoxValues(adminPage.workShiftsLocators.shiftName, Constants.adminModule.workShifts.shiftName);
+        await adminPage.fillDateValue(adminPage.workShiftsLocators.fromTime, Constants.adminModule.workShifts.fromTime);
+        await adminPage.fillDateValue(adminPage.workShiftsLocators.toTime, Constants.adminModule.workShifts.toTime);
+        await adminPage.fillTextBoxValues(adminPage.workShiftsLocators.assignedEmployees, Constants.adminModule.workShifts.assignedEmployees);
+        await adminPage.selecDropdownOption(adminPage.workShiftsLocators.assignedEmployees, Constants.adminModule.workShifts.assignedEmployees);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -223,11 +221,11 @@ test.describe('Filling Work Shifts and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.workShiftsDropDownMenu, 0);
         await page.waitForTimeout(2000);
-        await adminPage.editRow('Lunch Time');
+        await adminPage.editRow(Constants.adminModule.workShifts.shiftName);
         await adminPage.clearTextBoxValues(adminPage.workShiftsLocators.shiftName);
-        await adminPage.fillTextBoxValues(adminPage.workShiftsLocators.shiftName, ' Edited');
-        await adminPage.fillDateValue(adminPage.workShiftsLocators.fromTime, '02:00 PM');
-        await adminPage.fillDateValue(adminPage.workShiftsLocators.toTime, '03:00 PM');
+        await adminPage.fillTextBoxValues(adminPage.workShiftsLocators.shiftName, Constants.adminModule.edit);
+        await adminPage.fillDateValue(adminPage.workShiftsLocators.fromTime, Constants.adminModule.workShifts.fromTimeEdit);
+        await adminPage.fillDateValue(adminPage.workShiftsLocators.toTime, Constants.adminModule.workShifts.toTimeEdit);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -236,7 +234,7 @@ test.describe('Filling Work Shifts and editing the information', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.jobMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.workShiftsDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'Lunch Time Edited');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.workShifts.deleteWorkShift);
     });
 });
 
@@ -247,19 +245,19 @@ test.describe('Filling Organization General Information and editing the informat
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.generalInfoDropDownMenu, 0);
         await adminPage.click(adminPage.organizationLocators.editSwitch);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.orgName, 'OrangeHRM Edited');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.regNumber, '10101');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.taxID, 'DGI999');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.phone, '9999966666');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.fax, '6666699999');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.email, 'infoedited@orangehrm.com');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.adrStreet1, 'PUL');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.adrStreet2, 'RAM');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.city, 'CBE');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.state, 'TN');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.zipCode, '045');
-        await adminPage.selecDropdownOption(adminPage.organizationLocators.country, 'India');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.notes, 'HRM Software Edited');
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.orgName, Constants.adminModule.organization.orgName);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.regNumber, Constants.adminModule.organization.regNumber);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.taxID, Constants.adminModule.organization.taxID);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.phone, Constants.adminModule.organization.phone);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.fax, Constants.adminModule.organization.fax);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.email, Constants.adminModule.organization.email);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.adrStreet1, Constants.adminModule.organization.adrStreet1);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.adrStreet2, Constants.adminModule.organization.adrStreet2);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.city, Constants.adminModule.organization.city);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.state, Constants.adminModule.organization.state);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.zipCode, Constants.adminModule.organization.zipCode);
+        await adminPage.selecDropdownOption(adminPage.organizationLocators.country, Constants.adminModule.organization.country);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.notes, Constants.adminModule.organization.notes);
         await adminPage.clickSave(adminPage.actionButton, 0, Constants.sucessMsg.successfulUpdatedMsg);
     });
 });
@@ -271,15 +269,15 @@ test.describe('Filling Organization Locations Information and editing the inform
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.locationsDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 2);
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.name, 'Atmecs R&D');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.city, 'Texas');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.state, 'TX ');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.zipCode, '045');
-        await adminPage.selecDropdownOption(adminPage.locationsLocator.country, 'India');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.phone, '9999966666');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.fax, '6666699999');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.address, 'PUL');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.notes, 'HRM Software');
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.name, Constants.adminModule.locations.name);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.city, Constants.adminModule.locations.city);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.state, Constants.adminModule.locations.state);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.zipCode, Constants.adminModule.locations.zipCode);
+        await adminPage.selecDropdownOption(adminPage.locationsLocator.country, Constants.adminModule.locations.country);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.phone, Constants.adminModule.locations.phone);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.fax, Constants.adminModule.locations.fax);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.address, Constants.adminModule.locations.address);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.notes, Constants.adminModule.locations.notes);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -288,26 +286,26 @@ test.describe('Filling Organization Locations Information and editing the inform
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.organizationMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.locationsDropDownMenu, 0);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.name, 'Atmecs R&D');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.city, 'Texas');
-        await adminPage.selecDropdownOption(adminPage.locationsLocator.country, 'India');
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.name, Constants.adminModule.locations.name);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.city, Constants.adminModule.locations.city);
+        await adminPage.selecDropdownOption(adminPage.locationsLocator.country, Constants.adminModule.locations.country);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 1);
         let record = await page.locator(adminPage.recordsCount).textContent();
         console.log(record);
-        expect(record).toBe(`(1) Record Found`);
+        expect(record).toBe(Constants.assertion.totalRecords);
 
-        await adminPage.editRow('Atmecs R&D');
+        await adminPage.editRow(Constants.adminModule.locations.name);
         await page.waitForSelector(`div.orangehrm-card-container`);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.name, 'Atmecs R&D Edited');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.city, 'Texas Edited');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.state, 'TX Edited');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.zipCode, '045');
-        await adminPage.selecDropdownOption(adminPage.locationsLocator.country, 'India');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.phone, '9999966666');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.fax, '6666699999');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.address, 'PUL Edited');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.note, 'HRM Software Edited');
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.name, Constants.adminModule.locations.nameEdited);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.city, Constants.adminModule.locations.cityEdited);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.state, Constants.adminModule.locations.stateEdited);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.zipCode, Constants.adminModule.locations.zipCode);
+        await adminPage.selecDropdownOption(adminPage.locationsLocator.country, Constants.adminModule.locations.country);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.phone, Constants.adminModule.locations.phone);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.fax, Constants.adminModule.locations.fax);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.address, Constants.adminModule.locations.addressEdited);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.note, Constants.adminModule.locations.notesEdited);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -316,14 +314,14 @@ test.describe('Filling Organization Locations Information and editing the inform
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.organizationMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.locationsDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.name, 'Atmecs R&D Edited');
-        await adminPage.fillTextBoxValues(adminPage.locationsLocator.city, 'Texas');
-        await adminPage.selecDropdownOption(adminPage.locationsLocator.country, 'India');
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.name, Constants.adminModule.locations.nameEdited);
+        await adminPage.fillTextBoxValues(adminPage.locationsLocator.city, Constants.adminModule.locations.city);
+        await adminPage.selecDropdownOption(adminPage.locationsLocator.country, Constants.adminModule.locations.country);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 1);
         let record = await page.locator(adminPage.recordsCount).textContent();
         console.log(record);
-        expect(record).toBe(`(1) Record Found`);
-        await adminPage.deleteFileRecord('delete', 'Atmecs R&D Edited');
+        expect(record).toBe(Constants.assertion.totalRecords);
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.locations.nameEdited);
     });
 });
 
@@ -336,9 +334,9 @@ test.describe('Filling Organization Structure Information and editing the inform
         await adminPage.click(adminPage.organizationLocators.editSwitch);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
         await page.waitForSelector(`div[role='document']`);
-        await adminPage.fillTextBoxValues(adminPage.structureLocator.unitID, '007');
-        await adminPage.fillTextBoxValues(adminPage.structureLocator.name, 'Playwright Automation');
-        await adminPage.fillTextBoxValues(adminPage.structureLocator.description, 'Playwright Engineer 123 Testing');
+        await adminPage.fillTextBoxValues(adminPage.structureLocator.unitID, Constants.adminModule.structure.unitID);
+        await adminPage.fillTextBoxValues(adminPage.structureLocator.name, Constants.adminModule.structure.name);
+        await adminPage.fillTextBoxValues(adminPage.structureLocator.description, Constants.adminModule.structure.description);
         await adminPage.clickSave(adminPage.actionButton, 2, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -348,12 +346,12 @@ test.describe('Filling Organization Structure Information and editing the inform
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.structureDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.click(adminPage.organizationLocators.editSwitch);
-        await adminPage.editRowStructure('Playwright Automation');
+        await adminPage.editRowStructure(Constants.adminModule.structure.name);
         await page.waitForSelector(`div[role='document']`);
-        await adminPage.fillTextBoxValues(adminPage.structureLocator.unitID, '0077');
+        await adminPage.fillTextBoxValues(adminPage.structureLocator.unitID, Constants.adminModule.structure.unitID1);
         await page.waitForTimeout(2000);
-        await adminPage.fillTextBoxValues(adminPage.structureLocator.name, 'Quality Engineering Edited');
-        await adminPage.fillTextBoxValues(adminPage.structureLocator.description, 'Quality Engineering 123 Testing Edited');
+        await adminPage.fillTextBoxValues(adminPage.structureLocator.name, Constants.adminModule.structure.nameEdited);
+        await adminPage.fillTextBoxValues(adminPage.structureLocator.description, Constants.adminModule.structure.descriptionEdited);
         await adminPage.clickSave(adminPage.actionButton, 2, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -363,10 +361,10 @@ test.describe('Filling Organization Structure Information and editing the inform
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.structureDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.click(adminPage.organizationLocators.editSwitch);
-        await adminPage.addSubRowStructure('Quality Engineering Edited');
-        await adminPage.fillTextBoxValues(adminPage.structureLocator.unitID, '0077');
-        await adminPage.fillTextBoxValues(adminPage.structureLocator.name, 'Quality Playwright Engineering Sub');
-        await adminPage.fillTextBoxValues(adminPage.structureLocator.description, 'Quality Playwright Engineering 123 Testing Sub');
+        await adminPage.addSubRowStructure(Constants.adminModule.structure.nameEdited);
+        await adminPage.fillTextBoxValues(adminPage.structureLocator.unitID, Constants.adminModule.structure.unitID1);
+        await adminPage.fillTextBoxValues(adminPage.structureLocator.name, Constants.adminModule.structure.nameAdd);
+        await adminPage.fillTextBoxValues(adminPage.structureLocator.description, Constants.adminModule.structure.descriptionAdd);
         await adminPage.clickSave(adminPage.actionButton, 2, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -376,7 +374,7 @@ test.describe('Filling Organization Structure Information and editing the inform
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.structureDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.click(adminPage.organizationLocators.editSwitch);
-await adminPage.deleteFileStructure('structure','Quality Engineering Edited');
+        await adminPage.deleteFileStructure('structure', Constants.adminModule.structure.deleteStructure);
     });
 });
 
@@ -387,8 +385,8 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.skillsDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.skillsLocator.name, 'Playwright');
-        await adminPage.fillTextBoxValues(adminPage.skillsLocator.description, 'Automation Software');
+        await adminPage.fillTextBoxValues(adminPage.skillsLocator.name, Constants.adminModule.skills.name);
+        await adminPage.fillTextBoxValues(adminPage.skillsLocator.description, Constants.adminModule.skills.description);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -398,11 +396,11 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.skillsDropDownMenu, 0);
         await page.waitForTimeout(3000);
 
-        await adminPage.editRow('Playwright');
+        await adminPage.editRow(Constants.adminModule.skills.name);
         await page.waitForSelector(`div.orangehrm-card-container`);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.skillsLocator.name, 'Playwright Framework');
-        await adminPage.fillTextBoxValues(adminPage.skillsLocator.description, 'Automation Software Tool');
+        await adminPage.fillTextBoxValues(adminPage.skillsLocator.name, Constants.adminModule.skills.nameEdited);
+        await adminPage.fillTextBoxValues(adminPage.skillsLocator.description, Constants.adminModule.skills.descriptionEdited);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -411,7 +409,7 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.qualificationsMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.skillsDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'Playwright Framework');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.skills.nameEdited);
     });
 });
 
@@ -422,7 +420,7 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.educationDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.educationLocator.level, 'Long Distance Degree');
+        await adminPage.fillTextBoxValues(adminPage.educationLocator.level, Constants.adminModule.level);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -432,10 +430,10 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.educationDropDownMenu, 0);
         await page.waitForTimeout(3000);
 
-        await adminPage.editRow('Long Distance Degree');
+        await adminPage.editRow(Constants.adminModule.level);
         await page.waitForSelector(`div.orangehrm-card-container`);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.educationLocator.level, 'Long Distance Degree Edited');
+        await adminPage.fillTextBoxValues(adminPage.educationLocator.level, Constants.adminModule.level1);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -444,7 +442,7 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.qualificationsMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.educationDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'Long Distance Degree Edited');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.level1);
     });
 });
 
@@ -455,7 +453,7 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.licensesDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.licenseLocator.name, 'Sun Certified Java Programmer (SCJP)');
+        await adminPage.fillTextBoxValues(adminPage.licenseLocator.name, Constants.adminModule.license);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -465,10 +463,10 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.licensesDropDownMenu, 0);
         await page.waitForTimeout(3000);
 
-        await adminPage.editRow('Sun Certified Java Programmer (SCJP)');
+        await adminPage.editRow(Constants.adminModule.license);
         await page.waitForSelector(`div.orangehrm-card-container`);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.licenseLocator.name, 'Oracle Certified Java Programmer(OCJP)');
+        await adminPage.fillTextBoxValues(adminPage.licenseLocator.name, Constants.adminModule.license1);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -477,7 +475,7 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.qualificationsMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.licensesDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'Oracle Certified Java Programmer(OCJP)');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.license1);
     });
 });
 
@@ -488,7 +486,7 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.languagesDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.languageLocator.name, 'Hindi');
+        await adminPage.fillTextBoxValues(adminPage.languageLocator.name, Constants.adminModule.langName);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -498,10 +496,10 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.languagesDropDownMenu, 0);
         await page.waitForTimeout(3000);
 
-        await adminPage.editRow('Hindi');
+        await adminPage.editRow(Constants.adminModule.langName);
         await page.waitForSelector(`div.orangehrm-card-container`);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.languageLocator.name, 'Tamil');
+        await adminPage.fillTextBoxValues(adminPage.languageLocator.name, Constants.adminModule.langName1);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -510,7 +508,7 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.qualificationsMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.languagesDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'Tamil');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.langName1);
     });
 });
 
@@ -521,7 +519,7 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.membershipsDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.membershipLocator.name, 'BCCB');
+        await adminPage.fillTextBoxValues(adminPage.membershipLocator.name, Constants.adminModule.membershipName);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -531,10 +529,10 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.membershipsDropDownMenu, 0);
         await page.waitForTimeout(3000);
 
-        await adminPage.editRow('BCCB');
+        await adminPage.editRow(Constants.adminModule.membershipName);
         await page.waitForSelector(`div.orangehrm-card-container`);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.membershipLocator.name, 'XYYX');
+        await adminPage.fillTextBoxValues(adminPage.membershipLocator.name, Constants.adminModule.membershipName1);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -543,7 +541,7 @@ test.describe('Filling Qualifications Information and editing the information', 
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.qualificationsMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.membershipsDropDownMenu, 0);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'XYYX');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.membershipName1);
     });
 });
 
@@ -553,7 +551,7 @@ test.describe('Filling Nationalities Information and editing the information', (
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.nationalitiesMenu);
         await page.waitForTimeout(3000);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.membershipLocator.name, 'AmericanBuzz');
+        await adminPage.fillTextBoxValues(adminPage.membershipLocator.name, Constants.adminModule.membershipName2);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -562,10 +560,10 @@ test.describe('Filling Nationalities Information and editing the information', (
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.nationalitiesMenu);
         await page.waitForTimeout(3000);
 
-        await adminPage.editRow('AmericanBuzz');
+        await adminPage.editRow(Constants.adminModule.membershipName2);
         await page.waitForSelector(`div.orangehrm-card-container`);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.membershipLocator.name, 'AmericanAldrin');
+        await adminPage.fillTextBoxValues(adminPage.membershipLocator.name, Constants.adminModule.membershipName3);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -573,7 +571,7 @@ test.describe('Filling Nationalities Information and editing the information', (
         await page.waitForTimeout(2000);
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.nationalitiesMenu);
         await page.waitForTimeout(5000);
-        await adminPage.deleteFileRecord('delete', 'AmericanAldrin');
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.membershipName3);
     });
 });
 
@@ -583,22 +581,22 @@ test.describe('Modifying Corporate Branding Information and saving the informati
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.corpBrandingMenu);
         await page.waitForTimeout(3000);
         await adminPage.click(adminPage.corpBrandingLocator.primaryColor);
-        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, '#1dd6ff');
+        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, Constants.adminModule.hex.primaryColor);
         await adminPage.click(adminPage.corpBrandingLocator.secondaryColor);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, '#e92188');
+        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, Constants.adminModule.hex.secondaryColor);
         await adminPage.click(adminPage.corpBrandingLocator.primaryFontColor);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, '#1239c7');
+        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, Constants.adminModule.hex.primaryFontColor);
         await adminPage.click(adminPage.corpBrandingLocator.secondaryFontColor);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, '#a84646');
+        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, Constants.adminModule.hex.secondaryFontColor);
         await adminPage.click(adminPage.corpBrandingLocator.primaryGradientColor1);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, '#247d5e');
+        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, Constants.adminModule.hex.primaryGradientColor1);
         await adminPage.click(adminPage.corpBrandingLocator.primaryGradientColor2);
         await page.waitForTimeout(3000);
-        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, '#17f3ce');
+        await adminPage.fillTextBoxValues(adminPage.corpBrandingLocator.hex, Constants.adminModule.hex.primaryGradientColor2);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 1);
         await page.waitForTimeout(5000);
         await adminPage.clickSave(adminPage.actionButton, 2, Constants.sucessMsg.sucessfulSavedMsg);
@@ -609,9 +607,9 @@ test.describe('Modifying Corporate Branding Information and saving the informati
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.corpBrandingMenu);
         await page.waitForTimeout(3000);
         await page.waitForSelector(`div.orangehrm-card-container`);
-        await adminPage.bannerUploadFile('Client Logo', '50px X 50px.png');
-        await adminPage.bannerUploadFile('Client Banner', '182px X 50px.jpg');
-        await adminPage.bannerUploadFile('Login Banner', '340px X 65px.jpg');
+        await adminPage.bannerUploadFile(Constants.adminModule.upload.fileName.name1, Constants.adminModule.upload.clientLogo);
+        await adminPage.bannerUploadFile(Constants.adminModule.upload.fileName.name2, Constants.adminModule.upload.clientBanner);
+        await adminPage.bannerUploadFile(Constants.adminModule.upload.fileName.name3, Constants.adminModule.upload.loginBanner);
         await adminPage.clickSave(adminPage.actionButton, 2, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -628,7 +626,7 @@ test.describe('Modifying Configuration Information and saving the changes', () =
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.configurationMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.emailConfigurationDropDownMenu, 0);
         await page.waitForTimeout(2000);
-        await adminPage.fillTextBoxValues(adminPage.configurationLocators.mailSentAs, 'infotest@orangehrm.com');
+        await adminPage.fillTextBoxValues(adminPage.configurationLocators.mailSentAs, Constants.adminModule.mailSentAs);
         await adminPage.click(adminPage.configurationLocators.secureSMTP);
         await adminPage.click(adminPage.configurationLocators.sMTP);
         await adminPage.click(adminPage.configurationLocators.sendMail);
@@ -643,7 +641,7 @@ test.describe('Modifying Configuration Information and saving the changes', () =
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.emailConfigurationDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.configurationLocators.mailSentAs, 'info@orangehrm.com');
+        await adminPage.fillTextBoxValues(adminPage.configurationLocators.mailSentAs, Constants.adminModule.mailSentAs1);
         await adminPage.clickSave(adminPage.actionButton, 1, Constants.sucessMsg.sucessfulSavedMsg);
     });
 });
@@ -655,10 +653,10 @@ test.describe('Modifying Email Subscriptions and saving the changes', () => {
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.emailSubscriptionsDropDownMenu, 0);
         await page.waitForTimeout(2000);
         await adminPage.clickSave(adminPage.configurationLocators.leaveApplications, 0, Constants.sucessMsg.successfulUpdatedMsg);
-        await adminPage.addPerson('Leave Applications');
+        await adminPage.addPerson(Constants.adminModule.emailSub);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 0);
-        await adminPage.fillTextBoxValues(adminPage.name, 'Aldrin Kardoze');
-        await adminPage.fillTextBoxValues(adminPage.organizationLocators.email, 'afktest@orangehrm.com');
+        await adminPage.fillTextBoxValues(adminPage.name, Constants.adminModule.nameSub);
+        await adminPage.fillTextBoxValues(adminPage.organizationLocators.email, Constants.adminModule.testEmailSub);
         await adminPage.clickElementWithIndex(adminPage.actionButton, 2);
     });
 
@@ -668,8 +666,8 @@ test.describe('Modifying Email Subscriptions and saving the changes', () => {
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.emailSubscriptionsDropDownMenu, 0);
         await page.waitForTimeout(3000);
         await adminPage.clickSave(adminPage.configurationLocators.leaveApplications, 0, Constants.sucessMsg.successfulUpdatedMsg);
-        await adminPage.addPerson('Leave Applications');
-        await adminPage.deleteFileRecord('delete', 'Aldrin Kardoze');
+        await adminPage.addPerson(Constants.adminModule.emailSub);
+        await adminPage.deleteFileRecord('delete', Constants.adminModule.nameSub);
     });
 });
 
@@ -679,8 +677,8 @@ test.describe('Modifying Localization and saving the changes', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.configurationMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.localizationDropDownMenu, 0);
         await page.waitForTimeout(2000);
-        await adminPage.selecDropdownOption(adminPage.configurationLocators.language, 'German - Deutsch');
-        await adminPage.selecDropdownOption(adminPage.configurationLocators.dateFormat, 'dd-mm-yyyy ( 27-03-2023 )');
+        await adminPage.selecDropdownOption(adminPage.configurationLocators.language, Constants.adminModule.localization.language);
+        await adminPage.selecDropdownOption(adminPage.configurationLocators.dateFormat, `dd-mm-yyyy ( ${usDate} )`);
         await adminPage.clickSave(adminPage.actionButton, 0, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
@@ -689,8 +687,8 @@ test.describe('Modifying Localization and saving the changes', () => {
         await adminPage.clickHeaderMenu(adminPage.adminHeadersLocators.germanconfigurationMenu);
         await adminPage.clickElementWithIndex(adminPage.adminHeadersLocators.germanLocalizationDropDownMenu, 0);
         await page.waitForTimeout(2000);
-        await adminPage.selecDropdownOption(adminPage.configurationLocators.germanlanguage, 'English (United States)');
-        await adminPage.selecDropdownOption(adminPage.configurationLocators.germandateFormat, 'yyyy-mm-dd ( 2023-03-27 )');
+        await adminPage.selecDropdownOption(adminPage.configurationLocators.germanlanguage, Constants.adminModule.localization.germanlanguage);
+        await adminPage.selecDropdownOption(adminPage.configurationLocators.germandateFormat, `yyyy-mm-dd ( ${germanDate} )`);
         await adminPage.clickSave(adminPage.actionButton, 0, Constants.sucessMsg.germansuccessfulUpdatedMsg);
     });
 });

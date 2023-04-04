@@ -2,7 +2,7 @@
     "Credentials": {
         "stdUser": "Admin",
         "password": "admin123",
-        "newUser" : "Admin@123"
+        "newUser": "Admin@123"
     },
     "Urls": {
         "login": "/.*login/",
@@ -135,5 +135,175 @@
     "credentials": {
         "wrongUsername": "Adimn",
         "wrongPassword": "adimn321"
+    },
+    "buzzModule": {
+        "postInput": "Hey Everyone, What's up?",
+        "postInput2": "Hey Everyone, What's up?, Check Out this Remix!",
+        "upload50px": "50px X 50px.png",
+        "upload182px": "182px X 50px.jpg",
+        "videoURL": "https://www.youtube.com/watch?v=kvV_9-H6Ab0",
+        "commentInput": "Look I have commented for this Post",
+        "commmentInputEdit": "Look I have commented for this Post Edited"
+    },
+    "buzzAssertions": {
+        "feedText": "Hey Everyone, What's up?, Check Out this Remix!",
+        "feedText1": "Happy Birthday to my darling little son!!! Thanks guys for your presence at the party. ",
+        "feedText2": "Happy Birthday to my darling little son!!! Thanks guys for your presence at the party. ",
+        "like": "1 Like",
+        "comment": "Look I have commented for this Post Edited"
+    },
+    "maintenanceModule": {
+        "pastEmployee": "Paul Collings",
+        "vacancy": "Sales Representative",
+        "employeeName": "Dominic  Chase"
+    },
+    "pimModule": {
+        "licenseExpiryDate": "2030-11-25",
+        "nationality": "Indian",
+        "maritalStatus": "Single",
+        "dateOfBirth": "2000-12-12",
+        "bloodType": "A+",
+        "country": "India",
+        "name": "Gob",
+        "relationship": "Child",
+        "depDateofBirth": "2000-12-26",
+        "jobTitle": "QA Engineer",
+        "subUnit": "Quality Assurance",
+        "employeeStatus": "Full-Time Permanent",
+        "nameTitle": "Paul  Collings",
+        "reportingMethod": "reportingMethod",
+        "employeeName": "Aldrin F Kardoze",
+        "employeeId": "999",
+        "reportNameSearch": "PIM Sample Report Automation",
+        "displayFieldGroup": "Personal",
+        "displayField": "Employee Last Name",
+        "reportNameSearch1": "All Employee Sub Unit Hierarchy Report",
+        "reportNameSearchEdit": "All Employee Sub Unit Hierarchy Report Edited",
+        "criteria": "Employee Name",
+        "employeeName1": "Cecil Bonaparte"
+    },
+    "adminModule": {
+        "userName": "Admin",
+        "userRole": "Admin",
+        "employeeName": "Paul Colling",
+        "status": "Enabled",
+        "edit": " Edited",
+        "userManagement": {
+            "userName": "AdminTesting",
+            "employeeName": "Paul Collings"
+        },
+        "job": {
+            "jobTitle": "Automation Engineer",
+            "jobDescription": "Testing 123 Sample",
+            "note": "Automation Engineer Note Added",
+            "jobDescriptionEdited": "Testing 123 Sample Edited",
+            "noteEdited": "Automation Engineer Note Added and Edited",
+            "deleteEditedRecord": "Automation Engineer Edited"
+        },
+        "payGradeName": "Grade 0",
+        "currency": "INR - Indian Rupee",
+        "minSalary": "20000",
+        "maxSalary": "25000",
+        "deletePayGradeRecord": "Grade 0 Edited",
+        "employeeStatusName": "Full-Time Automation",
+        "deleteemployeeStatusEditedRecord": "Automation Engineer Edited",
+        "jobCategory": "On Bench",
+        "deletejobCategory": "On Bench Edited",
+        "workShifts": {
+            "shiftName": "Lunch Time",
+            "fromTime": "01:00 PM",
+            "toTime": "02:00 PM",
+            "assignedEmployees": "Cecil  Bonaparte",
+            "fromTimeEdit": "02:00 PM",
+            "toTimeEdit": "03:00 PM",
+            "deleteWorkShift": "Lunch Time Edited"
+        },
+        "organization": {
+            "orgName": "OrangeHRM Edited",
+            "regNumber": "10101",
+            "taxID": "DGI999",
+            "phone": "9999966666",
+            "fax": "6666699999",
+            "email": "infoedited@orangehrm.com",
+            "adrStreet1": "PUL",
+            "adrStreet2": "RAM",
+            "city": "CBE",
+            "state": "TN",
+            "zipCode": "045",
+            "country": "India",
+            "notes": "HRM Software Edited"
+        },
+        "locations": {
+            "name": "Atmecs R&D",
+            "city": "Texas",
+            "state": "TX ",
+            "zipCode": "045",
+            "country": "India",
+            "phone": "9999966666",
+            "fax": "6666699999",
+            "address": "PUL",
+            "notes": "HRM Software",
+            "nameEdited": "Atmecs R&D Edited",
+            "cityEdited": "Texas Edited",
+            "stateEdited": "TX Edited",
+            "addressEdited": "PUL Edited",
+            "notesEdited": "HRM Software Edited"
+        },
+        "structure": {
+            "unitID": "007",
+            "name": "Playwright Automation",
+            "description": "Playwright Engineer 123 Testing",
+            "unitID1": "0077",
+            "nameEdited": "Playwright Automation",
+            "descriptionEdited": "Playwright Engineer 123 Testing",
+            "nameAdd": "Quality Playwright Engineering Sub",
+            "descriptionAdd": "Quality Playwright Engineering 123 Testing Sub",
+            "deleteStructure": "Quality Engineering Edited"
+        },
+        "skills": {
+            "name": "Playwright",
+            "description": "Automation Software",
+            "nameEdited": "Playwright Framework",
+            "descriptionEdited": "Automation Software Tool"
+        },
+        "level": "Long Distance Degree",
+        "level1": "Long Distance Degree Edited",
+        "license": "Sun Certified Java Programmer (SCJP)",
+        "license1": "Oracle Certified Java Programmer(OCJP)",
+        "langName": "Hindi",
+        "langName1": "Tamil",
+        "membershipName": "BCCB",
+        "membershipName1": "XYYX",
+        "membershipName2": "AmericanBuzz",
+        "membershipName3": "AmericanAldrin",
+        "hex": {
+            "primaryColor": "#1dd6ff",
+            "secondaryColor": "#e92188",
+            "primaryFontColor": "#1239c7",
+            "secondaryFontColor": "#a84646",
+            "primaryGradientColor1": "#247d5e",
+            "primaryGradientColor2": "#17f3ce"
+        },
+        "upload": {
+            "fileName": {
+                "name1": "Client Logo",
+                "name2": "Client Banner",
+                "name3": "Login Banner"
+            },
+            "clientLogo": "50px X 50px.png",
+            "clientBanner": "182px X 50px.jpg",
+            "loginBanner": "340px X 65px.jpg"
+        },
+        "mailSentAs": "infotest@orangehrm.com",
+        "mailSentAs1": "info@orangehrm.com",
+        "emailSub": "Leave Applications",
+        "nameSub": "Aldrin Kardoze",
+        "testEmailSub": "afktest@orangehrm.com",
+        "localization": {
+            "language": "German - Deutsch",
+            "dateFormat": "",
+            "germanlanguage": "English (United States)",
+            "germandateFormat": ""
+        }
     }
 }

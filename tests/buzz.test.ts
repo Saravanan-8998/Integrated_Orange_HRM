@@ -1,10 +1,22 @@
 import { test, expect, Page } from '@playwright/test';
 import Constants from '../support/constants.json';
 import { TestData } from '../testData/testData';
-import { LoginPage, HomePage, BuzzPage } from '../pageObjects';
+import { LoginPage, HomePage, BuzzPage } from '../page_objects';
 import ENV from '../support/env';
+import { Utils } from '../support/utils';
+import { createAdminUser, getAdminFullName } from "../support/createUser";
 
-let loginPage: LoginPage, homePage: HomePage, buzzPage: BuzzPage, testData: TestData, page: Page;
+let loginPage: LoginPage, homePage: HomePage, buzzPage: BuzzPage, testData: TestData, page: Page, utils: Utils;
+
+let fullNameValue: any;
+let USERNAME: any;
+
+async function adminLogin() {
+    await createAdminUser();
+    fullNameValue = await getAdminFullName();
+    USERNAME = fullNameValue.slice(14, 32);
+    await loginPage.enterCredentials(USERNAME, 'Admin@123');
+}
 
 test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -16,9 +28,7 @@ test.beforeAll(async ({ browser }) => {
     await expect(page).toHaveURL(/.*login/);
     let pass = await testData.encodeDecodePassword();
     await loginPage.fillUsrNameAndPwdAndLogin(ENV.USERNAME, pass);
-    await expect(page).toHaveURL(/.*dashboard/);
-    await page.waitForSelector(homePage.dashboardGrid);
-    await homePage.clickBuzzMenu();
+    await utils.clickMenu("link", homePage.homePageElements.buzz, "Buzz");
 });
 
 test.afterAll(async () => {
@@ -28,11 +38,11 @@ test.afterAll(async () => {
 test.describe('Filling Buzz NewsFeed and Posting Update', () => {
     test('Filling Whats on your mind? and sharing photos to post', async () => {
         await buzzPage.click(buzzPage.buzzLocators.buzzTitle);
-        await buzzPage.fillTextBoxValues(buzzPage.buzzLocators.postInput, `Hey Everyone, What's up?`);
+        await buzzPage.fillTextBoxValues(buzzPage.buzzLocators.postInput, Constants.buzzModule.postInput);
         await buzzPage.click(buzzPage.buzzLocators.sharePhotos);
         await page.locator(buzzPage.buzzLocators.photosContainer).isEnabled();
-        await buzzPage.uploadFile('50px X 50px.png');
-        await buzzPage.uploadFile('182px X 50px.jpg');
+        await buzzPage.uploadFile(Constants.buzzModule.upload50px);
+        await buzzPage.uploadFile(Constants.buzzModule.upload182px);
         await buzzPage.clickSave(buzzPage.buzzLocators.shareButton, 0, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
@@ -40,8 +50,8 @@ test.describe('Filling Buzz NewsFeed and Posting Update', () => {
         await buzzPage.click(buzzPage.buzzLocators.buzzTitle);
         await buzzPage.click(buzzPage.buzzLocators.shareVideos);
         await page.locator(buzzPage.buzzLocators.photosContainer).isEnabled();
-        await buzzPage.fillTextBoxValues(buzzPage.buzzLocators.postInput, `Hey Everyone, What's up?, Check Out this Remix!`);
-        await buzzPage.fillTextBoxValues(buzzPage.buzzLocators.videoURLInput, 'https://www.youtube.com/watch?v=kvV_9-H6Ab0');
+        await buzzPage.fillTextBoxValues(buzzPage.buzzLocators.postInput, Constants.buzzModule.postInput2);
+        await buzzPage.fillTextBoxValues(buzzPage.buzzLocators.videoURLInput, Constants.buzzModule.videoURL);
         await page.waitForTimeout(3000);
         await buzzPage.clickSave(buzzPage.buzzLocators.shareButton, 0, Constants.sucessMsg.sucessfulSavedMsg);
     });
@@ -51,11 +61,11 @@ test.describe('Click Most Recent/Liked/Commented Posts and verify the Feed is Fi
     test('Click Most Recent Posts and verify that the posts are filtered', async () => {
         await buzzPage.click(buzzPage.buzzLocators.buzzTitle);
         await buzzPage.click(buzzPage.buzzLocators.mostRecentPosts);
-        expect(await buzzPage.getText(buzzPage.buzzLocators.feedtext)).toEqual(`Hey Everyone, What's up?, Check Out this Remix!`);
+        expect(await buzzPage.getText(buzzPage.buzzLocators.feedtext)).toEqual(Constants.buzzAssertions.feedText);
         await buzzPage.click(buzzPage.buzzLocators.mostLikedPosts);
-        expect(await buzzPage.getText(buzzPage.buzzLocators.feedtext)).toEqual(`Happy Birthday to my darling little son!!! Thanks guys for your presence at the party. `);
+        expect(await buzzPage.getText(buzzPage.buzzLocators.feedtext)).toEqual(Constants.buzzAssertions.feedText1);
         await buzzPage.click(buzzPage.buzzLocators.mostCommentedPosts);
-        expect(await buzzPage.getText(buzzPage.buzzLocators.feedtext)).toEqual(`Happy Birthday to my darling little son!!! Thanks guys for your presence at the party. `);
+        expect(await buzzPage.getText(buzzPage.buzzLocators.feedtext)).toEqual(Constants.buzzAssertions.feedText2);
     });
 });
 
@@ -64,21 +74,21 @@ test.describe('React to the Created Post in the Feed and Comment', () => {
         await buzzPage.click(buzzPage.buzzLocators.buzzTitle);
         await buzzPage.click(buzzPage.buzzLocators.mostRecentPosts);
         await buzzPage.click(buzzPage.buzzLocators.heart);
-        expect(await buzzPage.getText(buzzPage.buzzLocators.likeText)).toEqual(`1 Like`);
+        expect(await buzzPage.getText(buzzPage.buzzLocators.likeText)).toEqual(Constants.buzzAssertions.like);
     });
 
     test('Comment to the latest Post in the Feed, Like, Edit and Delete the Comment', async () => {
         await buzzPage.click(buzzPage.buzzLocators.buzzTitle);
         await buzzPage.click(buzzPage.buzzLocators.mostRecentPosts);
         await buzzPage.click(buzzPage.buzzLocators.comment);
-        await buzzPage.fillTextBoxValues(buzzPage.buzzLocators.commentInput, 'Look I have commented for this Post');
+        await buzzPage.fillTextBoxValues(buzzPage.buzzLocators.commentInput, Constants.buzzModule.commentInput);
         await page.keyboard.press('Enter');
         await buzzPage.click(buzzPage.buzzLocators.likeComment);
         await buzzPage.click(buzzPage.buzzLocators.editComment);
-        await buzzPage.fillTextBoxValues(buzzPage.buzzLocators.editCommentInput, 'Look I have commented for this Post Edited');
+        await buzzPage.fillTextBoxValues(buzzPage.buzzLocators.editCommentInput, Constants.buzzModule.commmentInputEdit);
         await page.keyboard.press('Enter');
         await page.waitForTimeout(3000);
-        expect(await buzzPage.getText(buzzPage.buzzLocators.commentText)).toEqual(`Look I have commented for this Post Edited`);
+        expect(await buzzPage.getText(buzzPage.buzzLocators.commentText)).toEqual(Constants.buzzAssertions.comment);
         await buzzPage.deleteComment();
     });
 });
