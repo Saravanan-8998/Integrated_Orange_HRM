@@ -4,7 +4,18 @@
   "description": "It is the complete automated application flow of Trail website Orange HRM",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+    "admin" : "npx playwright test admin.spec.ts",
+    "buzz" : "npx playwright test buzz.spec.ts",
+    "dashboard" : "npx playwright test dashboard.spec.ts",
+    "leave" : "npx playwright test leave.spec.ts",
+    "login" : "npx playwright test login.spec.ts",
+    "maintenance" : "npx playwright test maintenance.spec.ts",
+    "myInfo" : "npx playwright test myInfo.spec.ts",
+    "performance" : "npx playwright test performance.spec.ts",
+    "pim" : "npx playwright test pim.spec.ts",
+    "recruitment" : "npx playwright test recruitment.spec.ts",
+    "time" : "npx playwright test time.spec.ts"
   },
   "keywords": [],
   "author": "",

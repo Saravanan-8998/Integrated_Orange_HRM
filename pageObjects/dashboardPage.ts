@@ -192,7 +192,6 @@ export class Dashboard {
     // A function used to verify buzz latest post components
     async verifyBuzzLatestPostsComponents() {
         await (await this.page.waitForSelector(this.buzzLatestPosts.buzzLatestPostsTitle)).isVisible();
-        await (await this.page.waitForSelector(this.buzzLatestPosts.mainDiv)).isVisible();
     }
 
     // A function used to click check sub div

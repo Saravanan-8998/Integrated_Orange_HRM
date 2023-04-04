@@ -4,7 +4,8 @@ import { LoginPage } from "../pageObjects/login_Page";
 import subURL from "../support/subURL.json";
 import { myBrowserFixture } from "../support/fixtures";
 import { createAdminUser, getAdminFullName } from "../support/createUser";
-import { autoDelete } from "../support/deleteOldRecords";
+import { changeLanguage } from "../support/language";
+import Constants from "../support/constants.json";
 
 let page: Page;
 let loginPage: LoginPage;
@@ -16,8 +17,7 @@ async function adminLogin() {
     await createAdminUser();
     fullNameValue = await getAdminFullName();
     USERNAME = fullNameValue.slice(14, 32);
-    console.log("value of Username--->", USERNAME);
-    await loginPage.enterCredentials(USERNAME, 'Admin@123');
+    await loginPage.enterCredentials(USERNAME, Constants.Credentials.newUser);
     await leave.navigate();
 }
 
@@ -26,11 +26,12 @@ test.beforeAll(async () => {
     await page.goto(subURL.login);
     loginPage = new LoginPage(page);
     leave = new Leave(page);
+    await adminLogin();
+    await changeLanguage(USERNAME);
 });
 
 test.describe('Should check all functionality in Leave Module', async () => {
     test('Should add entitlement in add entitlement page', async () => {
-        await adminLogin();
         await leave.gotoEntitlement(USERNAME);
         await leave.addEntitlementData(USERNAME);
         await leave.saveEntitlement();

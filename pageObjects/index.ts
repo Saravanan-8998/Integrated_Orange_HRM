@@ -1,10 +1,10 @@
-export {HomePage} from './homePage';
-export {LoginPage} from './loginPage';
-export {MyInfoPage} from './myInfoPage';
-export {DirectoryPage} from './directoryPage';
-export {PerformancePage} from './performancePage';
-export {TimePage} from './timePage';
-export {PIMPage} from './pimPage';
+export { HomePage } from './homePage';
+export { LoginPage } from './loginPage';
+export { MyInfoPage } from './myInfoPage';
+export { DirectoryPage } from './directoryPage';
+export { PerformancePage } from './performancePage';
+export { TimePage } from './timePage';
+export { PIMPage } from './pimPage';
 export { BuzzPage } from './buzzPage';
 export { MaintenancePage } from './maintenancePage';
 export { AdminPage } from './adminPage';

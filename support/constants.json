@@ -514,6 +514,10 @@
         "openPosition": "1"
     },
     "myLeave": {
-        "leaveType": "US - FMLA"
+        "leaveType": "US - FMLA",
+        "leaveDay" : "Full Day"
+    },
+    "myLanguages": {
+        "language" : "English (United States)"
     }
 }

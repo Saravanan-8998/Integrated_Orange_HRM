@@ -5,6 +5,7 @@ import subURL from "../support/subURL.json";
 import { myBrowserFixture } from "../support/fixtures";
 import { createITManager, getITManagerFullName } from "../support/createUser";
 import Constants from "../support/constants.json";
+import { changeLanguage } from "../support/language";
 
 let page: Page;
 let loginPage: LoginPage;
@@ -16,20 +17,21 @@ async function adminUserLogin() {
     await createITManager();
     fullNameValue = await getITManagerFullName();
     USERNAME = fullNameValue.slice(14, 32);
-    await page.goto(subURL.login);
-    await loginPage.enterCredentials('Admin', 'admin123');
+    await loginPage.enterCredentials(USERNAME, Constants.Credentials.newUser);
     await recruitment.navigate();
 }
 
 test.beforeAll(async () => {
     page = (await myBrowserFixture()).page;
+    await page.goto(subURL.login);
     loginPage = new LoginPage(page);
     recruitment = new Recruitment(page);
+    await adminUserLogin();
+    await changeLanguage(USERNAME);
 });
 
 test.describe('Should check all functionality in Recruitment Module', async () => {
     test('Should add a New Vacancy', async () => {
-        await adminUserLogin();
         await recruitment.addNewVacancie(USERNAME);
     });
 
@@ -75,8 +77,8 @@ test.describe('Should check all functionality in Recruitment Module', async () =
     test('Should verify the created candidate is hired', async () => {
         await recruitment.verifyUserIsHired();
     });
+});
 
-    test('Should close all page', async () => {
-        await page.close();
-    });
+test.afterAll(async () => {
+    await page.close();
 });

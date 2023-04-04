@@ -2,7 +2,7 @@ import { Page, expect } from "@playwright/test";
 import constants from "../support/constants.json";
 
 export class PIMPage {
-    readonly page: Page; firstName: string; middleName: string; lastName: string; nickName: string; employeeId: string; toastMessage: string; addEmployee: string; closeIcon: string; save: string; addAdmin: any; empName: any; userRole: any; userStatus: any; userName: any; password: any; confirmPassword: any; saveAdmin: any; pageLoc: any; itManagerLoc: any;
+    readonly page: Page; changeLanguage: any; firstName: string; middleName: string; lastName: string; nickName: string; employeeId: string; toastMessage: string; addEmployee: string; closeIcon: string; save: string; addAdmin: any; empName: any; userRole: any; userStatus: any; userName: any; password: any; confirmPassword: any; saveAdmin: any; pageLoc: any; itManagerLoc: any;
 
     constructor(page: Page) {
         this.page = page;
@@ -38,6 +38,22 @@ export class PIMPage {
             clickAdd : `.orangehrm-background-container`,
             logoutLoc : `oxd-userdropdown-name`
         }
+        this.changeLanguage = {
+            location: `(//div[@class='oxd-select-text-input'])[1]`,
+            head: `//h6[text()='Localization']`,
+            save: `//button[@type='submit']`
+        }
+    }
+
+    //A function used to change the language
+    async changeToEng(){
+        await this.page.waitForSelector(this.changeLanguage.head);
+        let head = await this.page.locator(this.changeLanguage.head).textContent();
+        expect(head).toBe('Localization');
+        await this.page.waitForSelector(this.changeLanguage.location);
+        await this.page.locator(this.changeLanguage.location).click();
+        await this.page.getByRole('option', { name: constants.myLanguages.language }).getByText(constants.myLanguages.language, { exact: true }).click();
+        await this.page.locator(this.changeLanguage.save).click();
     }
 
     // A function used to add Employee to admin

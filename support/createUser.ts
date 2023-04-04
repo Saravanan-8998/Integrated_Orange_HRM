@@ -29,7 +29,7 @@ export async function getAdminFullName() {
 
 export async function getITManagerFullName() {
     for (let i = 0; i < 2; i++) {
-        result += nameValues1[i] + " ";
+        result += nameValues2[i] + " ";
     }
     return fullNameValue = result + 'Test';
 }
@@ -46,8 +46,8 @@ async function before() {
 async function createAdmin() {
     await page.goto(subURL.pim);
     await pimPage.clickAddEmployeeMenu();
-    let namesLocators = [pimPage.firstName, pimPage.middleName, pimPage.lastName, pimPage.employeeId];
-    await pimPage.fillFieldValues(namesLocators, nameValues1);
+    let namesLocators1 = [pimPage.firstName, pimPage.middleName, pimPage.lastName, pimPage.employeeId];
+    await pimPage.fillFieldValues(namesLocators1, nameValues1);
     await pimPage.clickSave(pimPage.save, 1, 'Successfully Saved');
     await page.waitForTimeout(5000);
 }
@@ -55,8 +55,8 @@ async function createAdmin() {
 async function createItManager() {
     await page.goto(subURL.pim);
     await pimPage.clickAddEmployeeMenu();
-    let namesLocators = [pimPage.firstName, pimPage.middleName, pimPage.lastName, pimPage.employeeId];
-    await pimPage.fillFieldValues(namesLocators, nameValues2);
+    let namesLocators2 = [pimPage.firstName, pimPage.middleName, pimPage.lastName, pimPage.employeeId];
+    await pimPage.fillFieldValues(namesLocators2, nameValues2);
     await pimPage.clickSave(pimPage.save, 1, 'Successfully Saved');
     await page.waitForTimeout(5000);
 }
