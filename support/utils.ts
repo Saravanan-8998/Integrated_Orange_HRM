@@ -1,10 +1,11 @@
 import { chromium, firefox, webkit, Page, expect } from '@playwright/test';
-import { HomePage } from '../pageObjects';
+import { AdminPage, HomePage } from '../pageObjects';
 import { DirectoryPage } from "../pageObjects/directoryPage";
 import Constants from "./constants.json";
 
 let directoryPage: DirectoryPage;
 let homePage: HomePage;
+let adminPage: AdminPage;
 
 export class Utils {
 
@@ -34,11 +35,19 @@ export class Utils {
   readonly location: string;
   readonly search: string;
   readonly userRole: string;
+  readonly terminate: string;
+  readonly terminateContainer: string;
+  readonly terminationDate: string;
+  readonly commentBox: string;
+  readonly terminationReason: string;
+  readonly usersMenu: string;
+  readonly userManagementMenu: string;
 
   constructor(page: Page) {
     this.page = page;
     homePage = new HomePage(page);
     directoryPage = new DirectoryPage(page);
+    adminPage = new AdminPage(page);
     this.backgroundContainer = '.orangehrm-background-container';
     this.save = "//button[normalize-space()='Save']";
     this.search = "//button[normalize-space()='Search']";
@@ -58,6 +67,8 @@ export class Utils {
     this.userDropdown = ".oxd-userdropdown-tab";
     this.tableContainer = ".orangehrm-paper-container";
     this.employeeListMenu = "//a[text()='Employee List']";
+    this.userManagementMenu = "//span[text()='User Management ']",
+      this.usersMenu = "//a[text()='Users']";
     this.trashPath = "../..//i[@class='oxd-icon bi-trash']";
     this.addEmployee = "//a[text()='Add Employee']";
     this.firstName = "[name='firstName']";
@@ -67,6 +78,11 @@ export class Utils {
     this.password = "//label[text()='Password']/../..//input";
     this.confirmPassword = "//label[text()='Confirm Password']/../..//input";
     this.job = "//a[text()='Job']";
+    this.terminate = "//button[text()=' Terminate Employment ']";
+    this.terminateContainer = "//div[contains(@class,'oxd-sheet oxd-sheet--rounded')]";
+    this.terminationDate = "//label[text()='Termination Date']/../..//input";
+    this.terminationReason = "//label[text()='Termination Reason']/../..//div[contains(@class,'text-input')]";
+    this.commentBox = 'textarea.oxd-textarea';
     this.joinedDate = "//label[text()='Joined Date']/../..//input";
     this.jobTitle = "//label[text()='Job Title']/../..//div[contains(@class,'text-input')]";
     this.location = "//label[text()='Location']/../..//div[contains(@class,'text-input')]";
@@ -234,6 +250,20 @@ export class Utils {
     }
   }
 
+  async deleteUsersName(userName) {
+    await this.clickMenu(Constants.Roles.link, homePage.homePageElements.admin, Constants.Menu.admin);
+    await this.click(this.userManagementMenu);
+    await this.click(this.usersMenu);
+    await this.fillTextBoxValues(adminPage.userManagementLocators.userName, userName, true);
+    await this.page.locator(directoryPage.directory.search).click();
+    await this.waitForElement(this.tableContainer);
+    await this.page.waitForTimeout(5000);
+    let tableRow = await (this.page.locator(this.row(userName))).first().isVisible();
+    if (tableRow) {
+      await this.deleteRecords(userName);
+    }
+  }
+
   async deleteRecords(value: string) {
     let rowVisibility = await this.page.locator(this.tableRow).first().isVisible();
     let rows = await this.getARow(Constants.Users.firstNameUser1);
@@ -295,6 +325,27 @@ export class Utils {
     await this.selecDropdownOption(Constants.Roles.option, this.userRole, Constants.others.reportingMethodAdmin);
     await this.clickSave(this.save, 0);
     await this.clickCloseIcon();
+  }
+
+  async terminateEmployee(userName) {
+    await this.clickMenu("link", homePage.homePageElements.pim, "PIM");
+    await this.click(this.employeeListMenu);
+    await this.fillTextBoxValues(directoryPage.directory.employeeName, userName, true);
+    await this.page.waitForTimeout(1000);
+    await this.click(directoryPage.directory.search);
+    await this.waitForElement(this.tableContainer);
+    await this.click(this.editIcon);
+    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+    await this.waitForElement(this.backgroundContainer);
+    await this.click(this.job);
+    await this.page.waitForLoadState("networkidle", { timeout: 15000 });
+    await this.click(this.terminate);
+    await this.waitForElement(this.terminateContainer);
+    await this.fillDateValue(this.terminationDate, Constants.Dates.terminationDate);
+    await this.selecDropdownOption(Constants.Roles.option, this.terminationReason, Constants.others.terminationReason);
+    await this.fillTextBoxValues(this.commentBox, Constants.others.terminationReason, true);
+    await this.clickSave(this.save, 1);
+    await this.clickMenu("link", homePage.homePageElements.pim, "PIM");
   }
 
   async deleteUsersDuplicate() {
