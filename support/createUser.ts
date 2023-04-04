@@ -12,11 +12,11 @@ let loginPage: LoginPage;
 let pimPage: PIMPage;
 let result: string = '';
 let fullNameValue: string;
-let nameValues1 = ['Saravanan', autoGenerate(99), 'Test', autoGenerate(9999)];
-let nameValues2 = ['Saravanan', autoGenerate(99), 'Test', autoGenerate(9999)];
+let nameValues1 = ['Naruto', autoGenerate(99), 'Test', autoGenerate(9999)];
+let nameValues2 = ['Uzumaki', autoGenerate(99), 'Test', autoGenerate(9999)];
 
 function autoGenerate(max: number) {
-    let num = Math.floor(Math.random() * max  + 22) + 99;
+    let num = Math.floor(Math.random() * max + 22) + 99;
     return num.toString();
 }
 

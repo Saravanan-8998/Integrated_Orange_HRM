@@ -63,11 +63,11 @@ test.describe('Personal Informations', () => {
     });
 
     test('Filling the Personal informations and verifying cancel button', async () => {
-        await pimPage.uploadFile('uploadTextFile.txt', false);
+        await pimPage.uploadFile(Constants.fileName, false);
     });
 
     test('Filling the Personal informations and verifying save button', async () => {
-        await pimPage.uploadFile('uploadTextFile.txt', true);
+        await pimPage.uploadFile(Constants.fileName, true);
         await utils.waitForElement(pimPage.table);
         let table = page.locator(pimPage.table);
         expect(table).toBeVisible();
@@ -79,7 +79,7 @@ test.describe('Personal Informations', () => {
     });
 
     test('Uploading a new file and checking the checkbox and performing delete operation', async () => {
-        await pimPage.uploadFile('uploadTextFile.txt', true);
+        await pimPage.uploadFile(Constants.fileName, true);
         await pimPage.deleteAttachedFile("cancel");
         await pimPage.deleteAttachedFile("save");
     });
@@ -102,7 +102,7 @@ test.describe('Filling Emergency Contacts informations', () => {
         await pimPage.fillFieldValues(emergencyContactLocators, emergencyContactValues);
         await pimPage.clickSave(pimPage.save, 1, Constants.sucessMsg.sucessfulSavedMsg);
         await pimPage.clickElementWithIndex(pimPage.addButton, 1);
-        await pimPage.uploadFile('uploadTextFile.txt', true);
+        await pimPage.uploadFile(Constants.fileName, true);
     });
 });
 
@@ -116,7 +116,7 @@ test.describe('Filling Dependents informations', () => {
         await pimPage.fillDateValue(pimPage.dateofBirth, Constants.pimModule.depDateofBirth);
         await pimPage.clickSave(pimPage.save, 1, Constants.sucessMsg.sucessfulSavedMsg);
         await pimPage.clickElementWithIndex(pimPage.addButton, 1);
-        await pimPage.uploadFile('uploadTextFile.txt', true);
+        await pimPage.uploadFile(Constants.fileName, true);
     });
 });
 

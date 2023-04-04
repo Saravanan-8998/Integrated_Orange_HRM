@@ -144,7 +144,7 @@ test.describe('Performance My Reviews', () => {
         await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.myReviews, true);
         await performancePage.fillMyReviewDetails();
         await utils.clickByRole(Constants.Roles.menuItem, Constants.Menu.myReviews, true);
-        let rowCells = await performancePage.getMyReviewDetails(Constants.Dates.reviewDueDate);
+        let rowCells = await performancePage.getReviewDetails(Constants.Dates.reviewDueDate, true);
         expect(rowCells.selfEvaluationStatus).toEqual(Constants.status.completed);
     });
 });
@@ -159,7 +159,7 @@ test.describe('Performance Employee Reviews', () => {
         await utils.fillTextBoxValues(performancePage.addReview.employeeName, Constants.Users.employeeNameForSearch, true)
         await utils.clickOption(Constants.Roles.option, Constants.Users.employeeNameUser1);
         await utils.click(directoryPage.directory.search);
-        let rowCells = await performancePage.getMyReviewDetails(Constants.Dates.reviewDueDate);
-        expect(rowCells.selfEvaluationStatus).toEqual(Constants.status.inProgress);
+        let rowCells = await performancePage.getReviewDetails(Constants.Dates.reviewDueDate);
+        expect(rowCells.reviewStatus).toEqual(Constants.status.inProgress);
     });
 });

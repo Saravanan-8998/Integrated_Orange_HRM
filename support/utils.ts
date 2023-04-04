@@ -209,6 +209,7 @@ export class Utils {
     await this.page.waitForSelector(locator);
     await this.page.getByRole(role, { name: menuLinkText }).click();
     await (await this.page.waitForSelector(this.backgroundContainer)).waitForElementState("stable");
+    await this.page.waitForLoadState("domcontentloaded", { timeout: 12000 });
     await this.page.waitForLoadState("networkidle", { timeout: 10000 });
   }
 
@@ -221,8 +222,12 @@ export class Utils {
     await this.click(this.employeeListMenu);
     await this.fillTextBoxValues(directoryPage.directory.employeeName, Constants.Users.employeeToSearch, true);
     await this.page.locator(directoryPage.directory.search).click();
+    let noRecordsCloseIcon = await this.page.locator(this.toastElements.closeIcon).isVisible();
+    if (noRecordsCloseIcon) {
+      await this.clickCloseIcon();
+    }
     await this.waitForElement(this.tableContainer);
-    await this.page.waitForTimeout(5000);
+    await this.page.waitForTimeout(3000);
     let tableRow = await (this.page.locator(this.row(Constants.Users.firstNameUser1))).first().isVisible();
     if (tableRow) {
       await this.deleteRecords(Constants.Users.firstNameUser1);
@@ -231,9 +236,9 @@ export class Utils {
 
   async deleteRecords(value: string) {
     let rowVisibility = await this.page.locator(this.tableRow).first().isVisible();
+    let rows = await this.getARow(Constants.Users.firstNameUser1);
+    let rowsCount = await rows.count();
     if (rowVisibility) {
-      let rows = await this.getARow(Constants.Users.firstNameUser1);
-      let rowsCount = await rows.count();
       for (let i = 0; i < rowsCount; i++) {
         let get = await this.getARow(value);
         await get.locator(this.trashPath).first().click();
@@ -253,7 +258,7 @@ export class Utils {
     return this.page.locator(this.row(value));
   }
 
-    // This function is used for Create user
+  // This function is used for Create user
   async createUsers(firstName, lastName, userName) {
     await this.clickMenu(Constants.Roles.link, homePage.homePageElements.pim, Constants.Menu.pim);
     await this.click(this.addEmployee);
@@ -270,21 +275,22 @@ export class Utils {
     await this.waitForElement(this.backgroundContainer);
     await this.page.waitForLoadState("networkidle", { timeout: 15000 });
     await this.click(this.job);
-    await this.page.waitForLoadState("networkidle", { timeout: 15000 });
+    await this.waitForSpinnerToDisappear();
     await this.fillDateValue(this.joinedDate, Constants.Dates.joinedDate);
     await this.selecDropdownOption(Constants.Roles.option, this.jobTitle, Constants.others.jobTitleSE);
     await this.selecDropdownOption(Constants.Roles.option, this.location, Constants.others.jobLocation);
     await this.clickSave(this.save, 0);
   }
 
-   // This function is used for updating the role
+  // This function is used for updating the role
   async updatingUserRole(userName, userRole) {
     await this.clickMenu(Constants.Roles.link, homePage.homePageElements.admin, userRole);
     await this.fillTextBoxValues(this.userName, userName, true);
     await this.click(this.search);
     await this.waitForElement(this.row(userName));
     await this.click(this.editIcon);
-    await this.page.waitForLoadState("networkidle", { timeout: 10000 });
+    await this.page.waitForLoadState("domcontentloaded", { timeout: 12000 });
+    await this.page.waitForLoadState("networkidle", { timeout: 12000 });
     await this.waitForElement(this.backgroundContainer);
     await this.selecDropdownOption(Constants.Roles.option, this.userRole, Constants.others.reportingMethodAdmin);
     await this.clickSave(this.save, 0);
@@ -299,19 +305,15 @@ export class Utils {
     await this.waitForElement(this.tableContainer);
     await this.page.waitForTimeout(5000);
     let tableRow = await (await this.getARow('Test')).first().isVisible();
-    console.log("tableRow", tableRow);
     if (tableRow) {
       await this.deleteRecords("User1");
     }
   }
 
   async deleteRecordsDuplicate(value: any) {
-    // await (await this.page.waitForSelector(this.addReview.tableRow)).waitForElementState("stable");
     let rowVisibility = await this.page.locator(this.tableRow).first().isVisible();
-    console.log("rowVisibility", rowVisibility);
     if (rowVisibility) {
       let rows = await this.getARow('User1');
-      console.log("rows", await rows.count());
       let rowsCount = await rows.count();
       for (let i = 0; i < rowsCount; i++) {
         let get = await this.getARow(value);
