@@ -47,6 +47,7 @@ export class BuzzPage {
             likeComment: `//p[text()='Like']`,
             editComment: `//p[text()='Edit']`,
             deleteCommentButton: `//p[text()='Delete']`,
+            feedUser: "(//p[contains(@class,'oxd-text oxd-text--p')])[2]",
             feedtext: `(//div[@class='orangehrm-buzz-post-body']//p)[1]`,
             likeText: `(//div[@class='orangehrm-buzz-stats-row']//p)[1]`,
             commentText: `//div[@class='orangehrm-post-comment-area']//span[1]`

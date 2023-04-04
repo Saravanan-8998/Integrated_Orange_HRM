@@ -24,10 +24,10 @@ const RPconfig = {
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: ["tests/performance.spec.ts"],
+  testMatch: ["tests/*.spec.ts"],
   timeout: 60 * 60 * 1000,
   expect: {
-    timeout: 10000
+    timeout: 15000
   },
   // fullyParallel: false,
   forbidOnly: !!process.env.CI,

@@ -4,7 +4,7 @@ import { TestData } from '../testData/testData';
 import { LoginPage, HomePage, AdminPage } from '../pageObjects';
 import ENV from '../support/env';
 import { Utils } from '../support/utils';
-import date, { addDays } from 'date-and-time';
+import date from 'date-and-time';
 
 let loginPage: LoginPage, homePage: HomePage, adminPage: AdminPage, testData: TestData, page: Page, utils: Utils;;
 
