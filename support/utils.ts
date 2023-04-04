@@ -97,7 +97,7 @@ export class Utils {
   }
 
   // This function is used to get the element
-  async getElement(locator) {
+  async getElement(locator: string) {
     return this.page.locator(locator);
   }
 
@@ -149,7 +149,7 @@ export class Utils {
   }
 
   // This function is used to "click on the element with index"
-  async clickElementWithIndex(locatorValue, index) {
+  async clickElementWithIndex(locatorValue: string, index: number) {
     await this.page.locator(locatorValue).nth(index).click();
   }
 
@@ -174,14 +174,14 @@ export class Utils {
   }
 
   // This function is used to "copy and paste" the values from the any textbox elements
-  async copyPaste(sourceLocator, destinationLocator) {
+  async copyPaste(sourceLocator: string, destinationLocator: string) {
     await this.page.locator(sourceLocator).dblclick();
     await this.page.locator(sourceLocator).press('Control+C');
     await this.page.locator(destinationLocator).press('Control+V');
   }
 
   // This function is used to "get the text" of any elements
-  async getText(locator) {
+  async getText(locator: string) {
     return await this.page.locator(locator).textContent();
   }
 
@@ -191,7 +191,7 @@ export class Utils {
   }
 
   // This function is used to "click the element/link"
-  async clickByRole(role, value, shouldWaitForContainer?: boolean) {
+  async clickByRole(role: any, value: any, shouldWaitForContainer?: boolean) {
     await this.page.getByRole(role, { name: value, exact: true }).click();
     if (shouldWaitForContainer) {
       await this.page.waitForSelector(this.backgroundContainer);
@@ -200,19 +200,19 @@ export class Utils {
   }
 
   // This function is used to "select the option" from "Auto suggestion"
-  async clickOption(role, value) {
+  async clickOption(role: any, value: string | RegExp) {
     await this.page.getByRole(role, { name: value }).getByText(value, { exact: true }).click();
   }
 
   // This function is used to "click on the My info sub menus"
-  async clickMenu(role, locator, menuLinkText) {
+  async clickMenu(role: any, locator: any, menuLinkText: string) {
     await this.page.waitForSelector(locator);
     await this.page.getByRole(role, { name: menuLinkText }).click();
     await (await this.page.waitForSelector(this.backgroundContainer)).waitForElementState("stable");
     await this.page.waitForLoadState("networkidle", { timeout: 10000 });
   }
 
-  async waitForElement(locator) {
+  async waitForElement(locator: string) {
     await (await this.page.waitForSelector(locator)).waitForElementState("stable");
   }
 
@@ -229,7 +229,7 @@ export class Utils {
     }
   }
 
-  async deleteRecords(value) {
+  async deleteRecords(value: string) {
     let rowVisibility = await this.page.locator(this.tableRow).first().isVisible();
     if (rowVisibility) {
       let rows = await this.getARow('Test');
@@ -248,12 +248,12 @@ export class Utils {
   }
 
   // This function is used to get the "specific row"
-  async getARow(value) {
+  async getARow(value: string) {
     await this.page.waitForSelector(this.row(value));
     return this.page.locator(this.row(value));
   }
 
-  async createUsers(firstName, lastName, userName) {
+  async createUsers(firstName: any, lastName: any, userName: any) {
     await this.clickMenu("link", homePage.homePageElements.pim, "PIM");
     await this.click(this.addEmployee);
     await this.page.waitForLoadState("networkidle", { timeout: 10000 });
@@ -275,7 +275,7 @@ export class Utils {
     await this.clickSave(this.save, 0);
   }
 
-  async updatingUserRole(userName, userRole) {
+  async updatingUserRole(userName: any, userRole: any) {
     await this.clickMenu("link", homePage.homePageElements.admin, userRole);
     await this.fillTextBoxValues(this.userName, userName, true);
     await this.click(this.search);
@@ -302,7 +302,7 @@ export class Utils {
     }
   }
 
-  async deleteRecordsDuplicate(value) {
+  async deleteRecordsDuplicate(value: any) {
     // await (await this.page.waitForSelector(this.addReview.tableRow)).waitForElementState("stable");
     let rowVisibility = await this.page.locator(this.tableRow).first().isVisible();
     console.log("rowVisibility", rowVisibility);
@@ -323,7 +323,7 @@ export class Utils {
     }
   }
 
-  async createUsersDuplicate(firstName, lastName, userName) {
+  async createUsersDuplicate(firstName: any, lastName: any, userName: any) {
     await this.clickMenu("link", homePage.homePageElements.pim, "PIM");
     await this.click(this.addEmployee);
     await this.page.waitForLoadState("networkidle", { timeout: 10000 });
@@ -345,7 +345,7 @@ export class Utils {
     await this.clickSave(this.save, 0);
   }
 
-  async updatingUserRoleDuplicate(userName, userRole) {
+  async updatingUserRoleDuplicate(userName: any, userRole: any) {
     await this.clickMenu("link", homePage.homePageElements.admin, userRole);
     await this.fillTextBoxValues(this.userName, userName, true);
     await this.click(this.search);

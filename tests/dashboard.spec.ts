@@ -4,8 +4,8 @@ import { LoginPage } from "../page_objects/login_page.PO";
 import subURL from "../support/subURL.json";
 import { myBrowserFixture } from "../support/fixtures";
 import { createAdminUser, getAdminFullName } from "../support/createUser";
-import { autoDelete } from "../support/deleteOldRecords";
 import { AssertionURL } from "../support/url";
+import Constants from "../support/constants.json";
 
 let page: Page;
 let loginPage: LoginPage;
@@ -17,7 +17,7 @@ async function adminLogin() {
     await createAdminUser();
     fullNameValue = await getAdminFullName();
     USERNAME = fullNameValue.slice(14, 32);
-    await loginPage.enterCredentials(USERNAME, 'Admin@123');
+    await loginPage.enterCredentials(USERNAME, Constants.Credentials.newUser);
 }
 
 test.beforeAll(async () => {
@@ -30,6 +30,7 @@ test.beforeAll(async () => {
 test.describe('Should check all functionality in Dashboard Module', async () => {
     test('Should check all the components loaded and visible in time at work component', async () => {
         await adminLogin();
+        await page.goto(subURL.dashboard);
         await expect(page).toHaveURL(AssertionURL.dashboardURL);
         await dashboard.verifyTimeAtWorkComponents();
     });
@@ -39,8 +40,11 @@ test.describe('Should check all functionality in Dashboard Module', async () => 
         await page.waitForLoadState();
         await expect(page).toHaveURL(AssertionURL.punchInURL);
     });
+});
 
+test.describe('Should check all functionality in my action Module', async () => {
     test('Should check all the components loaded and visible my action component', async () => {
+        await page.goto(subURL.dashboard);
         await expect(page).toHaveURL(AssertionURL.dashboardURL);
         await dashboard.verifyMyActionsComponents();
     });
@@ -49,31 +53,23 @@ test.describe('Should check all functionality in Dashboard Module', async () => 
         await dashboard.leaveRequestClick();
         await expect(page).toHaveURL(AssertionURL.viewLeaveListURL);
         await page.goBack();
-        await page.waitForLoadState();
     });
 
     test('Should check the time sheet redirect URL from My Actions', async () => {
         await dashboard.timeSheetClick();
         await expect(page).toHaveURL(AssertionURL.viewEmployeeTimesheetURL);
         await page.goBack();
-        await page.waitForLoadState();
-    });
-
-    test('Should check the self review redirect URL from My Actions', async () => {
-        await dashboard.selfReviewClick();
-        await expect(page).toHaveURL(AssertionURL.myPerformanceReviewURL);
-        await page.goBack();
-        await page.waitForLoadState();
     });
 
     test('Should check the interview redirect URL from My Actions', async () => {
         await dashboard.interviewClick();
         await expect(page).toHaveURL(AssertionURL.viewCandidatesURL);
-        await page.goBack();
-        await page.waitForLoadState();
     });
+});
 
+test.describe('Should check all functionality in quick launches Module', async () => {
     test('Should check all the components loaded and visible in quick launches components', async () => {
+        await page.goto(subURL.dashboard);
         await expect(page).toHaveURL(AssertionURL.dashboardURL);
         await dashboard.verifyQuickLaunchesComponents();
     });
@@ -82,45 +78,43 @@ test.describe('Should check all functionality in Dashboard Module', async () => 
         await dashboard.assignLeaveClick();
         await expect(page).toHaveURL(AssertionURL.assignLeaveURL);
         await page.goBack();
-        await page.waitForLoadState();
     });
 
     test('Should check the leave list redirect URL from quick launches', async () => {
         await dashboard.leaveListClick();
         await expect(page).toHaveURL(AssertionURL.viewLeaveListURL);
         await page.goBack();
-        await page.waitForLoadState();
     });
 
     test('Should check the timesheet redirect URL from quick launches', async () => {
         await dashboard.timesheetClick();
         await expect(page).toHaveURL(AssertionURL.viewEmployeeTimesheetURL);
         await page.goBack();
-        await page.waitForLoadState();
     });
 
     test('Should check the apply leave redirect URL from quick launches', async () => {
         await dashboard.applyLeaveClick();
         await expect(page).toHaveURL(AssertionURL.applyLeaveURL);
         await page.goBack();
-        await page.waitForLoadState();
     });
 
     test('Should check the my leave redirect URL from quick launches', async () => {
         await dashboard.myLeaveClick();
         await expect(page).toHaveURL(AssertionURL.viewMyLeaveListURL);
         await page.goBack();
-        await page.waitForLoadState();
     });
 
     test('Should check the my timesheet redirect URL from quick launches', async () => {
         await dashboard.myTimesheetClick();
         await expect(page).toHaveURL(AssertionURL.viewMyTimesheetURL);
         await page.goBack();
-        await page.waitForLoadState();
     });
+});
 
+test.describe('Should check all functionality in buzz latest posts Module', async () => {
     test('Should check all the components loaded and visible in buzz latest posts', async () => {
+        await page.goto(subURL.dashboard);
+        await page.waitForURL(subURL.dashboard);
         await expect(page).toHaveURL(AssertionURL.dashboardURL);
         await dashboard.verifyBuzzLatestPostsComponents();
     });
@@ -129,8 +123,12 @@ test.describe('Should check all functionality in Dashboard Module', async () => 
         await expect(page).toHaveURL(AssertionURL.dashboardURL);
         await dashboard.checkSubDiv();
     });
+});
 
+test.describe('Should check all functionality in Employees on Leave Today Module', async () => {
     test('should check components in Employees on Leave Today', async () => {
+        await page.goto(subURL.dashboard);
+        await page.waitForURL(subURL.dashboard);
         await expect(page).toHaveURL(AssertionURL.dashboardURL);
         await dashboard.verifyEmployeeLeaveTodayComponents();
     });
@@ -145,8 +143,12 @@ test.describe('Should check all functionality in Dashboard Module', async () => 
         await dashboard.save();
         await dashboard.close();
     });
+});
 
+test.describe('Should check all functionality in sub unit components Module', async () => {
     test('Should check all the components loaded and visible in sub unit components', async () => {
+        await page.goto(subURL.dashboard);
+        await page.waitForURL(subURL.dashboard);
         await expect(page).toHaveURL(AssertionURL.dashboardURL);
         await dashboard.verifyEmployeeDistributionBySubUnitComponents();
     });
@@ -155,8 +157,12 @@ test.describe('Should check all functionality in Dashboard Module', async () => 
         await expect(page).toHaveURL(AssertionURL.dashboardURL);
         await dashboard.totolList();
     });
+});
 
+test.describe('Should check all functionality in distribution by location components Module', async () => {
     test('Should check all the components loaded and visible in distribution by location components', async () => {
+        await page.goto(subURL.dashboard);
+        await page.waitForURL(subURL.dashboard);
         await expect(page).toHaveURL(AssertionURL.dashboardURL);
         await dashboard.verifyEmployeeDistributionByLocationComponents();
     });
@@ -168,6 +174,5 @@ test.describe('Should check all functionality in Dashboard Module', async () => 
 });
 
 test.afterAll(async () => {
-    // await autoDelete();
     await page.close();
 });

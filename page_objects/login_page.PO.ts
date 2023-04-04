@@ -16,12 +16,21 @@ export class LoginPage {
         this.requiredMsg = `(//span[contains(@class,'oxd-text oxd-text--span')])`;
     }
 
-    async componentsVisibility() {
+    async verifyImgComponent() {
         await (await this.page.waitForSelector(this.logoImg)).isVisible();
+    }
+
+    async verifyUserNameComponent() {
         await (await this.page.waitForSelector(this.userName)).isVisible();
-        await (await this.page.waitForSelector(this.password)).isVisible();
         await (await this.page.waitForSelector(this.inputUserName)).isVisible();
+    }
+
+    async verifyPasswordComponent() {
+        await (await this.page.waitForSelector(this.password)).isVisible();
         await (await this.page.waitForSelector(this.inputPassword)).isVisible();
+    }
+    
+    async verifyLoginBtnComponent() {
         await (await this.page.waitForSelector(this.loginBtn)).isVisible();
     }
 

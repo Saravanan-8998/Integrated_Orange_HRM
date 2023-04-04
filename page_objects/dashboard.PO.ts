@@ -23,14 +23,9 @@ export class Dashboard {
         }
         this.myActions = {
             myActionsTitle: `//p[text()='My Actions']`,
-            leaveRequestIcon: `button.oxd-icon-button.oxd-icon-button--success`,
-            timeSheetIcon: `button.oxd-icon-button.oxd-icon-button--warn`,
-            selfReviewIcon: `button.oxd-icon-button.oxd-icon-button--danger`,
-            interviewIcon: `button.oxd-icon-button.oxd-icon-button--info`,
             leaveRequest: `(//div[@class='orangehrm-todo-list-item']//p)[1]`,
             timeSheet: `(//div[@class='orangehrm-todo-list-item']//p)[2]`,
-            selfReview: `(//div[@class='orangehrm-todo-list-item']//p)[3]`,
-            interview: `(//div[@class='orangehrm-todo-list-item']//p)[4]`,
+            interview: `(//div[@class='orangehrm-todo-list-item']//p)[3]`,
         }
         this.quickLaunches = {
             quickLaunchesTitle: `//p[text()='Quick Launch']`,
@@ -43,31 +38,31 @@ export class Dashboard {
         }
         this.buzzLatestPosts = {
             buzzLatestPostsTitle: `//p[text()='Buzz Latest Posts']`,
-            mainDiv : `(//div[@class='orangehrm-dashboard-widget-body --scroll-visible'])[1]`,
-            subDiv : `oxd-text oxd-text--p orangehrm-buzz-widget-body`,
+            mainDiv: `(//div[@class='orangehrm-dashboard-widget-body --scroll-visible'])[1]`,
+            subDiv: `oxd-text oxd-text--p orangehrm-buzz-widget-body`,
         }
         this.employeeDistributionByLocation = {
-            employeeDistributionByLocationTitle : `//p[text()='Employee Distribution by Location']`,
-            chart : `//canvas[@id='Itq3jVei']`,
-            allList : `oxd-chart-legend-key`,
+            employeeDistributionByLocationTitle: `//p[text()='Employee Distribution by Location']`,
+            chart: `//canvas[@id='Itq3jVei']`,
+            allList: `oxd-chart-legend-key`,
         }
         this.employeeDistributionBySubUnit = {
-            employeeDistributionBySubUnitTitle : `//p[text()='Employee Distribution by Sub Unit']`,
-            chart : `//canvas[@id='XOD4lcKN']`,
-            allList : `oxd-chart-legend-key`,
+            employeeDistributionBySubUnitTitle: `//p[text()='Employee Distribution by Sub Unit']`,
+            chart: `//canvas[@id='XOD4lcKN']`,
+            allList: `oxd-chart-legend-key`,
         }
         this.employeeOnLeaveToday = {
-            employeeOnLeaveTodayTitle : `//p[text()='Employees on Leave Today']`,
-            settingIcon : `i.oxd-icon.bi-gear-fill`,
-            noLeaveMsg : `//img[@alt='No Content']/following-sibling::p[1]`,
-            noLeaveMsgIcon : `//img[@alt='No Content']`,
-            popupBody : `//div[@role='document']`,
-            toggleBtn : `//button[text()=' Cancel ']`,
-            saveBtn :  `//button[@type='submit']`,
-            closeBtn : `//button[text()='×']`,
-            cancelBtn : `//button[text()=' Cancel ']`,
-            txtHeader : `//div[@class='orangehrm-config-title']//p[1]`,
-            innertxt : `label.oxd-label`,
+            employeeOnLeaveTodayTitle: `//p[text()='Employees on Leave Today']`,
+            settingIcon: `i.oxd-icon.bi-gear-fill`,
+            noLeaveMsg: `//img[@alt='No Content']/following-sibling::p[1]`,
+            noLeaveMsgIcon: `//img[@alt='No Content']`,
+            popupBody: `//div[@role='document']`,
+            toggleBtn: `//button[text()=' Cancel ']`,
+            saveBtn: `//button[@type='submit']`,
+            closeBtn: `//button[text()='×']`,
+            cancelBtn: `//button[text()=' Cancel ']`,
+            txtHeader: `//div[@class='orangehrm-config-title']//p[1]`,
+            innertxt: `label.oxd-label`,
         }
     }
 
@@ -77,7 +72,7 @@ export class Dashboard {
         await (await this.page.waitForSelector(this.employeeOnLeaveToday.noLeaveMsg)).isVisible();
     }
 
-    async verifyEmployeeLeaveTodaySettingsComponents(){
+    async verifyEmployeeLeaveTodaySettingsComponents() {
         await this.leaveSettings();
         await (await this.page.waitForSelector(this.employeeOnLeaveToday.popupBody)).isVisible();
         await (await this.page.waitForSelector(this.employeeOnLeaveToday.txtHeader)).isVisible();
@@ -88,27 +83,27 @@ export class Dashboard {
         await (await this.page.waitForSelector(this.employeeOnLeaveToday.closeBtn)).isVisible();
     }
 
-    async leaveSettings(){
+    async leaveSettings() {
         await this.page.reload();
         await (await this.page.waitForSelector(this.employeeOnLeaveToday.settingIcon)).click();
     }
 
-    async toggle(){
+    async toggle() {
         await this.leaveSettings();
         await this.page.locator(this.employeeOnLeaveToday.toggleBtn).click();
     }
 
-    async cancel(){
+    async cancel() {
         await this.leaveSettings();
         await this.page.locator(this.employeeOnLeaveToday.cancelBtn).click();
     }
 
-    async save(){
+    async save() {
         await this.leaveSettings();
         await this.page.locator(this.employeeOnLeaveToday.saveBtn).click();
     }
 
-    async close(){
+    async close() {
         await this.leaveSettings();
         await this.page.locator(this.employeeOnLeaveToday.closeBtn).click();
     }
@@ -128,29 +123,22 @@ export class Dashboard {
 
     async verifyMyActionsComponents() {
         await (await this.page.waitForSelector(this.myActions.myActionsTitle)).isVisible();
-        await (await this.page.waitForSelector(this.myActions.leaveRequestIcon)).isVisible();
-        await (await this.page.waitForSelector(this.myActions.timeSheetIcon)).isVisible();
-        await (await this.page.waitForSelector(this.myActions.selfReviewIcon)).isVisible();
-        await (await this.page.waitForSelector(this.myActions.interviewIcon)).isVisible();
         await (await this.page.waitForSelector(this.myActions.leaveRequest)).isVisible();
         await (await this.page.waitForSelector(this.myActions.timeSheet)).isVisible();
-        await (await this.page.waitForSelector(this.myActions.selfReview)).isVisible();
-        await (await this.page.waitForSelector(this.myActions.interview)).isVisible();
     }
 
     async leaveRequestClick() {
         await this.page.locator(this.myActions.leaveRequest).click();
+        await this.page.waitForTimeout(5000);
     }
 
     async timeSheetClick() {
+        await this.page.waitForTimeout(4000);
         await this.page.locator(this.myActions.timeSheet).click();
     }
 
-    async selfReviewClick() {
-        await this.page.locator(this.myActions.selfReview).click();
-    }
-
     async interviewClick() {
+        await this.page.waitForTimeout(4000);
         await this.page.locator(this.myActions.interview).click();
     }
 
@@ -188,16 +176,13 @@ export class Dashboard {
         await this.page.locator(this.quickLaunches.myTimesheet).click();
     }
 
-    async verifyBuzzLatestPostsComponents(){
+    async verifyBuzzLatestPostsComponents() {
         await (await this.page.waitForSelector(this.buzzLatestPosts.buzzLatestPostsTitle)).isVisible();
         await (await this.page.waitForSelector(this.buzzLatestPosts.mainDiv)).isVisible();
     }
 
-    async checkSubDiv(){
-        let totalSubDiv = await this.page.locator(this.buzzLatestPosts.subDiv).count();
-        if(totalSubDiv >= 1) {
-            console.log("Total buzz latets posts are,",totalSubDiv);
-        }
+    async checkSubDiv() {
+        await this.page.locator(this.buzzLatestPosts.subDiv).count();
     }
 
     async verifyEmployeeDistributionByLocationComponents() {
@@ -208,10 +193,7 @@ export class Dashboard {
         await (await this.page.waitForSelector(this.employeeDistributionBySubUnit.employeeDistributionBySubUnitTitle)).isVisible();
     }
 
-    async totolList(){
-        let list = await this.page.locator(this.employeeDistributionByLocation.allList).count();
-        if(list >= 1){
-            console.log("Sub list is available");
-        }
+    async totolList() {
+        await this.page.locator(this.employeeDistributionByLocation.allList).count();
     }
 }

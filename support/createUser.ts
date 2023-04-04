@@ -1,10 +1,10 @@
 import { expect, test, Page } from "@playwright/test";
-import { LoginPage } from "../pageObjects/login_page.PO";
+import { LoginPage } from "../page_objects/login_page.PO";
 import subURL from "./subURL.json";
 import { myBrowserFixture } from "./fixtures";
-import { Dashboard } from "../pageObjects/dashboard.PO";
+import { Dashboard } from "../page_objects/dashboard.PO";
 import ENV from "./env";
-import { PIMPage } from "../pageObjects/main.PO";
+import { PIMPage } from "../page_objects/main.PO";
 
 let page: Page;
 let dashboard: Dashboard;

@@ -2,7 +2,7 @@ import { expect, Locator, Page } from "@playwright/test";
 import subURL from "../support/subURL.json";
 import testData from "../support/testDate.json";
 import constants from "../support/constants.json";
-import { LoginPage } from "../pageObjects/login_page.PO";
+import { LoginPage } from "../page_objects/login_page.PO";
 
 export class Leave {
 
@@ -67,33 +67,45 @@ export class Leave {
         await this.page.locator(this.apply.mainLeave).click();
     }
 
-    async addEntitlement(username: any) {
-        console.log("Username -->", username);
+    async gotoEntitlement(username: any) {
         await this.page.locator(this.entitlement.entitlement).click();
         await this.page.locator(this.entitlement.addEntitlement).click();
         await this.page.locator(this.entitlement.empName).fill(username);
+    }
+
+    async addEntitlementData(username: any){
         await this.page.getByRole('option', { name: username }).getByText(username, { exact: true }).click();
         await this.page.locator(this.entitlement.leaveType).click();
         await this.page.getByRole('option', { name: testData.myLeave.leaveType }).getByText(testData.myLeave.leaveType, { exact: true }).click();
         await this.page.locator(this.entitlement.leaveEntitlement).fill('10');
+    }
+
+    async saveEntitlement(){
         await this.page.locator(this.entitlement.submit).click();
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(6000);
+        await this.page.waitForSelector(this.entitlement.confirmEntitlement);
         await this.page.locator(this.entitlement.confirmEntitlement).click();
     }
 
-    async myLeaveEntitlement() {
+    async gotoMyLeaveEntitlement() {
         await this.page.locator(this.entitlement.entitlement).click();
         await this.page.locator(this.entitlement.myEntitlement).click();
         await this.page.locator(this.entitlement.leaveType).click();
+    }
+
+    async verifyMyLeaveEntitlement(){
         await this.page.getByRole('option', { name: testData.myLeave.leaveType }).getByText(testData.myLeave.leaveType, { exact: true }).click();
         await this.page.locator(this.entitlement.search).click();
         await this.verifymyLeaveEntitlement();
     }
 
-    async myLeaveEntitlementPage(username: any) {
+    async gotoMyLeaveEntitlementPage(username: any) {
         await this.page.locator(this.entitlement.entitlement).click();
         await this.page.locator(this.entitlement.myLeaveEntitlement).click();
         await this.page.locator(this.entitlement.empName).fill(username);
+    }
+
+    async verifyMyLeaveEntitlementPage(username: any){
         await this.page.getByRole('option', { name: username }).getByText(username, { exact: true }).click();
         await this.page.locator(this.entitlement.search).click();
         await this.verifymyLeaveEntitlement();
@@ -104,36 +116,49 @@ export class Leave {
         expect(records).toBe('(1) Record Found');
     }
 
-    async applyLeave() {
+    async gotoApplyLeave() {
         await this.page.locator(this.apply.apply).click();
         await this.page.locator(this.apply.leaveType).click();
+    }
+
+    async fillApplyLeaveData(){
         await this.page.getByRole('option', { name: testData.myLeave.leaveType }).getByText(testData.myLeave.leaveType, { exact: true }).click();
         await this.page.locator(this.apply.fromDate).clear();
         await this.page.locator(this.apply.fromDate).fill('2023-04-12');
         await this.page.locator(this.apply.toDate).clear();
         await this.page.locator(this.apply.toDate).fill('2023-04-12');
         await this.page.locator(this.apply.comments).fill('Testing leave apply module');
-        await this.page.locator(this.apply.submit).click();
-        await this.page.waitForTimeout(3000);
     }
 
-    async myLeaveList() {
+    async saveAppliedLeaveData(){
+        await this.page.locator(this.apply.submit).click();
+        await this.page.waitForTimeout(7000);
+    }
+
+    async gotoMyLeaveList() {
         await this.navigate();
         await this.page.locator(this.myLeave.myLeave).click();
         await this.page.locator(this.myLeave.leaveType).click();
         await this.page.getByRole('option', { name: testData.myLeave.leaveType }).getByText(testData.myLeave.leaveType, { exact: true }).click();
+    }
+
+    async verifyMyleaveList(){
         await this.page.locator(this.myLeave.submit).click();
+        await this.page.waitForTimeout(4000);
         let records = await this.page.locator(this.myLeave.totalRecords).textContent();
         expect(records).toBe('(1) Record Found');
     }
 
-    async searchLeaveList(username: any) {
+    async gotoSearchLeaveList() {
         let loginPage: LoginPage;
         loginPage = new LoginPage(this.page);
         await this.page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/logout');
         await this.page.waitForTimeout(4000);
         await loginPage.enterCredentials('Admin', 'admin123');
         await this.navigate();
+    }
+
+    async submitAssignLeave(username: any){
         await this.page.locator(this.leaveList.leaveList).click();
         await this.page.waitForTimeout(3000);
         await this.page.locator(`//input[@placeholder='Type for hints...']`).type(username);

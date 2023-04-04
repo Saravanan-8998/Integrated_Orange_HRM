@@ -1,7 +1,8 @@
 {
     "Credentials": {
         "stdUser": "Admin",
-        "password": "admin123"
+        "password": "admin123",
+        "newUser" : "Admin@123"
     },
     "Urls": {
         "login": "/.*login/",
@@ -130,5 +131,9 @@
         "text": "The selected record will be permanently deleted. Are you sure you want to continue?",
         "purge": "You are about to purge selected candidates permanently. Are you sure you want to continue? This operation cannot be undone",
         "item": "The selected item will be permanently deleted. Are you sure you want to continue?"
+    },
+    "credentials": {
+        "wrongUsername": "Adimn",
+        "wrongPassword": "adimn321"
     }
 }
