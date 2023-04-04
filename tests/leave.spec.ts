@@ -1,5 +1,5 @@
 import { expect, test, Page } from "@playwright/test";
-import { Leave } from "../pageObjects/leavePage";
+import { Leave } from "../pageObjects";
 import { LoginPage } from "../pageObjects/login_Page";
 import subURL from "../support/subURL.json";
 import { myBrowserFixture } from "../support/fixtures";

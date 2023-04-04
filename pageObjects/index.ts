@@ -8,3 +8,6 @@ export {PIMPage} from './pimPage';
 export { BuzzPage } from './buzzPage';
 export { MaintenancePage } from './maintenancePage';
 export { AdminPage } from './adminPage';
+export { Dashboard } from './dashboardPage';
+export { Leave } from './leavePage';
+export { Recruitment } from './recruitmentPage';
