@@ -181,16 +181,28 @@ export class PerformancePage {
     }
 
     //This function is used to get a My Review Row Details
-    async getMyReviewDetails(columnValue) {
+    async getReviewDetails(columnValue, isMyReview?:boolean) {
         await this.page.waitForSelector(this.addReview.tableRow);
         let rowCellValues = await this.page.locator(this.getRowCells(columnValue)).allTextContents();
-        return {
-            jobTitle: rowCellValues[0],
-            subUnit: rowCellValues[1],
-            reviewPeriod: rowCellValues[2],
-            reviewDueDate: rowCellValues[3],
-            selfEvaluationStatus: rowCellValues[4],
-            reviewStatus: rowCellValues[5]
+        if (isMyReview) {
+            return {
+                jobTitle: rowCellValues[0],
+                subUnit: rowCellValues[1],
+                reviewPeriod: rowCellValues[2],
+                reviewDueDate: rowCellValues[3],
+                selfEvaluationStatus: rowCellValues[4],
+                reviewStatus: rowCellValues[5]
+            }
+        }
+        else {
+            return {
+                employee: rowCellValues[0],
+                jobTitle: rowCellValues[1],
+                subUnit: rowCellValues[2],
+                reviewPeriod: rowCellValues[3],
+                reviewDueDate: rowCellValues[4],
+                reviewStatus: rowCellValues[5],
+            }
         }
     }
 

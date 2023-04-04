@@ -11,8 +11,6 @@ export class LoginPage {
         this.page = page;
         homePage = new HomePage(page);
         this.loginElements = {
-            // userName: '[name="username"]',
-            // password: '[name="password"]',
             loginButton: "//button[normalize-space()='Login']",
             logoImg : `img[alt='company-branding']`,
             userName : `//p[text()='Username : Admin']`,
@@ -33,18 +31,18 @@ export class LoginPage {
 
     // This function is used to get the "Username" element
     async getUserNameElement() {
-        await this.page.waitForSelector(this.loginElements.userName);
-        return this.loginElements.userName;
+        await this.page.waitForSelector(this.loginElements.inputUserName);
+        return this.loginElements.inputUserName;
     };
 
     // This function is used to get the "Password" element
     async getPasswordElement() {
-        await this.page.waitForSelector(this.loginElements.password);
-        return this.loginElements.password;
+        await this.page.waitForSelector(this.loginElements.inputPassword);
+        return this.loginElements.inputPassword;
     };
 
     // This function is used to login into application
-    async fillUsrNameAndPwdAndLogin(userName: any, password: string, ishomePageDasbboard?:boolean) {
+    async fillUsrNameAndPwdAndLogin(userName: string, password: string, ishomePageDasbboard?:boolean) {
         let getUserNameElem = await this.getUserNameElement();
         await this.page.locator(getUserNameElem).fill(userName);
         await this.page.locator(await this.getPasswordElement()).fill(password);

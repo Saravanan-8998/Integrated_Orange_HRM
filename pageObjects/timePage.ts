@@ -198,7 +198,6 @@ export class TimePage {
             await utils.clickSave(myInfoPage.save, 1);
             await utils.clickSave(myInfoPage.save, 0);
             await utils.clickCloseIcon();
-            await utils.waitForSpinnerToDisappear();
             await utils.waitForElement(this.projects.filterArea);
             await utils.fillTextBoxValues(this.projects.customerName, Constants.customers.customerName, true);
             await utils.clickOption(Constants.Roles.option, Constants.customers.customerName);
