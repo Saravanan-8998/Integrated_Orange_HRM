@@ -13,6 +13,8 @@ export class HomePage {
             admin: '//span[text()="Admin"]',
             pim: '//span[text()="PIM"]',
             time: '//span[text()="Time"]',
+            buzz: '//span[text()="Buzz"]',
+            maintenance: '//span[text()="Maintenance"]',
             dashboardGrid: 'div.orangehrm-dashboard-grid'
         }
     }

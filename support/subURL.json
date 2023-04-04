@@ -4,8 +4,9 @@
     "punchIn" : "web/index.php/attendance/punch",
     "viewCandidates" : "web/index.php/recruitment/viewCandidates",
     "viewJobVacancy" : "web/index.php/recruitment/viewJobVacancy",
-    "filePath" : "C:/Users/saravanan.s/Documents/OrangeHRM/OranageHRM/sampleUpload/upload.txt",
+    "filePath" : "C:/Users/saravanan.s/Documents/Integrated_Orange_HRM/support/upload.txt",
     "leave" : "/web/index.php/leave/viewMyLeaveList",
     "pim" : "/web/index.php/pim/viewEmployeeList",
-    "admin" : "/web/index.php/admin/viewSystemUsers"
+    "admin" : "/web/index.php/admin/viewSystemUsers",
+    "logout" : "/web/index.php/auth/logout"
 }

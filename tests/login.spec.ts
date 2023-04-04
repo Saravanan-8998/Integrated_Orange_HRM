@@ -1,5 +1,5 @@
 import { expect, test, Page } from "@playwright/test";
-import { LoginPage } from "../pageObjects/login_page.PO";
+import { LoginPage } from "../pageObjects/login_Page";
 import subURL from "../support/subURL.json";
 import { myBrowserFixture } from "../support/fixtures";
 import Constants from "../support/constants.json";
@@ -20,7 +20,10 @@ test.describe('Should check all type of login possibilities', async () => {
     })
 
     test('Should check all the login components', async () => {
-        await loginPage.componentsVisibility();
+        await loginPage.verifyImgComponent();
+        await loginPage.verifyUserNameComponent();
+        await loginPage.verifyPasswordComponent();
+        await loginPage.verifyLoginBtnComponent();
     });
 
     test('Should login with empty username and correct password', async () => {

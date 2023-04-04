@@ -1,6 +1,6 @@
 export class AssertionURL {
     static dashboardURL = /.*dashboard/ ;
-    static punchInURL = /.*punchOut/ ;
+    static punchInURL = /.*punch/ ;
     static viewLeaveListURL = /.*viewLeaveList/ ;
     static viewEmployeeTimesheetURL = /.*viewEmployeeTimesheet/ ;
     static myPerformanceReviewURL = /.*myPerformanceReview/ ;
