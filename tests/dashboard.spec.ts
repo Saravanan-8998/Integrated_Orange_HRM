@@ -1,6 +1,6 @@
 import { expect, test, Page } from "@playwright/test";
-import { Dashboard } from "../page_objects/dashboard.PO";
-import { LoginPage } from "../page_objects/login_page.PO";
+import { Dashboard } from "../pageObjects/dashboardPage";
+import { LoginPage } from "../pageObjects/login_Page";
 import subURL from "../support/subURL.json";
 import { myBrowserFixture } from "../support/fixtures";
 import { createAdminUser, getAdminFullName } from "../support/createUser";

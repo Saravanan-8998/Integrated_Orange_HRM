@@ -1,6 +1,6 @@
 import { expect, test, Page } from "@playwright/test";
-import { Leave } from "../page_objects/leave.PO";
-import { LoginPage } from "../page_objects/login_page.PO";
+import { Leave } from "../pageObjects/leavePage";
+import { LoginPage } from "../pageObjects/login_Page";
 import subURL from "../support/subURL.json";
 import { myBrowserFixture } from "../support/fixtures";
 import { createAdminUser, getAdminFullName } from "../support/createUser";

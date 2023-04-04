@@ -1,6 +1,6 @@
 import { expect, test, Page } from "@playwright/test";
-import { Recruitment } from "../page_objects/recruitment.PO";
-import { LoginPage } from "../page_objects/login_page.PO";
+import { Recruitment } from "../pageObjects/recruitmentPage";
+import { LoginPage } from "../pageObjects/login_Page";
 import subURL from "../support/subURL.json";
 import { myBrowserFixture } from "../support/fixtures";
 import { createITManager, getITManagerFullName } from "../support/createUser";

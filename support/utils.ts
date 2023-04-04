@@ -1,6 +1,6 @@
 import { chromium, firefox, webkit, Page, expect } from '@playwright/test';
-import { HomePage } from '../page_objects';
-import { DirectoryPage } from "../page_objects/directoryPage";
+import { HomePage } from '../pageObjects';
+import { DirectoryPage } from "../pageObjects/directoryPage";
 import Constants from "./constants.json";
 
 let directoryPage: DirectoryPage;

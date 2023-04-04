@@ -2,7 +2,7 @@ import { expect, Locator, Page } from "@playwright/test";
 import subURL from "../support/subURL.json";
 import testData from "../support/testDate.json";
 import constants from "../support/constants.json";
-import { LoginPage } from "../page_objects/login_page.PO";
+import { LoginPage } from "./login_Page";
 
 export class Leave {
 
