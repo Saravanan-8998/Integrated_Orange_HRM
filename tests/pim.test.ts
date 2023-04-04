@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import Constants from '../support/constants.json';
 import { Utils } from '../support/utils';
 import { TestData } from '../testData/testData';
-import { LoginPage, HomePage, PIMPage } from '../page_objects';
+import { LoginPage, HomePage, PIMPage } from '../pageObjects';
 import ENV from '../support/env';
 
 let loginPage: LoginPage, homePage: HomePage, pimPage: PIMPage, testData: TestData, page: Page, utils: Utils;;

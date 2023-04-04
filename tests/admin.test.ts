@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 import Constants from '../support/constants.json';
 import { TestData } from '../testData/testData';
-import { LoginPage, HomePage, AdminPage } from '../page_objects';
+import { LoginPage, HomePage, AdminPage } from '../pageObjects';
 import ENV from '../support/env';
 import { Utils } from '../support/utils';
 import date, { addDays } from 'date-and-time';

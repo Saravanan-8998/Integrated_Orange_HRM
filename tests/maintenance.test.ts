@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 import Constants from '../support/constants.json';
 import { TestData } from '../testData/testData';
-import { LoginPage, HomePage, MaintenancePage } from '../page_objects';
+import { LoginPage, HomePage, MaintenancePage } from '../pageObjects';
 import { Utils } from '../support/utils';
 import ENV from '../support/env';
 import { createAdminUser, getAdminFullName } from "../support/createUser";
