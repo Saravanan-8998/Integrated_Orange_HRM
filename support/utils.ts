@@ -253,14 +253,9 @@ export class Utils {
     return this.page.locator(this.row(value));
   }
 
-<<<<<<< HEAD
     // This function is used for Create user
   async createUsers(firstName, lastName, userName) {
     await this.clickMenu(Constants.Roles.link, homePage.homePageElements.pim, Constants.Menu.pim);
-=======
-  async createUsers(firstName: any, lastName: any, userName: any) {
-    await this.clickMenu("link", homePage.homePageElements.pim, "PIM");
->>>>>>> 3a8081816ea0c0dfd9ba05225daed39ded831d48
     await this.click(this.addEmployee);
     await this.page.waitForLoadState("networkidle", { timeout: 15000 });
     await this.page.waitForTimeout(2000);
@@ -282,14 +277,9 @@ export class Utils {
     await this.clickSave(this.save, 0);
   }
 
-<<<<<<< HEAD
    // This function is used for updating the role
   async updatingUserRole(userName, userRole) {
     await this.clickMenu(Constants.Roles.link, homePage.homePageElements.admin, userRole);
-=======
-  async updatingUserRole(userName: any, userRole: any) {
-    await this.clickMenu("link", homePage.homePageElements.admin, userRole);
->>>>>>> 3a8081816ea0c0dfd9ba05225daed39ded831d48
     await this.fillTextBoxValues(this.userName, userName, true);
     await this.click(this.search);
     await this.waitForElement(this.row(userName));

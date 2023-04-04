@@ -178,7 +178,6 @@ export class PIMPage {
         homePage = new HomePage(page);
     }
 
-<<<<<<< HEAD:pageObjects/pimPage.ts
     // This function is used to "Assign the Supervisor" for the Employee
     async assignSupervisor(employeeToSearch, supervisorEmployee) {
         await utils.clickMenu(Constants.Roles.link, homePage.homePageElements.pim, Constants.Menu.pim);
@@ -195,7 +194,7 @@ export class PIMPage {
         await utils.click(this.reportingMethod);
         await utils.clickOption(Constants.Roles.option, Constants.others.reportingMethodDirect);
         await utils.clickSave(this.save, 0, Constants.sucessMsg.sucessfulSavedMsg);
-=======
+    }
     // This function is used to "clear" the "textbox" values
     async clearTextBoxValues(locatorValue: any) {
         await this.page.locator(locatorValue).fill('');
@@ -245,7 +244,6 @@ export class PIMPage {
     // This function is used to "click on the element"
     async click(locator: any) {
         await this.page.locator(locator).click({ force: true });
->>>>>>> 1626cfff9859a008ec67a7c8c5627d3664bfd60e:page_objects/pimPage.ts
     }
 
     // This function is used to "click on the element with index"
@@ -371,22 +369,4 @@ export class PIMPage {
             await this.page.waitForTimeout(3000);
         };
     }
-
-        // This function is used to "Assign the Supervisor" for the Employee
-        async assignSupervisor(employeeToSearch, supervisorEmployee) {
-            await utils.clickMenu("link", homePage.homePageElements.pim, "PIM");
-            await utils.fillTextBoxValues(this.employeeName, employeeToSearch, true);
-            await utils.clickOption('option', employeeToSearch);
-            await utils.click(this.search);
-            await utils.click(this.editIcon);
-            await utils.waitForSpinnerToDisappear();
-            await utils.waitForElement(this.container)
-            await utils.click(this.reportTo);
-            await utils.clickElementWithIndex(this.add, 0);
-            await utils.fillTextBoxValues(this.name, supervisorEmployee, true);
-            await utils.clickOption('option', supervisorEmployee);
-            await utils.click(this.reportingMethod);
-            await utils.clickOption('option', "Direct");
-            await utils.clickSave(this.save, 0, Constants.sucessMsg.sucessfulSavedMsg);
-        }
 }
