@@ -11,18 +11,18 @@ export class LoginPage {
         this.page = page;
         homePage = new HomePage(page);
         this.loginElements = {
-            // userName: '[name="username"]',
-            // password: '[name="password"]',
+            userName: '[name="username"]',
+            password: '[name="password"]',
             loginButton: "//button[normalize-space()='Login']",
-            logoImg : `img[alt='company-branding']`,
-            userName : `//p[text()='Username : Admin']`,
-            password : `//p[text()='Password : admin123']`,
-            inputUserName : `input[name='username']`,
-            inputPassword : `input[name='password']`,
-            loginBtn : `button[type='submit']`,
-            inValidMsg : `//p[text()='Invalid credentials']`,
-            alertDiv : `//div[@role='alert']//div[1]`,
-            requiredMsg : `(//span[contains(@class,'oxd-text oxd-text--span')])`
+            logoImg: `img[alt='company-branding']`,
+            // userName : `//p[text()='Username : Admin']`,
+            // password : `//p[text()='Password : admin123']`,
+            inputUserName: `input[name='username']`,
+            inputPassword: `input[name='password']`,
+            loginBtn: `button[type='submit']`,
+            inValidMsg: `//p[text()='Invalid credentials']`,
+            alertDiv: `//div[@role='alert']//div[1]`,
+            requiredMsg: `(//span[contains(@class,'oxd-text oxd-text--span')])`
         }
     }
 
@@ -44,13 +44,13 @@ export class LoginPage {
     };
 
     // This function is used to login into application
-    async fillUsrNameAndPwdAndLogin(userName: any, password: string, ishomePageDasbboard?:boolean) {
+    async fillUsrNameAndPwdAndLogin(userName: any, password: string, ishomePageDasbboard?: boolean) {
         let getUserNameElem = await this.getUserNameElement();
         await this.page.locator(getUserNameElem).fill(userName);
         await this.page.locator(await this.getPasswordElement()).fill(password);
         await this.clickLogin();
-        if(ishomePageDasbboard){
-        await expect(this.page).toHaveURL(/.*dashboard/);
+        if (ishomePageDasbboard) {
+            await expect(this.page).toHaveURL(/.*dashboard/);
         }
         await this.page.waitForSelector(homePage.homePageElements.dashboardGrid);
     }

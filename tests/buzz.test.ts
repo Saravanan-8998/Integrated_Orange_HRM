@@ -4,22 +4,12 @@ import { TestData } from '../testData/testData';
 import { LoginPage, HomePage, BuzzPage } from '../pageObjects';
 import ENV from '../support/env';
 import { Utils } from '../support/utils';
-import { createAdminUser, getAdminFullName } from "../support/createUser";
 
 let loginPage: LoginPage, homePage: HomePage, buzzPage: BuzzPage, testData: TestData, page: Page, utils: Utils;
 
-let fullNameValue: any;
-let USERNAME: any;
-
-async function adminLogin() {
-    await createAdminUser();
-    fullNameValue = await getAdminFullName();
-    USERNAME = fullNameValue.slice(14, 32);
-    await loginPage.enterCredentials(USERNAME, 'Admin@123');
-}
-
 test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
+    utils = new Utils(page);
     loginPage = new LoginPage(page);
     homePage = new HomePage(page);
     buzzPage = new BuzzPage(page);
@@ -28,7 +18,12 @@ test.beforeAll(async ({ browser }) => {
     await expect(page).toHaveURL(/.*login/);
     let pass = await testData.encodeDecodePassword();
     await loginPage.fillUsrNameAndPwdAndLogin(ENV.USERNAME, pass);
-    await utils.clickMenu("link", homePage.homePageElements.buzz, "Buzz");
+    await utils.deleteUsers();
+    await utils.createUsers(Constants.Users.firstNameUser1, Constants.Users.lastNameUser1, Constants.Users.userNameUser1);
+    await utils.updatingUserRole(Constants.Users.userNameUser1, Constants.others.reportingMethodAdmin);
+    await utils.logout();
+    await loginPage.fillUsrNameAndPwdAndLogin(Constants.Users.userNameUser1, Constants.Users.password);
+    await homePage.clickBuzzMenu();
 });
 
 test.afterAll(async () => {
@@ -61,10 +56,13 @@ test.describe('Click Most Recent/Liked/Commented Posts and verify the Feed is Fi
     test('Click Most Recent Posts and verify that the posts are filtered', async () => {
         await buzzPage.click(buzzPage.buzzLocators.buzzTitle);
         await buzzPage.click(buzzPage.buzzLocators.mostRecentPosts);
+        expect(await buzzPage.getText(buzzPage.buzzLocators.feedUser)).toEqual(Constants.buzzAssertions.feedUser);
         expect(await buzzPage.getText(buzzPage.buzzLocators.feedtext)).toEqual(Constants.buzzAssertions.feedText);
         await buzzPage.click(buzzPage.buzzLocators.mostLikedPosts);
+        expect(await buzzPage.getText(buzzPage.buzzLocators.feedUser)).toEqual(Constants.buzzAssertions.feedExistingUser);
         expect(await buzzPage.getText(buzzPage.buzzLocators.feedtext)).toEqual(Constants.buzzAssertions.feedText1);
         await buzzPage.click(buzzPage.buzzLocators.mostCommentedPosts);
+        expect(await buzzPage.getText(buzzPage.buzzLocators.feedUser)).toEqual(Constants.buzzAssertions.feedExistingUser);
         expect(await buzzPage.getText(buzzPage.buzzLocators.feedtext)).toEqual(Constants.buzzAssertions.feedText2);
     });
 });
@@ -73,6 +71,7 @@ test.describe('React to the Created Post in the Feed and Comment', () => {
     test('React to the latest Post in the Feed', async () => {
         await buzzPage.click(buzzPage.buzzLocators.buzzTitle);
         await buzzPage.click(buzzPage.buzzLocators.mostRecentPosts);
+        expect(await buzzPage.getText(buzzPage.buzzLocators.feedUser)).toEqual(Constants.buzzAssertions.feedUser);
         await buzzPage.click(buzzPage.buzzLocators.heart);
         expect(await buzzPage.getText(buzzPage.buzzLocators.likeText)).toEqual(Constants.buzzAssertions.like);
     });
@@ -80,6 +79,7 @@ test.describe('React to the Created Post in the Feed and Comment', () => {
     test('Comment to the latest Post in the Feed, Like, Edit and Delete the Comment', async () => {
         await buzzPage.click(buzzPage.buzzLocators.buzzTitle);
         await buzzPage.click(buzzPage.buzzLocators.mostRecentPosts);
+        expect(await buzzPage.getText(buzzPage.buzzLocators.feedUser)).toEqual(Constants.buzzAssertions.feedUser);
         await buzzPage.click(buzzPage.buzzLocators.comment);
         await buzzPage.fillTextBoxValues(buzzPage.buzzLocators.commentInput, Constants.buzzModule.commentInput);
         await page.keyboard.press('Enter');
@@ -97,7 +97,6 @@ test.describe('Deleted the created Post by selecting the post', () => {
     test('Delete the created post by clicking 3 dots and click Delete Post', async () => {
         await buzzPage.click(buzzPage.buzzLocators.buzzTitle);
         await buzzPage.click(buzzPage.buzzLocators.mostRecentPosts);
-        await buzzPage.deleteFeed();
         await buzzPage.deleteFeed();
         await buzzPage.deleteFeed();
     });
