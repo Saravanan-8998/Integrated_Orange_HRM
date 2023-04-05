@@ -17,7 +17,6 @@ export class PIMPage {
     readonly licenseExpiryDate: string;
     readonly ssnNumber: string;
     readonly sinNumber: string;
-    readonly nationality: string;
     readonly maritalStatus: string;
     readonly dateofBirth: string;
     readonly gender: string;
@@ -57,13 +56,15 @@ export class PIMPage {
     readonly employeeList: any;
     readonly edit: any;
     readonly editEmployeeReports: any;
-    search: string;
-    reportingMethod: string;
-    employeeName: string;
-    editIcon: string;
-    reportTo: string;
-    name: string;
-    add: string;
+    readonly search: string;
+    readonly reportingMethod: string;
+    readonly employeeName: string;
+    readonly editIcon: string;
+    readonly reportTo: string;
+    readonly name: string;
+    readonly add: string;
+    readonly addDisplayField: string;
+    readonly nationalityClick: string;
 
     constructor(page: Page) {
         this.page = page;
@@ -77,13 +78,13 @@ export class PIMPage {
         this.licenseExpiryDate = `//label[text()='License Expiry Date']/../..//div/input`;
         this.ssnNumber = '//label[text()="SSN Number"]/../..//div/input';
         this.sinNumber = '//label[text()="SIN Number"]/../..//div/input'
-        this.nationality = `//label[text()='Nationality']/../../..//div[@class='oxd-select-text--after']`
+        this.nationalityClick = `//label[text()="Nationality"]/../../..//div[@class="oxd-select-text-input"]`
         this.maritalStatus = `//label[text()='Marital Status']/../../..//div[@class='oxd-select-text--after']`
         this.dateofBirth = `//label[text()='Date of Birth']/../..//div/input`;
         this.gender = '//label[text()="Gender"]/../../..//div[@class="oxd-radio-wrapper"]/label/input[@value="1"]';
         this.militaryService = `//label[text()='Military Service']/../..//div/input`;
         this.smoker = `//label[text()='Smoker']/../../..//div/label/input[@type='checkbox']`;
-        this.save = 'button.oxd-button--medium';
+        this.save = `//button[normalize-space()='Save']`;
         this.toastMessage = 'p.oxd-text--toast-message';
         this.closeIcon = '.oxd-toast-close-container';
         this.bloodType = `//label[text()='Blood Type']/../..//*[@class='oxd-select-wrapper']/div`;
@@ -115,7 +116,8 @@ export class PIMPage {
             work: '//label[text()="Work"]/../..//div/input',
             workEmail: '//label[text()="Work Email"]/../..//div/input',
             otherEmail: '//label[text()="Other Email"]/../..//div/input',
-            country: '//label[text()="Country"]/../../..//div[@class="oxd-select-text--after"]'
+            country: '//label[text()="Country"]/../../..//div[@class="oxd-select-text--after"]',
+            nationality: `//label[text()='Nationality']/../../..//div[contains(@class,'text-input')]`
         }
         this.emergencyContactDetails = {
             emergencyContactMenuLink: `//a[text()="Emergency Contacts"]`,
@@ -174,6 +176,7 @@ export class PIMPage {
         this.save = "//button[normalize-space()='Save']";
         this.name = "//label[text()='Name']/../..//input";
         this.add = "//button[normalize-space()='Add']";
+        this.addDisplayField = "(//i[@class='oxd-icon bi-plus'])[2]";
         utils = new Utils(page);
         homePage = new HomePage(page);
     }
@@ -366,7 +369,7 @@ export class PIMPage {
             await this.clearTextBoxValues(locator);
             const index = namesLocators.indexOf(locator);
             await this.fillTextBoxValues(locator, values[index]);
-            await this.page.waitForTimeout(3000);
+            await this.page.waitForTimeout(1000);
         };
     }
 }

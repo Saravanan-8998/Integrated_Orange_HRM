@@ -16,7 +16,8 @@
         "menuItem": "menuitem",
         "option": "option",
         "dropdown": "dropdown",
-        "button": "button"
+        "button": "button",
+        "listbox": "listbox"
     },
     "Menu": {
         "directory": "Directory",
@@ -49,7 +50,8 @@
         "myReviews": "My Reviews",
         "employeeReviews": "Employee Reviews",
         "admin": "Admin",
-        "user": "User"
+        "user": "User",
+        "reportTo": "Report-to"
     },
     "EmployeeName": {
         "firstName": "Pon",
@@ -59,7 +61,7 @@
     },
     "employeeDetails": {
         "firstName": "Aldrin",
-        "middleName": "F",
+        "middleName": "",
         "lastName": "Kardoze",
         "employeeId": "999"
     },
@@ -298,7 +300,7 @@
     "popupText": {
         "text": "The selected record will be permanently deleted. Are you sure you want to continue?",
         "purgeCandidate": "You are about to purge selected candidates permanently. Are you sure you want to continue? This operation cannot be undone",
-        "purgeEmployee":"You are about to purge the employee permanently. Are you sure you want to continue? This operation cannot be undone",
+        "purgeEmployee": "You are about to purge the employee permanently. Are you sure you want to continue? This operation cannot be undone",
         "item": "The selected item will be permanently deleted. Are you sure you want to continue?"
     },
     "credentials": {
@@ -330,7 +332,7 @@
     },
     "pimModule": {
         "licenseExpiryDate": "2030-11-25",
-        "nationality": "Indian",
+        "nationality": "Albanian",
         "maritalStatus": "Single",
         "dateOfBirth": "2000-12-12",
         "bloodType": "A+",
@@ -341,15 +343,15 @@
         "jobTitle": "QA Engineer",
         "subUnit": "Quality Assurance",
         "employeeStatus": "Full-Time Permanent",
-        "nameTitle": "Paul  Collings",
-        "reportingMethod": "reportingMethod",
+        "nameTitle": "John Smith",
+        "reportingMethod": "Direct",
         "employeeName": "Aldrin F Kardoze",
         "employeeId": "999",
         "reportNameSearch": "PIM Sample Report Automation",
         "displayFieldGroup": "Personal",
         "displayField": "Employee Last Name",
         "reportNameSearch1": "All Employee Sub Unit Hierarchy Report",
-        "reportNameSearchEdit": "All Employee Sub Unit Hierarchy Report Edited",
+        "reportNameSearchEdit": "PIM Sample Report Automation Edited",
         "criteria": "Employee Name",
         "employeeName1": "Cecil Bonaparte"
     },
@@ -364,6 +366,7 @@
             "employeeName": "Paul Collings"
         },
         "job": {
+            "job": "Job",
             "jobTitle": "Automation Engineer",
             "jobDescription": "Testing 123 Sample",
             "note": "Automation Engineer Note Added",
@@ -531,9 +534,9 @@
     },
     "myLeave": {
         "leaveType": "US - FMLA",
-        "leaveDay" : "Full Day"
+        "leaveDay": "Full Day"
     },
     "myLanguages": {
-        "language" : "English (United States)"
+        "language": "English (United States)"
     }
 }

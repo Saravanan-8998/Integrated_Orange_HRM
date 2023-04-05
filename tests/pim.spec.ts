@@ -4,12 +4,17 @@ import { Utils } from '../support/utils';
 import { TestData } from '../testData/testData';
 import { LoginPage, HomePage, PIMPage } from '../pageObjects';
 import ENV from '../support/env';
+import date from 'date-and-time';
 
-let loginPage: LoginPage, homePage: HomePage, pimPage: PIMPage, testData: TestData, page: Page, utils: Utils;;
+let loginPage: LoginPage, homePage: HomePage, pimPage: PIMPage, testData: TestData, page: Page, utils: Utils;
 
-let nameValues = [Constants.employeeDetails.firstName, Constants.employeeDetails.middleName, Constants.employeeDetails.lastName, Constants.employeeDetails.employeeId];
+const now = new Date();
+const email1 = date.format(now, 'MMMDDS');
+const email2 = date.format(now, 'DDS');
+
+let nameValues = [Constants.Users.firstNameUser2, Constants.employeeDetails.middleName, Constants.Users.lastNameUser2, Constants.employeeDetails.employeeId];
 let idValues = [Constants.employeeIDs.otherId, Constants.employeeIDs.driverLicenseNumber, Constants.employeeIDs.ssnNumber, Constants.employeeIDs.sinNumber];
-let contactDetailValues = [Constants.EmployeeContactDetails.street1, Constants.EmployeeContactDetails.street2, Constants.EmployeeContactDetails.city, Constants.EmployeeContactDetails.state, Constants.EmployeeContactDetails.zip, Constants.EmployeeContactDetails.home, Constants.EmployeeContactDetails.mobile, Constants.EmployeeContactDetails.work, Constants.EmployeeContactDetails.workEmail, Constants.EmployeeContactDetails.otherEmail];
+let contactDetailValues = [Constants.EmployeeContactDetails.street1, Constants.EmployeeContactDetails.street2, Constants.EmployeeContactDetails.city, Constants.EmployeeContactDetails.state, Constants.EmployeeContactDetails.zip, Constants.EmployeeContactDetails.home, Constants.EmployeeContactDetails.mobile, Constants.EmployeeContactDetails.work, `${email1}@hrm.com`, `${email2}@hrm.com`];
 let emergencyContactValues = [Constants.EmergencyContacts.name, Constants.EmergencyContacts.relationship, Constants.EmergencyContacts.homeTelephone, Constants.EmergencyContacts.mobile, Constants.EmergencyContacts.workTelephone];
 
 let namesLocators = [];
@@ -31,7 +36,14 @@ test.beforeAll(async ({ browser }) => {
     await expect(page).toHaveURL(/.*login/);
     let pass = await testData.encodeDecodePassword();
     await loginPage.fillUsrNameAndPwdAndLogin(ENV.USERNAME, pass);
-    await utils.clickMenu("link", homePage.homePageElements.pim, "PIM");
+    await utils.deleteUsersName(Constants.Users.testuserDelete1);
+    await utils.deleteUsersName(Constants.Users.testuserDelete2);
+    await utils.deleteUsers();
+    await utils.createUsers(Constants.Users.firstNameUser1, Constants.Users.lastNameUser1, Constants.Users.userNameUser1);
+    await utils.updatingUserRole(Constants.Users.userNameUser1, Constants.others.reportingMethodAdmin);
+    await utils.logout();
+    await loginPage.fillUsrNameAndPwdAndLogin(Constants.Users.userNameUser1, Constants.Users.password);
+    await homePage.clickPIMMenu();
 });
 
 test.afterAll(async () => {
@@ -41,25 +53,25 @@ test.afterAll(async () => {
 test.describe('Personal Informations', () => {
     test('Adding Employee section', async () => {
         await pimPage.clickAddEmployeeMenu();
-        namesLocators = [pimPage.firstName, pimPage.middleName, pimPage.lastName, pimPage.employeeId];
-        await pimPage.fillFieldValues(namesLocators, nameValues);
-        await pimPage.clickSave(pimPage.save, 1, Constants.sucessMsg.sucessfulSavedMsg);
-        await page.waitForTimeout(5000);
+        namesLocators = [pimPage.firstName, pimPage.middleName, pimPage.lastName];
+        await utils.fillFieldValues(namesLocators, nameValues);
+        await pimPage.clickSave(pimPage.save, 0, Constants.sucessMsg.sucessfulSavedMsg);
     });
 
     test.skip('Filling the Id section', async () => {
-        await pimPage.fillFieldValues(idLocators, idValues);
-        await pimPage.fillDateValue(pimPage.licenseExpiryDate, Constants.pimModule.licenseExpiryDate);
+        await utils.fillFieldValues(idLocators, idValues);
+        await utils.fillDateValue(pimPage.licenseExpiryDate, Constants.pimModule.licenseExpiryDate);
     });
 
     test('Filling the Personal Informations section', async () => {
-        await pimPage.selecDropdownOption(pimPage.nationality, Constants.pimModule.nationality);
+        await page.waitForLoadState('networkidle');
+        await utils.selecDropdownOption(Constants.Roles.option, pimPage.contactDetailsLocators.nationality, Constants.pimModule.nationality);
         await pimPage.selecDropdownOption(pimPage.maritalStatus, Constants.pimModule.maritalStatus);
-        await pimPage.fillDateValue(pimPage.dateofBirth, Constants.pimModule.dateOfBirth);
+        await utils.fillDateValue(pimPage.dateofBirth, Constants.pimModule.dateOfBirth);
         await pimPage.click(pimPage.gender);
-        await pimPage.clickSave(pimPage.save, 0, Constants.sucessMsg.successfulUpdatedMsg);
+        await utils.clickSave(pimPage.save, 0, Constants.sucessMsg.successfulUpdatedMsg);
         await pimPage.selecDropdownOption(pimPage.bloodType, Constants.pimModule.bloodType);
-        await pimPage.clickSave(pimPage.save, 1, Constants.sucessMsg.successfulUpdatedMsg);
+        await utils.clickSave(pimPage.save, 0, Constants.sucessMsg.successfulUpdatedMsg);
     });
 
     test('Filling the Personal informations and verifying cancel button', async () => {
@@ -87,8 +99,8 @@ test.describe('Personal Informations', () => {
 
 test.describe('Filling Contact Informations', () => {
     test('Filling the Address section fields', async () => {
-        await pimPage.clickMenu(pimPage.contactDetails, 'Contact Details');
-        await pimPage.fillFieldValues(contactDetailsLocators, contactDetailValues);
+        await pimPage.clickMenu(pimPage.contactDetails, Constants.Menu.contactDetails);
+        await utils.fillFieldValues(contactDetailsLocators, contactDetailValues);
         await pimPage.selecDropdownOption(pimPage.contactDetailsLocators.country, Constants.pimModule.country);
         await pimPage.clickSave(pimPage.save, 0, Constants.sucessMsg.successfulUpdatedMsg);
     });
@@ -97,10 +109,10 @@ test.describe('Filling Contact Informations', () => {
 test.describe('Filling Emergency Contacts informations', () => {
     test('Filling Emergency Contacts informations', async () => {
         await pimPage.clickEmergencyContactsMenu();
-        await pimPage.clickMenu(pimPage.emergencyContactDetails.emergencyContactMenuLink, 'Emergency Contacts');
+        await pimPage.clickMenu(pimPage.emergencyContactDetails.emergencyContactMenuLink, Constants.Menu.emergencyContacts);
         await pimPage.clickElementWithIndex(pimPage.addButton, 0);
-        await pimPage.fillFieldValues(emergencyContactLocators, emergencyContactValues);
-        await pimPage.clickSave(pimPage.save, 1, Constants.sucessMsg.sucessfulSavedMsg);
+        await utils.fillFieldValues(emergencyContactLocators, emergencyContactValues);
+        await pimPage.clickSave(pimPage.save, 0, Constants.sucessMsg.sucessfulSavedMsg);
         await pimPage.clickElementWithIndex(pimPage.addButton, 1);
         await pimPage.uploadFile(Constants.fileName, true);
     });
@@ -108,13 +120,13 @@ test.describe('Filling Emergency Contacts informations', () => {
 
 test.describe('Filling Dependents informations', () => {
     test('Filling Dependents informations', async () => {
-        await pimPage.clickMenu(pimPage.dependentsDetails.dependentsMenuLink, 'Dependents');
+        await pimPage.clickMenu(pimPage.dependentsDetails.dependentsMenuLink, Constants.depedendant.dependents);
         await pimPage.clickElementWithIndex(pimPage.addButton, 0);
         await pimPage.clearTextBoxValues(pimPage.nameInputField);
         await pimPage.fillTextBoxValues(pimPage.nameInputField, Constants.pimModule.name);
         await pimPage.selecDropdownOption(pimPage.dependentsDetails.relationship, Constants.pimModule.relationship);
-        await pimPage.fillDateValue(pimPage.dateofBirth, Constants.pimModule.depDateofBirth);
-        await pimPage.clickSave(pimPage.save, 1, Constants.sucessMsg.sucessfulSavedMsg);
+        await utils.fillDateValue(pimPage.dateofBirth, Constants.pimModule.depDateofBirth);
+        await pimPage.clickSave(pimPage.save, 0, Constants.sucessMsg.sucessfulSavedMsg);
         await pimPage.clickElementWithIndex(pimPage.addButton, 1);
         await pimPage.uploadFile(Constants.fileName, true);
     });
@@ -122,37 +134,37 @@ test.describe('Filling Dependents informations', () => {
 
 test.describe('Filling Job informations', () => {
     test('Filling Job informations', async () => {
-        await pimPage.clickMenu(pimPage.jobDetails.jobMenuLink, 'Job');
-        await pimPage.selecDropdownOption(pimPage.jobDetails.jobTitle, Constants.pimModule.jobTitle);
+        await pimPage.clickMenu(pimPage.jobDetails.jobMenuLink, Constants.adminModule.job.job);
+        // await pimPage.selecDropdownOption(pimPage.jobDetails.jobTitle, Constants.pimModule.jobTitle);
         await pimPage.selecDropdownOption(pimPage.jobDetails.subUnit, Constants.pimModule.subUnit);
-        await pimPage.selecDropdownOption(pimPage.jobDetails.employeeStatus, Constants.pimModule.employeeStatus);
+        // await pimPage.selecDropdownOption(pimPage.jobDetails.employeeStatus, Constants.pimModule.employeeStatus);
         await pimPage.clickSave(pimPage.save, 0, Constants.sucessMsg.successfulUpdatedMsg);
     });
 });
 
 test.describe('Filling Report-To informations', () => {
     test('Filling Report-To informations', async () => {
-        await pimPage.clickMenu(pimPage.reportToDetails.reportToMenuLink, 'Report-to');
+        await pimPage.clickMenu(pimPage.reportToDetails.reportToMenuLink, Constants.Menu.reportTo);
         await pimPage.clickElementWithIndex(pimPage.addButton, 0);
         await pimPage.fillTextBoxValues(pimPage.reportToDetails.nameTitle, Constants.pimModule.nameTitle);
         await pimPage.selecDropdownOption(pimPage.reportToDetails.nameTitle, Constants.pimModule.nameTitle);
         await pimPage.selecDropdownOption(pimPage.reportToDetails.reportingMethod, Constants.pimModule.reportingMethod);
-        await pimPage.clickSave(pimPage.save, 1, Constants.sucessMsg.sucessfulSavedMsg);
+        await pimPage.clickSave(pimPage.save, 0, Constants.sucessMsg.sucessfulSavedMsg);
     });
 });
 
 test.describe('Search Employee List informations', () => {
     test('Filling Employee informations and searching for the existing Employee', async () => {
         await pimPage.clickEmployeeListMenu();
-        await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.employeeName, Constants.pimModule.employeeName);
-        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.employeeName, Constants.pimModule.employeeName);
-        await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.employeeId, Constants.pimModule.employeeId);
-        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.employmentStatus, Constants.pimModule.employeeStatus);
+        await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.employeeName, Constants.Users.employeeNameUser2);
+        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.employeeName, Constants.Users.employeeNameUser2);
+        // await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.employeeId, Constants.pimModule.employeeId);
+        // await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.employmentStatus, Constants.pimModule.employeeStatus);
         await pimPage.fillTextBoxValues(pimPage.employeeSearchInformation.supervisorName, Constants.pimModule.nameTitle);
         await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.supervisorName, Constants.pimModule.nameTitle);
-        await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.jobTitle, Constants.pimModule.jobTitle);
+        // await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.jobTitle, Constants.pimModule.jobTitle);
         await pimPage.selecDropdownOption(pimPage.employeeSearchInformation.subUnit, Constants.pimModule.subUnit);
-        await pimPage.clickElementWithIndex(pimPage.save, 1);
+        await pimPage.clickElementWithIndex(pimPage.search, 0);
     });
 
     test('Checking the checkbox and performing delete operation for the existing Employee Information', async () => {
@@ -164,14 +176,16 @@ test.describe('Search Employee List informations', () => {
 test.describe('Search Employee Reports informations', () => {
     test('Filling Employee Reports and searching for the existing Employee Reports', async () => {
         await pimPage.clickReportsMenu();
-        await pimPage.clickElementWithIndex(pimPage.save, 2);
+        await pimPage.clickElementWithIndex(pimPage.add, 0);
         await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch);
         await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayFieldGroup, Constants.pimModule.displayFieldGroup);
         await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayField, Constants.pimModule.displayField);
-        await pimPage.clickElementWithIndex(pimPage.save, 1);
+        await pimPage.click(pimPage.addDisplayField);
+        await pimPage.clickElementWithIndex(pimPage.save, 0);
+        await pimPage.clickReportsMenu();
         await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch);
         await pimPage.selecDropdownOption(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch);
-        await pimPage.clickElementWithIndex(pimPage.save, 1);
+        await pimPage.clickElementWithIndex(pimPage.search, 0);
     });
 
     test('Checking the checkbox and performing edit operation for the existing Employee Information', async () => {
@@ -181,16 +195,25 @@ test.describe('Search Employee Reports informations', () => {
     });
 
     test('Searching for the existing Employee Reports and editing Report', async () => {
+        await pimPage.clickReportsMenu();
+        await pimPage.clickElementWithIndex(pimPage.add, 0);
+        await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch);
+        await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayFieldGroup, Constants.pimModule.displayFieldGroup);
+        await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayField, Constants.pimModule.displayField);
+        await pimPage.click(pimPage.addDisplayField);
+        await pimPage.clickElementWithIndex(pimPage.save, 0);
+        await pimPage.clickReportsMenu();
+
         await pimPage.clearTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch);
-        await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch1);
-        await pimPage.selecDropdownOption(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch1);
-        await pimPage.clickElementWithIndex(pimPage.save, 1);
+        await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch);
+        await pimPage.selecDropdownOption(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch);
+        await pimPage.clickElementWithIndex(pimPage.search, 0);
         await pimPage.click(pimPage.attachmentCheckBox);
         await pimPage.click(pimPage.edit);
     });
 
     test('Editing the existing Report and Adding an Employee Name and verify the employee is added', async () => {
-        await pimPage.clearTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch);
+        await utils.clearTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch);
         await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearchEdit);
         await pimPage.selecDropdownOption(pimPage.editEmployeeReports.criteria, Constants.pimModule.criteria);
         await pimPage.clickElementWithIndex(pimPage.editEmployeeReports.addreport, 0);
@@ -200,6 +223,12 @@ test.describe('Search Employee Reports informations', () => {
         await pimPage.click(pimPage.editEmployeeReports.editFields);
         await pimPage.selecDropdownOption(pimPage.editEmployeeReports.displayField, Constants.pimModule.displayField);
         await pimPage.clickElementWithIndex(pimPage.editEmployeeReports.addreport, 1);
-        await pimPage.clickElementWithIndex(pimPage.save, 1);
+        await pimPage.clickElementWithIndex(pimPage.save, 0);
+        await pimPage.clickReportsMenu();
+        await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearchEdit);
+        await pimPage.selecDropdownOption(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearchEdit);
+        await pimPage.clickElementWithIndex(pimPage.search, 0);
+        await pimPage.click(pimPage.attachmentCheckBox);
+        await pimPage.deleteAttachedFile("delete");
     })
 });

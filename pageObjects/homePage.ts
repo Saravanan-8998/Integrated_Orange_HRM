@@ -18,7 +18,10 @@ export class HomePage {
             dashboardGrid: 'div.orangehrm-dashboard-grid',
             menuHeader: `ul.oxd-main-menu`,
             buzzContainer: 'div.orangehrm-buzz-newsfeed',
-            cardContainer: 'div.orangehrm-card-container'
+            cardContainer: 'div.orangehrm-card-container',
+            pimHeader: `//span[text()='PIM']`,
+            pimContainer: 'div.orangehrm-background-container',
+            backgroundContainer: 'div.orangehrm-background-container'
         }
     }
 
@@ -35,6 +38,16 @@ export class HomePage {
         await (await this.page.waitForSelector(this.homePageElements.menuHeader)).waitForElementState('stable');
         await this.page.getByRole('link', { name: 'Maintenance' }).click();
         await this.page.waitForSelector(this.homePageElements.cardContainer);
+        await this.page.waitForTimeout(2000);
+    };
+
+    // This function is used to select PIM Menu
+    async clickPIMMenu() {
+        await (await this.page.waitForSelector(this.homePageElements.pimHeader)).waitForElementState('stable');
+        await (await this.page.waitForSelector(this.homePageElements.menuHeader)).waitForElementState('stable');
+        await this.page.getByRole('link', { name: 'PIM' }).click();
+        await this.page.waitForSelector(this.homePageElements.pimContainer);
+        await this.page.waitForSelector(this.homePageElements.backgroundContainer);
         await this.page.waitForTimeout(2000);
     };
 }

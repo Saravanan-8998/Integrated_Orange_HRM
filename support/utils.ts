@@ -307,7 +307,7 @@ export class Utils {
     await this.click(this.job);
     await this.waitForSpinnerToDisappear();
     await this.fillDateValue(this.joinedDate, Constants.Dates.joinedDate);
-    await this.selecDropdownOption(Constants.Roles.option, this.jobTitle, Constants.others.jobTitleSE);
+    // await this.selecDropdownOption(Constants.Roles.option, this.jobTitle, Constants.others.jobTitleSE);
     await this.selecDropdownOption(Constants.Roles.option, this.location, Constants.others.jobLocation);
     await this.clickSave(this.save, 0);
   }
