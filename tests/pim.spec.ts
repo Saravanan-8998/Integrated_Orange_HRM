@@ -212,7 +212,7 @@ test.describe('Search Employee Reports informations', () => {
     });
 
     test('Editing the existing Report and Adding an Employee Name and verify the employee is added', async () => {
-        await page.waitForLoadState('load');
+        await page.waitForLoadState('networkidle');
         await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearchEdit);
         await pimPage.selecDropdownOption(pimPage.editEmployeeReports.criteria, Constants.pimModule.criteria);
         await pimPage.clickElementWithIndex(pimPage.editEmployeeReports.addreport, 0);

@@ -18,6 +18,8 @@ test.beforeAll(async ({ browser }) => {
     await expect(page).toHaveURL(/.*login/);
     let pass = await testData.encodeDecodePassword();
     await loginPage.fillUsrNameAndPwdAndLogin(ENV.USERNAME, pass);
+    await utils.deleteUsersName(Constants.Users.testuserDelete1);
+    await utils.deleteUsersName(Constants.Users.testuserDelete2);
     await utils.deleteUsers();
     await utils.createUsers(Constants.Users.firstNameUser1, Constants.Users.lastNameUser1, Constants.Users.userNameUser1);
     await utils.updatingUserRole(Constants.Users.userNameUser1, Constants.others.reportingMethodAdmin);

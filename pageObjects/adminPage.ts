@@ -227,6 +227,7 @@ export class AdminPage {
     // This function is used to "click on the element"
     async click(locator: any) {
         await this.page.locator(locator).click({ force: true });
+        await this.page.waitForTimeout(1500);
     };
 
     // A function used to click save
