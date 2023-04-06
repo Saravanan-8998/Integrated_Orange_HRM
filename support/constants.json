@@ -251,7 +251,8 @@
         "scheduled": "Status: Interview Scheduled",
         "markInterview": "Status: Interview Passed",
         "offerJob": "Status: Job Offered",
-        "hired": "Status: Hired"
+        "hired": "Status: Hired",
+        "adminCheck": "testuser2AdminTest User2Enabled"
     },
     "Users": {
         "firstNameUser1": "Test",
@@ -368,6 +369,7 @@
         "job": {
             "job": "Job",
             "jobTitle": "Automation Engineer",
+            "jobTitleEdited": "Automation Engineer Edited",
             "jobDescription": "Testing 123 Sample",
             "note": "Automation Engineer Note Added",
             "jobDescriptionEdited": "Testing 123 Sample Edited",
@@ -375,16 +377,20 @@
             "deleteEditedRecord": "Automation Engineer Edited"
         },
         "payGradeName": "Grade 0",
+        "payGradeNameEdited": "Grade 0 Edited",
         "currency": "INR - Indian Rupee",
         "minSalary": "20000",
         "maxSalary": "25000",
         "deletePayGradeRecord": "Grade 0 Edited",
         "employeeStatusName": "Full-Time Automation",
+        "employeeStatusNameEdit": "Automation Engineer Edited",
         "deleteemployeeStatusEditedRecord": "Automation Engineer Edited",
         "jobCategory": "On Bench",
+        "jobCategoryEdited": "On Bench Edited",
         "deletejobCategory": "On Bench Edited",
         "workShifts": {
             "shiftName": "Lunch Time",
+            "shiftNameEdited": "Lunch Time Edited",
             "fromTime": "01:00 PM",
             "toTime": "02:00 PM",
             "assignedEmployees": "Cecil  Bonaparte",
@@ -432,7 +438,7 @@
             "descriptionEdited": "Playwright Engineer 123 Testing",
             "nameAdd": "Quality Playwright Engineering Sub",
             "descriptionAdd": "Quality Playwright Engineering 123 Testing Sub",
-            "deleteStructure": "Quality Engineering Edited"
+            "deleteStructure": "Playwright Automation"
         },
         "skills": {
             "name": "Playwright",
@@ -466,7 +472,7 @@
             },
             "clientLogo": "support/50px X 50px.png",
             "clientBanner": "support/182px X 50px.jpg",
-            "loginBanner": "/support/340px X 65px.jpg"
+            "loginBanner": "support/340px X 65px.jpg"
         },
         "mailSentAs": "infotest@orangehrm.com",
         "mailSentAs1": "info@orangehrm.com",

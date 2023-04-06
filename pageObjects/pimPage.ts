@@ -211,6 +211,7 @@ export class PIMPage {
 
     // This function is used to fill the "textbox" values
     async fillTextBoxValues(locatorValue: any, fillValue: any) {
+        await this.page.locator(locatorValue).clear();
         await (await this.page.waitForSelector(locatorValue)).waitForElementState("stable");
         await this.page.locator(locatorValue).type(fillValue);
         await this.page.waitForTimeout(2000);

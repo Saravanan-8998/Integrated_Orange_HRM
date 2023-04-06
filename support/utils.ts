@@ -306,6 +306,7 @@ export class Utils {
     await this.page.waitForLoadState("networkidle", { timeout: 15000 });
     await this.click(this.job);
     await this.waitForSpinnerToDisappear();
+    await this.page.waitForLoadState("networkidle", { timeout: 15000 });
     await this.fillDateValue(this.joinedDate, Constants.Dates.joinedDate);
     // await this.selecDropdownOption(Constants.Roles.option, this.jobTitle, Constants.others.jobTitleSE);
     await this.selecDropdownOption(Constants.Roles.option, this.location, Constants.others.jobLocation);

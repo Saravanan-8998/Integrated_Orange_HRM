@@ -37,6 +37,12 @@ export class AdminPage {
     corpBrandingLocator: any;
     configurationLocators: any;
     name: string;
+    save: string;
+    search: string;
+    publish: string;
+    preview: string;
+    add: string;
+    backgroundContainer: string;
 
     constructor(page: Page) {
         this.page = page;
@@ -55,6 +61,11 @@ export class AdminPage {
         this.confirmationPopup = 'div.orangehrm-dialog-popup';
         this.popupText = 'p.oxd-text--card-body';
         this.popupDeleteButton = '(//div[@class="orangehrm-modal-footer"]//button)[2]';
+        this.save = `//button[normalize-space()='Save']`;
+        this.search = "//button[normalize-space()='Search']";
+        this.publish = `//button[normalize-space()='Publish']`;
+        this.preview = `//button[normalize-space()='Preview']`;
+        this.add = "//button[normalize-space()='Add']";
 
         this.adminHeadersLocators = {
             userManagementMenu: `//span[text()='User Management ']`,
@@ -191,27 +202,34 @@ export class AdminPage {
         }
         this.edit = `//i[@class='oxd-icon bi-pencil-fill']`;
         this.name = `//label[text()="Name"]/../..//div/input`;
+        this.backgroundContainer = '.orangehrm-background-container';
 
     };
 
+    // This function is used to select Menu
     async clickMenu(locator: any, menuLink: string) {
         await this.page.waitForSelector(locator);
         await this.page.getByRole('button', { name: menuLink }).click();
-        await this.page.waitForSelector(this.container);
-        await this.page.waitForTimeout(5000);
+        await (await this.page.waitForSelector(this.container)).waitForElementState("stable");
+        await this.page.waitForLoadState("domcontentloaded", { timeout: 12000 });
+        await this.page.waitForLoadState("networkidle", { timeout: 10000 });
     };
 
+    // This function is used to "click on the Header sub menus"
     async clickHeaderMenu(locator: string) {
         await this.page.waitForSelector(locator);
         await this.page.locator(locator).click();
-        await this.page.waitForSelector(this.container);
-        await this.page.waitForTimeout(5000);
+        await (await this.page.waitForSelector(this.container)).waitForElementState("stable");
+        await this.page.waitForLoadState("domcontentloaded", { timeout: 12000 });
+        await this.page.waitForLoadState("networkidle", { timeout: 10000 });
     };
 
+    // This function is used to "click on the element"
     async click(locator: any) {
         await this.page.locator(locator).click({ force: true });
     };
 
+    // A function used to click save
     async clickSave(locatorValue: string, index: number, messageToVerify?: string) {
         await this.page.locator(locatorValue).nth(index).click();
         await this.page.waitForTimeout(1000);
@@ -219,17 +237,20 @@ export class AdminPage {
         await this.clickCloseIcon();
     };
 
+    // A function used to clear all the text box values
     async clearTextBoxValues(locatorValue: any) {
         await this.page.locator(locatorValue).clear();
         await this.page.waitForTimeout(1000);
     };
 
+    // This function is used to fill the "textbox" values
     async fillTextBoxValues(locatorValue: any, fillValue: any) {
         await this.page.locator(locatorValue).clear();
         await (await this.page.waitForSelector(locatorValue)).waitForElementState("stable");
         await this.page.locator(locatorValue).type(fillValue);
     };
 
+    // A function used to fill fields values
     async fillFieldValues(namesLocators: any, values: any) {
         for (const locator of namesLocators) {
             await this.clearTextBoxValues(locator);
@@ -239,23 +260,29 @@ export class AdminPage {
         };
     };
 
+    // This function is used to "click on the element with index"
     async clickElementWithIndex(locatorValue: string, index: number) {
         await this.page.locator(locatorValue).nth(index).click();
     };
 
+    // This function is used to click the dropdown and "select the passed value"
     async selecDropdownOption(locator: any, optionValue: any) {
         await this.click(locator);
         await this.page.getByRole('option', { name: optionValue }).getByText(optionValue, { exact: true }).first().click();
     };
 
+    // A function used to get the toast message
     async getToastMessage() {
         return await this.page.locator(this.toastMessage).textContent();
     };
 
+    // This function is used to click on the "Close" Icon of the toast message
     async clickCloseIcon() {
         await this.page.locator(this.closeIcon).click();
+        await this.page.waitForTimeout(2000);
     };
 
+    // This function is for "uploading the file"
     async jobuploadFile(filePath: any, value: boolean) {
         await this.click(this.browseButton);
         await this.page.setInputFiles(this.uploadElement, filePath);
@@ -270,27 +297,33 @@ export class AdminPage {
         }
     };
 
+    // This function is for "uploading the file"
     async bannerUploadFile(type: any, filePath: any) {
         await this.page.setInputFiles(`//label[text()="${type}"]/../../..//input[@class='oxd-file-input']`, filePath);
         await this.page.waitForTimeout(3000);
     };
 
+    // A function used to edit a Row
     async editRow(fillName: any) {
         this.page.locator(`//div[text()='${fillName}']/../..//i[@class='oxd-icon bi-pencil-fill']`).click();
     };
 
+    // A function used to edit a Row Structure
     async editRowStructure(fillName: any) {
         this.page.locator(`//div[contains(text(), '${fillName}')]/../..//i[@class='oxd-icon bi-pencil-fill']`).click();
     };
 
+    // A function used to add a Sub Row Structure
     async addSubRowStructure(fillName: any) {
         this.page.locator(`//div[contains(text(), '${fillName}')]/../..//i[@class='oxd-icon bi-plus']`).click();
     };
 
+    // A function used to add a Person
     async addPerson(fillName: any) {
         this.page.locator(`//div[contains(text(), '${fillName}')]/../..//i[@class='oxd-icon bi-person-plus-fill']`).click();
     }
 
+    // This function is used to Delete Structure
     async deleteFileStructure(confirmation: string, fillName: any) {
         if (confirmation == "structure") {
             this.page.locator(`//div[contains(text(), '${fillName}')]/../..//i[@class='oxd-icon bi-trash-fill']`).click();
@@ -308,6 +341,7 @@ export class AdminPage {
         }
     };
 
+    // This function is used to Delete Record
     async deleteFileRecord(confirmation: string, fillName: string) {
         if (confirmation == "cancel") {
             this.page.locator(`//div[text()='${fillName}']/../..//i[@class='oxd-icon bi-trash']`).first().click();
@@ -325,6 +359,7 @@ export class AdminPage {
         }
     };
 
+    // This function is used to fill the "Date" textbox values
     async fillDateValue(locatorValue: any, fillValue: any) {
         await this.page.locator(locatorValue).fill(fillValue);
     };

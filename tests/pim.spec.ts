@@ -203,7 +203,6 @@ test.describe('Search Employee Reports informations', () => {
         await pimPage.click(pimPage.addDisplayField);
         await pimPage.clickElementWithIndex(pimPage.save, 0);
         await pimPage.clickReportsMenu();
-
         await pimPage.clearTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch);
         await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch);
         await pimPage.selecDropdownOption(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearch);
@@ -213,7 +212,7 @@ test.describe('Search Employee Reports informations', () => {
     });
 
     test('Editing the existing Report and Adding an Employee Name and verify the employee is added', async () => {
-        await utils.clearTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch);
+        await page.waitForLoadState('load');
         await pimPage.fillTextBoxValues(pimPage.searchEmployeeReports.reportNameSearch, Constants.pimModule.reportNameSearchEdit);
         await pimPage.selecDropdownOption(pimPage.editEmployeeReports.criteria, Constants.pimModule.criteria);
         await pimPage.clickElementWithIndex(pimPage.editEmployeeReports.addreport, 0);
